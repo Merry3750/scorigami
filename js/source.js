@@ -3,7 +3,7 @@ var g_data;
 window.onload = function()
 {
 	$.ajax({
-			url: 'http://localhost:8081/data',						
+			url: '/data',						
 			success: function(data) {
 				//console.log('success');
 				//console.log(data);

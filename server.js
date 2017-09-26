@@ -92,4 +92,4 @@ app.get('/*', function(req, res)
 	res.sendFile(path.join(__dirname+"/view/index.html"));
 });
 
-app.listen(process.env.PORT);
+app.listen(process.env.PORT || 8081);
