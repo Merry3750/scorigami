@@ -12,6 +12,7 @@ var url = 'https://www.pro-football-reference.com/boxscores/game-scores.htm';
 var json = [];
 var matrix = [];
 var maxpts = 0;
+var maxlosepts = 0;
 var maxcount = 0;
 
 function updateData()
@@ -44,6 +45,10 @@ function updateData()
 			//find the highest score and highest count
 			for(var i = 0; i < newjson.length; i++)
 			{
+				if(newjson[i].ptsLose > maxlosepts)
+				{
+					maxlosepts = newjson[i].ptsLose;
+				}
 				if(newjson[i].ptsWin > maxpts)
 				{
 					maxpts = newjson[i].ptsWin;
@@ -88,6 +93,7 @@ app.get('/data', function(req, res)
 	var data = {
 		matrix: matrix,
 		maxpts: maxpts,
+		maxlosepts: maxlosepts,
 		maxcount: maxcount
 	};
 	//console.log(data);

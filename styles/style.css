@@ -21,32 +21,12 @@ body{
 	text-align: center;
 }
 
-.green:hover{
-	background-color: #00AA00;
+.hover:hover{
+	background-color: rgba(187, 187, 187, 0.60);
 }
 
-.blank:hover{
-	background-color: #CCCCCC; 
-}
-
-.green.adjhoverH, .green.adjhoverV{
-	background-color: #009000; 
-}
-
-.gradient.adjhoverH, .gradient.adjhoverH a div{
-	-webkit-box-shadow:inset 0px 1px 0px 0px var(--hover-border-color), inset 0px -1px 0px 0px var(--hover-border-color);
-    -moz-box-shadow:inset 0px 1px 0px 0px var(--hover-border-color), inset 0px -1px 0px 0px var(--hover-border-color);
-    box-shadow:inset 0px 1px 0px 0px var(--hover-border-color), inset 0px -1px 0px 0px var(--hover-border-color);
-}
-
-.gradient.adjhoverV, .gradient.adjhoverV a div{
-	-webkit-box-shadow:inset 1px 0px 0px 0px var(--hover-border-color), inset -1px 0px 0px 0px var(--hover-border-color);
-    -moz-box-shadow:inset 1px 0px 0px 0px var(--hover-border-color), inset -1px 0px 0px 0px var(--hover-border-color);
-    box-shadow:inset 1px 0px 0px 0px var(--hover-border-color), inset -1px 0px 0px 0px var(--hover-border-color);
-}
-
-.blank.adjhoverH, .blank.adjhoverV{
-	background-color: #EEEEEE; 
+.hover.adjhover, .hover.adjhover{
+	background-color: rgba(187, 187, 187, 0.30) /*#AAAAAA*/; 
 }
 
 th.adjhover{
@@ -55,17 +35,14 @@ th.adjhover{
 	color:black;
 }
 
-.count{
+.count, .hover{
 	color: white;
+	width: 100%;
+	height: 100%;
 }
 
 td a{
 	color: white;
-}
-
-td a div{
-	width: 100%;
-	height: 100%;
 }
 
 th, td{
@@ -102,3 +79,36 @@ table a
 	width: 100%;
 	height: 100%;
 }
+
+#scoreTable{
+	margin: auto;
+}
+
+#hueSpectrum{
+	text-align:center;
+	font-size: 15px;
+	padding: 5px;
+	height: 20px;
+	line-height: 20px;
+}
+
+#hueSpectrum div{
+	float:left;
+	padding: 1px;
+	font-weight: bold;
+}
+
+.hueColor{
+	margin: auto;
+	padding: 0;
+	width: 3px;
+	height: 20px;
+	display:inline-block;
+}
+
+.outer-wrapper{ position: relative; float: right; right: 50%; }
+.inner-wrapper { position: relative; float: right; right: -50%; }
+.clearfix:before,
+.clearfix:after { content: " "; display: table; }
+.clearfix:after { clear: both; }
+.clearfix { *zoom: 1; }

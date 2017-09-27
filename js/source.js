@@ -8,7 +8,7 @@ window.onload = function()
 				//console.log('success');
 				//console.log(data);
 				g_data = data;
-				main(data);
+				render(data);
 			},
 			error: function(data) {
 				console.log('error');
@@ -23,7 +23,7 @@ window.onload = function()
 };
 
 //sets up table
-function main()
+function render()
 {
 	var matrix = g_data.matrix;
 	
@@ -34,7 +34,7 @@ function main()
 	//start at -1 so labels can be added
 	for(var i = -1; i <= g_data.maxpts; i++)
 	{
-		htmlstring += "<tr>";
+		htmlstring += "<tr id='row_" + i + "'>";
 		for(var j = -1; j <= g_data.maxpts; j++)
 		{
 			//if i==-1, we are in the label row
@@ -66,7 +66,7 @@ function main()
 				//color in green squares
 				else if (matrix[i][j] > 0)
 				{
-					htmlstring += "<td id='cell_" + i + "-" + j + "' class='green'><a href='https://www.pro-football-reference.com/boxscores/game_scores_find.cgi?pts_win=" + j + "&pts_lose=" + i +"'><div><div id='count_" + i + "-" + j + "' class='count'>" + matrix[i][j] + "</div></div></a></td>";
+					htmlstring += "<td id='cell_" + i + "-" + j + "' class='green'><a href='https://www.pro-football-reference.com/boxscores/game_scores_find.cgi?pts_win=" + j + "&pts_lose=" + i +"'><div id='hover_" + i + "-" + j + "' class='hover'><div id='count_" + i + "-" + j + "' class='count'>" + matrix[i][j] + "</div></div></a></td>";
 				}
 				//fill in empty squares
 				else
@@ -86,7 +86,7 @@ function main()
 								htmlstring += "<td class='black'></td>";
 								break;
 							default:
-								htmlstring += "<td id='cell_" + i + "-" + j + "' class='blank'></td>";
+								htmlstring += "<td id='cell_" + i + "-" + j + "' class='blank'><div id='hover_" + i + "-" + j + "' class='hover'></div></td>";
 								break;
 								
 						}
@@ -99,7 +99,7 @@ function main()
 					}
 					else
 					{
-						htmlstring += "<td id='cell_" + i + "-" + j + "' class='blank'></td>";
+						htmlstring += "<td id='cell_" + i + "-" + j + "' class='blank'><div id='hover_" + i + "-" + j + "' class='hover'></div></td>";
 					}
 				}
 			}
@@ -121,12 +121,27 @@ function main()
 			}
 		}
 	}
-	//toggleGradient();
-	//toggleCount();
+	
+	//populate hue spectrum (because doing this manually would be tedious)
+	htmlstring = "";
+	//var cssString = "background: linear-gradient(to right";
+	var hueSpectrumColors = document.getElementById("hueSpectrumColors");
+	for(var i = 0; i <= 270; i++)
+	{
+		htmlstring += "<span id='hue_" + i + "' class='hueColor' style='background-color:hsl(" + i + ",50%,50%);'></span>";
+		//cssString += ",hsl(" + i + ",50%,50%)";
+	}
+	//cssString += ");"
+	//console.log(cssString);
+	hueSpectrumColors.innerHTML = htmlstring;
+	
+	toggleGradient(true);
+	toggleCount(false);
+	toggleEmptyRows(false);
 }
 
 //shades the cells based on the number of times that score has been achieved
-function toggleGradient()
+function toggleGradient(on)
 {
 	var matrix = g_data.matrix;
 	for(var i = 0; i <= g_data.maxpts; i++)
@@ -136,31 +151,43 @@ function toggleGradient()
 			var cell = document.getElementById("cell_" + i + "-" + j);
 			if(cell)
 			{
-				if(cell.classList.contains("gradient"))
-				{
-					cell.classList.remove("gradient");
-					if (cell.classList.contains("green"))
-					{
-						cell.firstChild.firstChild.style.backgroundColor = "";
-					}
-				}
-				else
+				if(on)
 				{
 					cell.classList.add("gradient");
 					if (cell.classList.contains("green"))
 					{
-						var alpha = 1.0 - (0.8 * matrix[i][j] / g_data.maxcount + 0.1);
-						cell.firstChild.firstChild.style.backgroundColor = "rgba(255,255,255," + alpha + ")";
+						// var alpha = 0.9 * matrix[i][j] / g_data.maxcount + 0.1;
+						// cell.style.backgroundColor = "rgba(0,128,0," + alpha + ")";
+						var hue = 270.0 * matrix[i][j] / g_data.maxcount;
+						cell.style.backgroundColor = "hsl(" + hue + ",50%,50%)";
+					}
+				}
+				else
+				{
+					cell.classList.remove("gradient");
+					if (cell.classList.contains("green"))
+					{
+						cell.style.backgroundColor = "";
 					}
 				}
 			}
 		}
 	}
-
-					//htmlstring += "<td id='cell_" + i + "-" + j + "' class='green' style='background-color:rgba(0,128,0," + alpha + ")'><a href='https://www.pro-football-reference.com/boxscores/game_scores_find.cgi?pts_win=" + j + "&pts_lose=" + i +"'>&nbsp</a></td>";
+	var spectrum = document.getElementById("hueSpectrum");
+	if(spectrum)
+	{
+		if(on)
+		{
+			spectrum.classList.remove("hidden");
+		}
+		else
+		{
+			spectrum.classList.add("hidden");
+		}
+	}
 }
 
-function toggleCount()
+function toggleCount(on)
 {
 	for(var i = 0; i <= g_data.maxpts; i++)
 	{
@@ -169,7 +196,7 @@ function toggleCount()
 			var div = document.getElementById("count_" + i + "-" + j);
 			if(div)
 			{
-				if(div.classList.contains("hidden"))
+				if(on)
 				{
 					div.classList.remove("hidden");
 				}
@@ -182,21 +209,52 @@ function toggleCount()
 	}
 }
 
+function toggleEmptyRows(on)
+{
+
+	console.log(g_data.maxlosepts);
+	for(var i = g_data.maxlosepts + 1; i <= g_data.maxpts; i++)
+	{
+		var row = document.getElementById("row_" + i);
+		if(row)
+		{
+			if(on)
+			{
+				row.classList.remove("hidden");
+			}
+			else
+			{
+				row.classList.add("hidden");
+			}
+		}
+	}
+}
+
 //called when user moves mouse over an element
 //adds adjhover class to all elements in the same row and column as the hovered element
 function mouseOver(i, j)
 {
 	for(var k = 0; k <= g_data.maxpts; k++)
 	{
-		var cell = document.getElementById("cell_" + i + "-" + k);
+		// var cell = document.getElementById("cell_" + i + "-" + k);
+		// if(cell && k != j)
+		// {
+			// cell.classList.add("adjhoverH");
+		// }
+		// var cell = document.getElementById("cell_" + k + "-" + j);
+		// if(cell && k != i)
+		// {
+			// cell.classList.add("adjhoverV");
+		// }
+		var cell = document.getElementById("hover_" + i + "-" + k);
 		if(cell && k != j)
 		{
-			cell.classList.add("adjhoverH");
+			cell.classList.add("adjhover");
 		}
-		var cell = document.getElementById("cell_" + k + "-" + j);
+		var cell = document.getElementById("hover_" + k + "-" + j);
 		if(cell && k != i)
 		{
-			cell.classList.add("adjhoverV");
+			cell.classList.add("adjhover");
 		}
 	}
 	var colHeader = document.getElementById("colHeader_" + j);
@@ -210,15 +268,25 @@ function mouseOff(i, j)
 {
 	for(var k = 0; k <= g_data.maxpts; k++)
 	{
-		var cell = document.getElementById("cell_" + i + "-" + k);
+		// var cell = document.getElementById("cell_" + i + "-" + k);
+		// if(cell && k != j)
+		// {
+			// cell.classList.remove("adjhoverH");
+		// }
+		// var cell = document.getElementById("cell_" + k + "-" + j);
+		// if(cell && k != i)
+		// {
+			// cell.classList.remove("adjhoverV");
+		// }
+		var cell = document.getElementById("hover_" + i + "-" + k);
 		if(cell && k != j)
 		{
-			cell.classList.remove("adjhoverH");
+			cell.classList.remove("adjhover");
 		}
-		var cell = document.getElementById("cell_" + k + "-" + j);
+		var cell = document.getElementById("hover_" + k + "-" + j);
 		if(cell && k != i)
 		{
-			cell.classList.remove("adjhoverV");
+			cell.classList.remove("adjhover");
 		}
 	}
 	var colHeader = document.getElementById("colHeader_" + j);
