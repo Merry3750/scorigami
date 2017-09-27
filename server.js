@@ -6,7 +6,9 @@ var path = require("path");
 
 app.use(express.static(__dirname + '/'));
 
-url = 'https://www.pro-football-reference.com/boxscores/game-scores.htm';
+//page from pro-football-reference that lists all NFL scores from history as well as their frequency (only lists scores that happened at least once)
+var url = 'https://www.pro-football-reference.com/boxscores/game-scores.htm';
+
 var json = [];
 var matrix = [];
 var maxpts = 0;
@@ -14,19 +16,21 @@ var maxcount = 0;
 
 function updateData()
 {
+	console.log("fetching data");
 	request(url, function(error, response, html)
 	{
 		if(!error)
 		{
-			console.log("fetching data");
 			var newjson = [];
 			var newmatrix = [];
 			html = html.substr(html.indexOf('<tr >'), html.length);
 			var PTS_WIN_IDENTIFIER = 'data-stat="pts_win" >';
 			var PTS_LOSE_IDENTIFIER = 'data-stat="pts_lose" >';
 			var COUNTER_IDENTIFIER = 'data-stat="counter" >';
+			//cycle through table in the returned HTML string
 			while(html.indexOf('<tr >') >= 0)
 			{
+				//get data in both points columns and win column
 				var object = {};
 				html = html.substr(html.indexOf(PTS_WIN_IDENTIFIER) + PTS_WIN_IDENTIFIER.length, html.length);
 				object.ptsWin = parseInt(html.substr(0, html.indexOf("</td>")));
@@ -37,6 +41,7 @@ function updateData()
 				html = html.substr(html.indexOf('<tr >'), html.length);
 				newjson.push(object);
 			}
+			//find the highest score and highest count
 			for(var i = 0; i < newjson.length; i++)
 			{
 				if(newjson[i].ptsWin > maxpts)
@@ -48,6 +53,7 @@ function updateData()
 					maxcount = newjson[i].count;
 				}
 			}
+			//create matrix with length and width equal to the max points, fill it with 0's
 			for (var i = 0; i <= maxpts; i++)
 			{
 				newmatrix[i] = [];
@@ -56,6 +62,7 @@ function updateData()
 					newmatrix[i][j] = 0;
 				}
 			}
+			//fill matrix with useful data
 			for(var i = 0; i < newjson.length; i++)
 			{
 				newmatrix[newjson[i].ptsLose][newjson[i].ptsWin] = newjson[i].count;
