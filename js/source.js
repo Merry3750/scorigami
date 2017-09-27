@@ -129,15 +129,18 @@ function render()
 	for(var i = 0; i <= 270; i++)
 	{
 		htmlstring += "<span id='hue_" + i + "' class='hueColor' style='background-color:hsl(" + i + ",50%,50%);'></span>";
-		//cssString += ",hsl(" + i + ",50%,50%)";
 	}
-	//cssString += ");"
-	//console.log(cssString);
 	hueSpectrumColors.innerHTML = htmlstring;
 	
-	toggleGradient(true);
+	var hueSpectrumLabelMaxCount = document.getElementById("hueSpectrumLabelMaxCount");
+	if(hueSpectrumLabelMaxCount)
+	{
+		hueSpectrumLabelMaxCount.innerHTML = g_data.maxpts;
+	}
+	
+	toggleGradient(false);
 	toggleCount(false);
-	toggleEmptyRows(false);
+	toggleEmptyRows(true);
 }
 
 //shades the cells based on the number of times that score has been achieved
