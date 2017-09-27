@@ -3,9 +3,39 @@
 	<title>Scorigami</title>
 	<script src="https://code.jquery.com/jquery-1.6.2.min.js"></script>
 	<script src="../js/source.js"></script>
-	<link rel="stylesheet" href="../styles/style.css"></link>
+	<link rel="stylesheet" href="../styles/common.css"></link>
+	<link rel="stylesheet" href="../styles/table.css"></link>
+	<link rel="stylesheet" href="../styles/switch.css"></link>
 </head>
 <body>
+	<div class="clearfix">
+		<div class='outer-wrapper'>
+			<div id='switchContainer' class='inner-wrapper'>
+				<div class="switchWrapper">
+					<label class="switch">
+					  <input type="checkbox" id="countSwitch">
+					  <span class="slider"></span>
+					</label>
+					<div class="switchText">Show Count</div>
+				</div>
+				<div class="switchWrapper">
+					<label class="switch">
+					  <input type="checkbox" id="gradientSwitch">
+					  <span class="slider">
+					  </span>
+					</label>
+					<div class="switchText">Show Gradient</div>
+				</div>
+				<div class="switchWrapper" id="emptyRowsSwitch">
+					<label class="switch">
+					  <input type="checkbox">
+					  <span class="slider"></span>
+					</label>
+					<div class="switchText">Show Empty Rows</div>
+				</div>
+			</div>
+		</div>
+	</div>
 	<div id='tableContainer'>
 		<table id="scoreTable">
 		</table>

@@ -8,7 +8,8 @@ window.onload = function()
 				//console.log('success');
 				//console.log(data);
 				g_data = data;
-				render(data);
+				render();
+				setupEvents();
 			},
 			error: function(data) {
 				console.log('error');
@@ -108,7 +109,30 @@ function render()
 	}
 	table.innerHTML = htmlstring;
 	
-	//add events to cells
+	//populate hue spectrum (because doing this manually would be tedious)
+	htmlstring = "";
+	//var cssString = "background: linear-gradient(to right";
+	var hueSpectrumColors = document.getElementById("hueSpectrumColors");
+	for(var i = 0; i <= 240; i++)
+	{
+		htmlstring += "<span id='hue_" + i + "' class='hueColor' style='background-color:hsl(" + (240 - i) + ",50%,50%);'></span>";
+	}
+	hueSpectrumColors.innerHTML = htmlstring;
+	
+	var hueSpectrumLabelMaxCount = document.getElementById("hueSpectrumLabelMaxCount");
+	if(hueSpectrumLabelMaxCount)
+	{
+		hueSpectrumLabelMaxCount.innerHTML = g_data.maxcount;
+	}
+	
+	toggleGradient(false);
+	toggleCount(false);
+	toggleEmptyRows(false);
+}
+
+function setupEvents()
+{
+	//add hover events to cells
 	for(var i = 0; i <= g_data.maxpts; i++)
 	{
 		for(var j = 0; j <= g_data.maxpts; j++)
@@ -122,25 +146,24 @@ function render()
 		}
 	}
 	
-	//populate hue spectrum (because doing this manually would be tedious)
-	htmlstring = "";
-	//var cssString = "background: linear-gradient(to right";
-	var hueSpectrumColors = document.getElementById("hueSpectrumColors");
-	for(var i = 0; i <= 270; i++)
+	var countSwitch = document.getElementById("countSwitch");
+	if(countSwitch)
 	{
-		htmlstring += "<span id='hue_" + i + "' class='hueColor' style='background-color:hsl(" + i + ",50%,50%);'></span>";
-	}
-	hueSpectrumColors.innerHTML = htmlstring;
-	
-	var hueSpectrumLabelMaxCount = document.getElementById("hueSpectrumLabelMaxCount");
-	if(hueSpectrumLabelMaxCount)
-	{
-		hueSpectrumLabelMaxCount.innerHTML = g_data.maxpts;
+		countSwitch.addEventListener('change', function(e){toggleCount(e.target.checked);});
 	}
 	
-	toggleGradient(false);
-	toggleCount(false);
-	toggleEmptyRows(true);
+	var gradientSwitch = document.getElementById("gradientSwitch");
+	if(gradientSwitch)
+	{
+		gradientSwitch.addEventListener('change', function(e){toggleGradient(e.target.checked);});
+	}
+	
+	var emptyRowsSwitch = document.getElementById("emptyRowsSwitch");
+	if(emptyRowsSwitch)
+	{
+		emptyRowsSwitch.addEventListener('change', function(e){toggleEmptyRows(e.target.checked);});
+	}
+
 }
 
 //shades the cells based on the number of times that score has been achieved
@@ -161,7 +184,7 @@ function toggleGradient(on)
 					{
 						// var alpha = 0.9 * matrix[i][j] / g_data.maxcount + 0.1;
 						// cell.style.backgroundColor = "rgba(0,128,0," + alpha + ")";
-						var hue = 270.0 * matrix[i][j] / g_data.maxcount;
+						var hue = 240.0 - 240.0 * matrix[i][j] / g_data.maxcount;
 						cell.style.backgroundColor = "hsl(" + hue + ",50%,50%)";
 					}
 				}

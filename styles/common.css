@@ -1,0 +1,6 @@
+.outer-wrapper{ position: relative; float: right; right: 50%; }
+.inner-wrapper { position: relative; float: right; right: -50%; }
+.clearfix:before,
+.clearfix:after { content: " "; display: table; }
+.clearfix:after { clear: both; }
+.clearfix { *zoom: 1; }

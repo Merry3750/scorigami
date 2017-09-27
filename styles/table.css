@@ -1,7 +1,3 @@
-:root{
-	--hover-border-color: #AAAAAA;
-}
-
 body{
 	font-family: sans-serif;
 }
@@ -46,6 +42,7 @@ td a{
 }
 
 th, td{
+	min-width: 15px;
 	width: 15px;
 	height: 12px;
 	line-height:12px;
@@ -65,7 +62,7 @@ th{
 }
 
 td{
-	font-size:9px;
+	font-size:8px;
 }
 
 table{
@@ -105,10 +102,3 @@ table a
 	height: 20px;
 	display:inline-block;
 }
-
-.outer-wrapper{ position: relative; float: right; right: 50%; }
-.inner-wrapper { position: relative; float: right; right: -50%; }
-.clearfix:before,
-.clearfix:after { content: " "; display: table; }
-.clearfix:after { clear: both; }
-.clearfix { *zoom: 1; }
