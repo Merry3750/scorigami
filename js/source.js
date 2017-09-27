@@ -8,7 +8,8 @@ window.onload = function()
 				//console.log('success');
 				//console.log(data);
 				g_data = data;
-				render();
+				console.log(data);
+				render(false);
 				setupEvents();
 			},
 			error: function(data) {
@@ -24,9 +25,13 @@ window.onload = function()
 };
 
 //sets up table
-function render()
+function render(sbEra)
 {
 	var matrix = g_data.matrix;
+	if(sbEra)
+	{
+		matrix = g_data.sbmatrix;
+	}
 	
 	var table = document.getElementById('scoreTable');
 	var htmlstring = "";
@@ -124,10 +129,6 @@ function render()
 	{
 		hueSpectrumLabelMaxCount.innerHTML = g_data.maxcount;
 	}
-	
-	toggleGradient(false);
-	toggleCount(false);
-	toggleEmptyRows(false);
 }
 
 function setupEvents()
@@ -163,6 +164,10 @@ function setupEvents()
 	{
 		emptyRowsSwitch.addEventListener('change', function(e){toggleEmptyRows(e.target.checked);});
 	}
+	
+	toggleGradient(countSwitch.checked);
+	toggleCount(gradientSwitch.checked);
+	toggleEmptyRows(emptyRowsSwitch.checked);
 
 }
 
@@ -237,8 +242,6 @@ function toggleCount(on)
 
 function toggleEmptyRows(on)
 {
-
-	console.log(g_data.maxlosepts);
 	for(var i = g_data.maxlosepts + 1; i <= g_data.maxpts; i++)
 	{
 		var row = document.getElementById("row_" + i);

@@ -68,5 +68,6 @@ input:checked + .slider:before {
 	line-height: var(--switch-height);
 	height: var(--switch-height);
 	float:right;
+	padding-left: 2px;
 	/* display:inline-block; */
 }

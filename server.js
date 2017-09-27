@@ -11,6 +11,7 @@ var url = 'https://www.pro-football-reference.com/boxscores/game-scores.htm';
 
 var json = [];
 var matrix = [];
+var sbmatrix = [];
 var maxpts = 0;
 var maxlosepts = 0;
 var maxcount = 0;
@@ -24,10 +25,12 @@ function updateData()
 		{
 			var newjson = [];
 			var newmatrix = [];
+			var newsbmatrix = [];
 			html = html.substr(html.indexOf('<tr >'), html.length);
 			var PTS_WIN_IDENTIFIER = 'data-stat="pts_win" >';
 			var PTS_LOSE_IDENTIFIER = 'data-stat="pts_lose" >';
 			var COUNTER_IDENTIFIER = 'data-stat="counter" >';
+			var LAST_GAME_IDENTIFIER = 'data-stat="last_game" >';
 			//cycle through table in the returned HTML string
 			while(html.indexOf('<tr >') >= 0)
 			{
@@ -39,8 +42,13 @@ function updateData()
 				object.ptsLose = parseInt(html.substr(0, html.indexOf("</td>")));
 				html = html.substr(html.indexOf(COUNTER_IDENTIFIER) + COUNTER_IDENTIFIER.length, html.length);
 				object.count = parseInt(html.substr(0, html.indexOf("</td>")));
+				html = html.substr(html.indexOf(LAST_GAME_IDENTIFIER) + LAST_GAME_IDENTIFIER.length, html.length);
+				var year = parseInt(html.substr(html.indexOf("</a>") - 4, html.indexOf("</a>")));
+				object.sbEra = (year >= 1966);
 				html = html.substr(html.indexOf('<tr >'), html.length);
+
 				newjson.push(object);
+
 			}
 			//find the highest score and highest count
 			for(var i = 0; i < newjson.length; i++)
@@ -62,18 +70,25 @@ function updateData()
 			for (var i = 0; i <= maxpts; i++)
 			{
 				newmatrix[i] = [];
+				newsbmatrix[i] = [];
 				for(var j = 0; j <= maxpts; j++)
 				{
 					newmatrix[i][j] = 0;
+					newsbmatrix[i][j] = 0;
 				}
 			}
 			//fill matrix with useful data
 			for(var i = 0; i < newjson.length; i++)
 			{
 				newmatrix[newjson[i].ptsLose][newjson[i].ptsWin] = newjson[i].count;
+				if(newjson[i].sbEra)
+				{
+					newsbmatrix[newjson[i].ptsLose][newjson[i].ptsWin] = newjson[i].count;
+				}
 			}
 			json = newjson;
 			matrix = newmatrix;
+			sbmatrix = newsbmatrix;
 			var date = new Date();
 			console.log("done " + date.toUTCString());
 		}
@@ -92,6 +107,7 @@ app.get('/data', function(req, res)
 {
 	var data = {
 		matrix: matrix,
+		sbmatrix: sbmatrix,
 		maxpts: maxpts,
 		maxlosepts: maxlosepts,
 		maxcount: maxcount
