@@ -1,3 +1,7 @@
+:root{
+	--hover-border-color: #AAAAAA;
+}
+
 body{
 	font-family: sans-serif;
 }
@@ -30,15 +34,15 @@ body{
 }
 
 .gradient.adjhoverH, .gradient.adjhoverH a div{
-	-webkit-box-shadow:inset 0px 1px 0px 0px #CCCCCC, inset 0px -1px 0px 0px #CCCCCC;
-    -moz-box-shadow:inset 0px 1px 0px 0px #CCCCCC, inset 0px -1px 0px 0px #CCCCCC;
-    box-shadow:inset 0px 1px 0px 0px #CCCCCC, inset 0px -1px 0px 0px #CCCCCC;
+	-webkit-box-shadow:inset 0px 1px 0px 0px var(--hover-border-color), inset 0px -1px 0px 0px var(--hover-border-color);
+    -moz-box-shadow:inset 0px 1px 0px 0px var(--hover-border-color), inset 0px -1px 0px 0px var(--hover-border-color);
+    box-shadow:inset 0px 1px 0px 0px var(--hover-border-color), inset 0px -1px 0px 0px var(--hover-border-color);
 }
 
 .gradient.adjhoverV, .gradient.adjhoverV a div{
-	-webkit-box-shadow:inset 1px 0px 0px 0px #CCCCCC, inset -1px 0px 0px 0px #CCCCCC;
-    -moz-box-shadow:inset 1px 0px 0px 0px #CCCCCC, inset -1px 0px 0px 0px #CCCCCC;
-    box-shadow:inset 1px 0px 0px 0px #CCCCCC, inset -1px 0px 0px 0px #CCCCCC;
+	-webkit-box-shadow:inset 1px 0px 0px 0px var(--hover-border-color), inset -1px 0px 0px 0px var(--hover-border-color);
+    -moz-box-shadow:inset 1px 0px 0px 0px var(--hover-border-color), inset -1px 0px 0px 0px var(--hover-border-color);
+    box-shadow:inset 1px 0px 0px 0px var(--hover-border-color), inset -1px 0px 0px 0px var(--hover-border-color);
 }
 
 .blank.adjhoverH, .blank.adjhoverV{
@@ -65,10 +69,9 @@ td a div{
 }
 
 th, td{
-	width: 20px;
-	height: 15px;
-	font-size: 10px;
-	line-height:15px;
+	width: 15px;
+	height: 12px;
+	line-height:12px;
 	padding: 0;
 	margin: 0;
 	-webkit-touch-callout: none; /* iOS Safari */
@@ -78,6 +81,14 @@ th, td{
 	-ms-user-select: none; /* Internet Explorer/Edge */
 	user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
 	
+}
+
+th{
+	font-size:11px;
+}
+
+td{
+	font-size:9px;
 }
 
 table{
