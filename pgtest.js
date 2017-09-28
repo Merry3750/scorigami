@@ -7,13 +7,10 @@ const client = new Client({
 
 client.connect();
 
-client.query("INSERT INTO test (id, text) VALUES (0, 'hello, world');", (err, res) => {
-	if (err) throw err;
-	client.query('SELECT * FROM test;', (err, res) => {
-	  if (err) throw err;
-	  for (let row of res.rows) {
-		console.log(JSON.stringify(row));
-	  }
-	  client.end();
-	});
+client.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
+  if (err) throw err;
+  for (let row of res.rows) {
+    console.log(JSON.stringify(row));
+  }
+  client.end();
 });
