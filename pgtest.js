@@ -7,8 +7,13 @@ const client = new Client({
 
 client.connect();
 
-client.query('CREATE TABLE test (id INTEGER, text TEXT);', (err, res) => {
-  if (err) throw err;
-
-  client.end();
+client.query('INSERT INTO test (id INTEGER, text TEXT) VALIES (0, "hello, world");', (err, res) => {
+	if (err) throw err;
+	client.query('SELECT * FROM test;', (err, res) => {
+	  if (err) throw err;
+	  for (let row of res.rows) {
+		console.log(JSON.stringify(row));
+	  }
+	  client.end();
+	});
 });
