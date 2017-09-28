@@ -1,7 +1,8 @@
 const { Client } = require('pg');
+var dbinfo = require('./connection_string');
 
 const client = new Client({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: dbinfo.URI || process.env.DATABASE_URL,
   ssl: true,
 });
 
