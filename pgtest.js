@@ -1,5 +1,13 @@
 const { Client } = require('pg');
-var dbinfo = require('./connection_string') || "";
+
+try 
+{
+	var dbinfo = require('./connection_string') || "";
+}
+catch(e)
+{
+	dbinfo = "";
+}
 
 var connectionString = process.env.DATABASE_URL || dbinfo.URI
 
