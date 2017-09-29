@@ -7,6 +7,15 @@ var request = require('request');
 
 var url = 'http://www.nfl.com/liveupdate/scorestrip/ss.json';
 
+var scoresTable = "scores";
+var metadataTable = "metadata";
+
+if(process.env.DEBUG)
+{
+	scoresTable = "scores_DEBUG";
+	metadataTable = "metadata_DEBUG";
+}
+
 const client = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: true,
@@ -35,7 +44,7 @@ function updateData()
 			if (data.t == "REG" || data.t == "POST")
 			{
 				//check the current week
-				client.query("SELECT data_int FROM metadata WHERE description='current_week';", (err1, res1) =>
+				client.query("SELECT data_int FROM " + metadataTable + " WHERE description='current_week';", (err1, res1) =>
 				{
 					if(!err1)
 					{
@@ -43,12 +52,12 @@ function updateData()
 						//if the current week does not match the current tracked week, change the current week and delete the tracked games (we won't be needing them any more)
 						if(current_week != data.w)
 						{
-							client.query("UPDATE metadata SET data_int=" + data.w + " WHERE description='current_week';DELETE FROM metadata WHERE description='tracked_game';", (err2, res2) => {updateData()});
+							client.query("UPDATE " + metadataTable + " SET data_int=" + data.w + " WHERE description='current_week';DELETE FROM " + metadataTable + " WHERE description='tracked_game';", (err2, res2) => {updateData()});
 						}
 						else
 						{
 							//get the list of tracked games
-							client.query("SELECT data_int FROM metadata WHERE description='tracked_game';", (err2, res2) =>
+							client.query("SELECT data_int FROM " + metadataTable + " WHERE description='tracked_game';", (err2, res2) =>
 							{	
 								if(!err2)
 								{
@@ -91,7 +100,7 @@ function updateData()
 											//get the score row from the database
 											var pts_win = game.hs > game.vs ? game.hs : game.vs;
 											var pts_lose = game.hs > game.vs ? game.vs : game.hs;
-											client.query("SELECT count FROM scores WHERE (pts_win=" + pts_win + " AND pts_lose=" + pts_lose + ");", (err3, res3) =>
+											client.query("SELECT count FROM " + scoresTable + " WHERE (pts_win=" + pts_win + " AND pts_lose=" + pts_lose + ");", (err3, res3) =>
 											{
 												if(!err3)
 												{
@@ -107,14 +116,14 @@ function updateData()
 													//if the game score has been achieved before (in database), increment the count and add it to the list of tracked games
 													if(res3.rows[0] || aCompleteFuckingMiracleHasHapppened)
 													{
-														queryString += "UPDATE scores SET count=count+1 WHERE (pts_win=" + pts_win + " AND pts_lose=" + pts_lose + ");\n";
+														queryString += "UPDATE " + scoresTable + " SET count=count+1 WHERE (pts_win=" + pts_win + " AND pts_lose=" + pts_lose + ");\n";
 													}
 													//if the game score has not been achieved before (not in database), add it to the database and add it to the list of tracked games
 													else
 													{
-														queryString += "INSERT INTO scores VALUES (" + pts_win + ", " + pts_lose + ", 1);\n";
+														queryString += "INSERT INTO " + scoresTable + " VALUES (" + pts_win + ", " + pts_lose + ", 1);\n";
 													}
-													queryString += "INSERT INTO metadata (description, data_int) VALUES ('tracked_game', " + game.eid + ");\n";
+													queryString += "INSERT INTO " + metadataTable + " (description, data_int) VALUES ('tracked_game', " + game.eid + ");\n";
 													finishedQueries++;
 													if(finishedQueries >= newgames.length)
 													{
@@ -175,7 +184,7 @@ function updateData()
 
 function getData()
 {
-	client.query('SELECT * FROM scores;', (err, res) =>
+	client.query("SELECT * FROM " + scoresTable + ";", (err, res) =>
 	{
 		if(!err)
 		{
