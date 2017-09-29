@@ -57,7 +57,7 @@ function updateData()
 									for (let game of data.gms)
 									{
 										//if the game is not over, ignore it
-										if(game.q == "F" || true)
+										if(game.q == "F")
 										{	
 											var tracked = false;
 											//if the game has already been tracked, ignore it
