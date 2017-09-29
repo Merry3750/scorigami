@@ -14,6 +14,19 @@ const client = new Client({
 
 client.connect();
 
+
+
+client.query('SELECT * FROM scores;', (err, res) => {
+  if (err) throw err;
+  for (let row of res.rows) {
+    console.log(JSON.stringify(row));
+  }
+  client.end();
+});
+
+
+
+
 app.use(express.static(__dirname + '/'));
 
 var json = [];
