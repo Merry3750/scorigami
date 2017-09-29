@@ -1,18 +1,8 @@
 const { Client } = require('pg');
-
-try 
-{
-	var dbinfo = require('./connection_string') || "";
-}
-catch(e)
-{
-	dbinfo = "";
-}
-
-var connectionString = process.env.DATABASE_URL || dbinfo.URI
+require('dotenv').load();
 
 const client = new Client({
-  connectionString: connectionString,
+  connectionString: process.env.DATABASE_URL,
   ssl: true,
 });
 
@@ -20,8 +10,6 @@ client.connect();
 
 client.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
   if (err) throw err;
-  for (let row of res.rows) {
-    //console.log(JSON.stringify(row));
-  }
+  console.log("success");
   client.end();
 });
