@@ -1,13 +1,17 @@
 var express = require('express');
-var fs = require('fs');
-var request = require('request');
 var app = express();
 var path = require("path");
+const { Client } = require('pg');
+require('dotenv').load();
+
+const client = new Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: true,
+});
+
+client.connect();
 
 app.use(express.static(__dirname + '/'));
-
-//page from pro-football-reference that lists all NFL scores from history as well as their frequency (only lists scores that happened at least once)
-var url = 'https://www.pro-football-reference.com/boxscores/game-scores.htm';
 
 var json = [];
 var matrix = [];
@@ -19,53 +23,30 @@ var maxcount = 0;
 function updateData()
 {
 	console.log("fetching data");
-	request(url, function(error, response, html)
+	client.query('SELECT * FROM scores;', (err, res) =>
 	{
-		if(!error)
+		if(!err)
 		{
 			var newjson = [];
 			var newmatrix = [];
 			var newsbmatrix = [];
-			html = html.substr(html.indexOf('<tr >'), html.length);
-			var PTS_WIN_IDENTIFIER = 'data-stat="pts_win" >';
-			var PTS_LOSE_IDENTIFIER = 'data-stat="pts_lose" >';
-			var COUNTER_IDENTIFIER = 'data-stat="counter" >';
-			var LAST_GAME_IDENTIFIER = 'data-stat="last_game" >';
-			//cycle through table in the returned HTML string
-			while(html.indexOf('<tr >') >= 0)
+			for (let row of res.rows) 
 			{
-				//get data in both points columns and win column
-				var object = {};
-				html = html.substr(html.indexOf(PTS_WIN_IDENTIFIER) + PTS_WIN_IDENTIFIER.length, html.length);
-				object.ptsWin = parseInt(html.substr(0, html.indexOf("</td>")));
-				html = html.substr(html.indexOf(PTS_LOSE_IDENTIFIER) + PTS_LOSE_IDENTIFIER.length, html.length);
-				object.ptsLose = parseInt(html.substr(0, html.indexOf("</td>")));
-				html = html.substr(html.indexOf(COUNTER_IDENTIFIER) + COUNTER_IDENTIFIER.length, html.length);
-				object.count = parseInt(html.substr(0, html.indexOf("</td>")));
-				html = html.substr(html.indexOf(LAST_GAME_IDENTIFIER) + LAST_GAME_IDENTIFIER.length, html.length);
-				var year = parseInt(html.substr(html.indexOf("</a>") - 4, html.indexOf("</a>")));
-				object.sbEra = (year >= 1966);
-				html = html.substr(html.indexOf('<tr >'), html.length);
-
-				newjson.push(object);
-
-			}
-			//find the highest score and highest count
-			for(var i = 0; i < newjson.length; i++)
-			{
-				if(newjson[i].ptsLose > maxlosepts)
+				newjson.push(row);
+				if(row.pts_lose > maxlosepts)
 				{
-					maxlosepts = newjson[i].ptsLose;
+					maxlosepts = row.pts_lose;
 				}
-				if(newjson[i].ptsWin > maxpts)
+				if(row.pts_win > maxpts)
 				{
-					maxpts = newjson[i].ptsWin;
+					maxpts = row.pts_win;
 				}
-				if(newjson[i].count > maxcount)
+				if(row.count > maxcount)
 				{
-					maxcount = newjson[i].count;
+					maxcount = row.count;
 				}
 			}
+			
 			//create matrix with length and width equal to the max points, fill it with 0's
 			for (var i = 0; i <= maxpts; i++)
 			{
@@ -80,11 +61,11 @@ function updateData()
 			//fill matrix with useful data
 			for(var i = 0; i < newjson.length; i++)
 			{
-				newmatrix[newjson[i].ptsLose][newjson[i].ptsWin] = newjson[i].count;
-				if(newjson[i].sbEra)
-				{
-					newsbmatrix[newjson[i].ptsLose][newjson[i].ptsWin] = newjson[i].count;
-				}
+				newmatrix[newjson[i].pts_lose][newjson[i].pts_win] = newjson[i].count;
+				// if(newjson[i].sbEra)
+				// {
+					// newsbmatrix[newjson[i].pts_lose][newjson[i].pts_win] = newjson[i].count;
+				// }
 			}
 			json = newjson;
 			matrix = newmatrix;
