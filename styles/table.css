@@ -87,6 +87,7 @@ table a
 	padding: 5px;
 	height: 20px;
 	line-height: 20px;
+	min-width: 700px;
 }
 
 #hueSpectrum div{

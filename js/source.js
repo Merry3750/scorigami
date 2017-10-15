@@ -38,18 +38,18 @@ function render()
 	for(var i = -1; i <= g_data.maxpts; i++)
 	{
 		htmlstring += "<tr id='row_" + i + "'>";
-		for(var j = -1; j <= g_data.maxpts; j++)
+		for(var j = 0; j <= g_data.maxpts + 1; j++)
 		{
 			//if i==-1, we are in the label row
 			if(i == -1)
 			{
-				//do not label the top left cell, since the left column is all labels
-				if (j < 0)
+				//do not label the top right cell, since the left column is all labels
+				if (j > g_data.maxpts)
 				{
 					htmlstring += "<th></th>";
 				}
 				//adding column lables
-				else
+				else 
 				{
 					htmlstring += "<th id='colHeader_" + j + "'>" + j + "</th>";
 				}
@@ -62,9 +62,14 @@ function render()
 					htmlstring += "<td class='black'></td>";
 				}
 				//adding row label
-				else if (j == i-1)
+				else if (j == i - 1)
 				{
-					htmlstring += "<th id='rowHeader_" + i + "' class='black'>" + i + "</th>";
+					htmlstring += "<th id='specialHeader_" + i + "' class='black'></th>";
+				}
+				//adding row label
+				else if (j == g_data.maxpts + 1)
+				{
+					htmlstring += "<th id='rowHeader_" + i + "'>" + i + "</th>";
 				}
 				//color in green squares
 				else if (matrix[i][j] > 0)
@@ -347,6 +352,18 @@ function mouseOver(i, j)
 	colHeader.classList.add("adjhover");
 	var rowHeader = document.getElementById("rowHeader_" + i);
 	rowHeader.classList.add("adjhover");
+	var specialHeader2 = document.getElementById("specialHeader_" + (j + 1));
+	if(specialHeader2)
+	{
+		specialHeader2.innerHTML = j;
+		specialHeader2.classList.add("adjhover");
+	}
+	var specialHeader = document.getElementById("specialHeader_" + i);
+	if(specialHeader)
+	{
+		specialHeader.innerHTML = i;
+		specialHeader.classList.add("adjhover");
+	}
 }
 //called when moves mouse off an element
 //removes adjhover class to all elements in the same row and column as the hovered element
@@ -379,6 +396,18 @@ function mouseOff(i, j)
 	colHeader.classList.remove("adjhover");
 	var rowHeader = document.getElementById("rowHeader_" + i);
 	rowHeader.classList.remove("adjhover");
+	var specialHeader2 = document.getElementById("specialHeader_" + (j + 1));
+	if(specialHeader2)
+	{
+		specialHeader2.innerHTML = "";
+		specialHeader2.classList.remove("adjhover");
+	}
+	var specialHeader = document.getElementById("specialHeader_" + i);
+	if(specialHeader)
+	{
+		specialHeader.innerHTML = "";
+		specialHeader.classList.remove("adjhover");
+	}
 }
 
 //delegate functions to make it possible to create event liteners in a loop
