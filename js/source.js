@@ -114,9 +114,13 @@ function render()
 	htmlstring = "";
 	//var cssString = "background: linear-gradient(to right";
 	var hueSpectrumColors = document.getElementById("hueSpectrumColors");
+	
+	var num = 600 / Math.log(g_data.maxcount);
+	
 	for(var i = 0; i <= 240; i++)
 	{
-		htmlstring += "<span id='hue_" + i + "' class='hueColor' style='background-color:hsl(" + (240 - i) + ",50%,50%);'></span>";
+		var width = (Math.log(240 - i) - Math.log(239 - i)) * num;
+		htmlstring += "<span id='hue_" + i + "' class='hueColor' style='background-color:hsl(" + (240 - i) + ",50%,50%);width:" + width + "px'></span>";
 	}
 	hueSpectrumColors.innerHTML = htmlstring;
 	
@@ -183,6 +187,7 @@ function toggleGradient(on)
 		toggleSBEra(false);
 	}
 	var matrix = g_data.matrix;
+	var max = Math.log(g_data.maxcount);
 	for(var i = 0; i <= g_data.maxpts; i++)
 	{
 		for(var j = 0; j <= g_data.maxpts; j++)
@@ -197,7 +202,7 @@ function toggleGradient(on)
 					{
 						// var alpha = 0.9 * matrix[i][j] / g_data.maxcount + 0.1;
 						// cell.style.backgroundColor = "rgba(0,128,0," + alpha + ")";
-						var hue = 240.0 - 240.0 * matrix[i][j] / g_data.maxcount;
+						var hue = 240.0 - 240.0 * Math.log(matrix[i][j]) / max;
 						cell.style.backgroundColor = "hsl(" + hue + ",50%,50%)";
 					}
 				}
@@ -378,11 +383,11 @@ function mouseOff(i, j)
 //delegate functions to make it possible to create event liteners in a loop
 function mouseOverDelegate(i, j) {
   return function(){
-      mouseOver(i, j)
+      mouseOver(i, j);
   }
 }
 function mouseOffDelegate(i, j) {
   return function(){
-      mouseOff(i, j)
+      mouseOff(i, j);
   }
 }

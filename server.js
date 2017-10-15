@@ -90,11 +90,11 @@ function updateData()
 											//console.log("game " + game.eid + " not tracked because it has not ended");
 										}
 									}
+									var finishedQueries = 0;
+									var queryString = "";
 									//iterate through the list of untracked games
 									for (let game of newgames)
 									{
-										var finishedQueries = 0;
-										var queryString = "";
 										(function(game)
 										{
 											//get the score row from the database
