@@ -1,4 +1,5 @@
 var g_data;
+var MAX_HUE = 240.0;
 
 window.onload = function()
 {
@@ -115,12 +116,12 @@ function render()
 	//var cssString = "background: linear-gradient(to right";
 	var hueSpectrumColors = document.getElementById("hueSpectrumColors");
 	
-	var num = 600 / Math.log(g_data.maxcount);
+	var num = 600 / Math.log(MAX_HUE + 2);
 	
-	for(var i = 0; i <= 240; i++)
+	for(var i = 0; i <= MAX_HUE; i++)
 	{
-		var width = (Math.log(240 - i) - Math.log(239 - i)) * num;
-		htmlstring += "<span id='hue_" + i + "' class='hueColor' style='background-color:hsl(" + (240 - i) + ",50%,50%);width:" + width + "px'></span>";
+		var width = (Math.log(MAX_HUE + 2 - i) - Math.log(MAX_HUE + 1 - i)) * num;
+		htmlstring += "<span id='hue_" + i + "' class='hueColor' style='background-color:hsl(" + (MAX_HUE - i) + ",50%,50%);width:" + width + "px'></span>";
 	}
 	hueSpectrumColors.innerHTML = htmlstring;
 	
@@ -202,7 +203,7 @@ function toggleGradient(on)
 					{
 						// var alpha = 0.9 * matrix[i][j] / g_data.maxcount + 0.1;
 						// cell.style.backgroundColor = "rgba(0,128,0," + alpha + ")";
-						var hue = 240.0 - 240.0 * Math.log(matrix[i][j]) / max;
+						var hue = MAX_HUE - MAX_HUE * Math.log(matrix[i][j]) / max;
 						cell.style.backgroundColor = "hsl(" + hue + ",50%,50%)";
 					}
 				}
