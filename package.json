@@ -1,5 +1,5 @@
 {
-  "name": "scoragami",
+  "name": "scorigami",
   "version": "1.0.0",
   "description": "All NFL scores ever",
   "main": "server.js",
