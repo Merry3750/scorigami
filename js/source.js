@@ -171,27 +171,14 @@ function setupEvents()
 		emptyRowsSwitch.addEventListener('change', function(e){toggleEmptyRows(e.target.checked);});
 	}
 	
-	var sbEraSwitch = document.getElementById("sbEraSwitch");
-	if(sbEraSwitch)
-	{
-		sbEraSwitch.addEventListener('change', function(e){toggleSBEra(e.target.checked);});
-	}
-	
 	toggleGradient(countSwitch.checked);
 	toggleCount(gradientSwitch.checked);
 	toggleEmptyRows(emptyRowsSwitch.checked);
-	toggleSBEra(sbEraSwitch.checked);
 }
 
 //shades the cells based on the number of times that score has been achieved
 function toggleGradient(on)
 {
-	if(on)
-	{
-		console.log("gradientSwitch");
-		document.getElementById("sbEraSwitch").checked = false;
-		toggleSBEra(false);
-	}
 	var matrix = g_data.matrix;
 	var max = Math.log(g_data.maxcount);
 	for(var i = 0; i <= g_data.maxpts; i++)
@@ -239,11 +226,6 @@ function toggleGradient(on)
 
 function toggleCount(on)
 {
-	if(on)
-	{
-		document.getElementById("sbEraSwitch").checked = false;
-		toggleSBEra(false);
-	}
 	for(var i = 0; i <= g_data.maxpts; i++)
 	{
 		for(var j = 0; j <= g_data.maxpts; j++)
@@ -278,44 +260,6 @@ function toggleEmptyRows(on)
 			else
 			{
 				row.classList.add("hidden");
-			}
-		}
-	}
-}
-
-function toggleSBEra(on)
-{
-	if(on)
-	{
-		document.getElementById("countSwitch").checked = false;
-		document.getElementById("gradientSwitch").checked = false;
-		
-		toggleGradient(false);
-		toggleCount(false);
-	}
-	for(var i = 0; i <= g_data.maxpts; i++)
-	{
-		for(var j = 0; j <= g_data.maxpts; j++)
-		{
-			var cell = document.getElementById("cell_" + i + "-" + j);
-			if(cell && g_data.sbmatrix[i][j] == 0)
-			{
-				if(on)
-				{
-					if (cell.classList.contains("green"))
-					{
-						cell.classList.add("sb");
-						cell.classList.remove("green");
-					}
-				}
-				else
-				{
-					if (cell.classList.contains("sb"))
-					{
-						cell.classList.add("green");
-						cell.classList.remove("sb");
-					}
-				}
 			}
 		}
 	}

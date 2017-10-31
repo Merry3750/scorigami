@@ -11,8 +11,6 @@ var url = 'http://www.nfl.com/liveupdate/scorestrip/ss.json';
 var scoresTable = "scores";
 var metadataTable = "metadata";
 
-var updated = true;
-
 if(process.env.DEBUG)
 {
 	scoresTable = "scores_DEBUG";
@@ -238,6 +236,7 @@ function getData()
 	});
 }
 
+//Renders page, unused as of 2017/10/30
 function renderPage()
 {
 	fs.readFile(path.join(__dirname+"/view/indexTemplate.html"), 'utf8', function(err, data)

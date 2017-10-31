@@ -1,3 +1,10 @@
+h1{
+	text-align: center;
+	margin: 10px;
+	font-size: 3em;
+}
+
+
 .outer-wrapper{ position: relative; float: right; right: 50%; }
 .inner-wrapper { position: relative; float: right; right: -50%; }
 .clearfix:before,
