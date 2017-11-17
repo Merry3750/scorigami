@@ -4,6 +4,20 @@ h1{
 	font-size: 3em;
 }
 
+h4{
+	text-align: center;
+	margin: 0;
+}
+
+div.text{
+	max-width: 1125px;
+	width: 100%;
+	margin: auto;
+}
+
+iframe{
+	margin: auto;
+}
 
 .outer-wrapper{ position: relative; float: right; right: 50%; }
 .inner-wrapper { position: relative; float: right; right: -50%; }
