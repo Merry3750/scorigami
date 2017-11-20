@@ -62,6 +62,7 @@ function updateData()
 								if(!err2)
 								{
 									var newgames = [];
+									var secondHalf = false;
 									//iterate through this week's games
 									for (let game of data.gms)
 									{
@@ -89,6 +90,17 @@ function updateData()
 										{
 											//console.log("game " + game.eid + " not tracked because it has not ended");
 										}
+										//if there is a game in the second half, set secondHalf to true
+										if(game.q == 3 || game.q == 4)
+										{
+											secondHalf = true;
+										}
+									}
+									//if there is a game in the fourth quarter, run tick every minute instead of every hour
+									if(secondHalf)
+									{
+										console.log("secondHalf");
+										setTimeout(tick, 1000 * 60);
 									}
 									var finishedQueries = 0;
 									var queryString = "";
