@@ -1,29 +1,38 @@
 var g_data;
 var MAX_HUE = 240.0;
 
+$.ajax({
+	url: '/data',						
+	success: function(data) {
+		//console.log('success');
+		//console.log(data);
+		g_data = data;
+		checkReady();
+	},
+	error: function(data) {
+		console.log('error');
+		console.log(data);
+		
+		// two arguments: the id of the Timeline container (no '#')
+		// and the JSON object or an instance of TL.TimelineConfig created from
+		// a suitable JSON object
+		//window.timeline = new TL.Timeline('timeline-embed', 'marktwain_test.json');
+	}
+});
+
 window.onload = function()
 {
-	$.ajax({
-			url: '/data',						
-			success: function(data) {
-				//console.log('success');
-				//console.log(data);
-				g_data = data;
-				console.log(data);
-				render();
-				setupEvents();
-			},
-			error: function(data) {
-				console.log('error');
-				console.log(data);
-				
-				// two arguments: the id of the Timeline container (no '#')
-				// and the JSON object or an instance of TL.TimelineConfig created from
-				// a suitable JSON object
-				//window.timeline = new TL.Timeline('timeline-embed', 'marktwain_test.json');
-			}
-		});
+	checkReady();
 };
+
+function checkReady()
+{
+	if(g_data && document.readyState === "complete") 
+	{ 
+		render(); 
+		setupEvents();
+	}
+}
 
 //sets up table
 function render()
@@ -135,6 +144,8 @@ function render()
 	{
 		hueSpectrumLabelMaxCount.innerHTML = g_data.maxcount;
 	}
+	
+	document.getElementById("video").src = "https://www.youtube.com/embed/9l5C8cGMueY?rel=0";
 }
 
 function setupEvents()
@@ -171,8 +182,8 @@ function setupEvents()
 		emptyRowsSwitch.addEventListener('change', function(e){toggleEmptyRows(e.target.checked);});
 	}
 	
-	toggleGradient(countSwitch.checked);
-	toggleCount(gradientSwitch.checked);
+	toggleCount(countSwitch.checked);
+	toggleGradient(gradientSwitch.checked);
 	toggleEmptyRows(emptyRowsSwitch.checked);
 }
 
