@@ -13,6 +13,7 @@ var metadataTable = "metadata";
 
 if(process.env.DEBUG)
 {
+	console.log("DEBUG");
 	scoresTable = "scores_DEBUG";
 	metadataTable = "metadata_DEBUG";
 }
