@@ -108,100 +108,100 @@ function getShorthandName(string)
 	switch(string)
 	{
 		case "ARI":
-			return "ARI";
+			return "crd";
 			break;
 		case "ATL":
-			return "ATL";
+			return "atl";
 			break;
 		case "BAL":
-			return "RAV";
+			return "rav";
 			break;
 		case "BUF":
-			return "BUF";
+			return "buf";
 			break;
 		case "CAR":
-			return "CAR";
+			return "car";
 			break;
 		case "CHI":
-			return "CHI";
+			return "chi";
 			break;
 		case "CIN":
-			return "CIN";
+			return "cin";
 			break;
 		case "CLE":
-			return "CLE";
+			return "cle";
 			break;
 		case "DAL":
-			return "DAL";
+			return "dal";
 			break;
 		case "DEN":
-			return "DEN";
+			return "den";
 			break;
 		case "DET":
-			return "DET";
+			return "det";
 			break;
 		case "GB":
-			return "GNB";
+			return "gnb";
 			break;
 		case "HOU":
-			return "HOU";
+			return "htx";
 			break;
 		case "IND":
-			return "IND";
+			return "clt";
 			break;
 		case "JAX":
-			return "JAX";
+			return "jax";
 			break;
 		case "KC":
-			return "KAN";
+			return "kan";
 			break;
 		case "LA":
-			return "LAR";
+			return "ram";
 			break;
 		case "LAC":
-			return "LAC";
+			return "ram";
 			break;
 		case "MIA":
-			return "MIA";
+			return "mia";
 			break;
 		case "MIN":
-			return "MIN";
+			return "min";
 			break;
 		case "NE":
-			return "NWE";
+			return "nwe";
 			break;
 		case "NO":
-			return "NOR";
+			return "nor";
 			break;
 		case "NYG":
-			return "NYG";
+			return "nyg";
 			break;
 		case "NYJ":
-			return "NYJ";
+			return "nyj";
 			break;
 		case "OAK":
-			return "OAK";
+			return "rai";
 			break;
 		case "PHI":
-			return "PHI";
+			return "phi";
 			break;
 		case "PIT":
-			return "PIT";
+			return "pit";
 			break;
 		case "SEA":
-			return "SEA";
+			return "sea";
 			break;
 		case "SF":
-			return "SFO";
+			return "sfo";
 			break;
 		case "TB":
-			return "TAM";
+			return "tam";
 			break;
 		case "TEN":
-			return "TEN";
+			return "oti";
 			break;
 		case "WAS":
-			return "WAS";
+			return "was";
 			break;
 		default:
 			return string;
@@ -210,6 +210,6 @@ function getShorthandName(string)
 }
 
 module.exports = {
-	getFullName": getFullName,
-	getShorthandName": getShorthandName
+	getFullName: getFullName,
+	getShorthandName: getShorthandName
 }

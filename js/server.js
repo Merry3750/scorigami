@@ -5,6 +5,7 @@ const { Client } = require('pg');
 require('dotenv').load();
 var request = require('request');
 var fs = require('fs');
+var teamParser = require("./teamParser.js");
 
 var url = 'http://www.nfl.com/liveupdate/scorestrip/ss.json';
 
@@ -25,7 +26,7 @@ const client = new Client({
 
 client.connect();
 
-app.use(express.static(__dirname + '/'));
+app.use(express.static(__dirname + '/..'));
 
 var json = [];
 var matrix = [];
@@ -113,6 +114,7 @@ function updateData()
 											//get the score row from the database
 											var pts_win = game.hs > game.vs ? game.hs : game.vs;
 											var pts_lose = game.hs > game.vs ? game.vs : game.hs;
+											var homeWin = game.hs > game.vs;
 											client.query("SELECT count FROM " + scoresTable + " WHERE (pts_win=" + pts_win + " AND pts_lose=" + pts_lose + ");", (err3, res3) =>
 											{
 												if(!err3)
@@ -126,6 +128,13 @@ function updateData()
 															aCompleteFuckingMiracleHasHapppened = true;
 														}
 													}
+													var winTeam = teamParser.getFullName(homeWin ? game.h : game.v);
+													var loseTeam = teamParser.getFullName(homeWin ? game.v : game.h);
+													var homeTeam = teamParser.getFullName(game.h);
+													var awayTeam = teamParser.getFullName(game.v);
+													var date =  Math.floor(game.eid / 100).toString();
+													var gamelink = "https://www.pro-football-reference.com/boxscores/" + date + "0" + teamParser.getShorthandName(game.h) + ".htm";
+													date = date.substr(0, 4) + "-" + date.substr(4, 2) + "-" + date.substr(6, 2);
 													//if the game score has been achieved before (in database), increment the count and add it to the list of tracked games
 													if(res3.rows[0] || aCompleteFuckingMiracleHasHapppened)
 													{
@@ -391,7 +400,7 @@ app.get('/data', function(req, res)
 
 app.get('/*', function(req, res)
 {
-	res.sendFile(path.join(__dirname+"/view/index.html"));
+	res.sendFile(path.join(__dirname+"/../view/index.html"));
 });
 
 app.listen(process.env.PORT || 8081);
