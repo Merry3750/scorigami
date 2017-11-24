@@ -24,9 +24,6 @@ const client = new Client({
   ssl: true,
 });
 
-var startTime = new Date();
-var hits = 0;
-
 client.connect();
 
 app.use(express.static(__dirname + '/..'));
@@ -102,7 +99,7 @@ function updateData()
 											secondHalf = true;
 										}
 									}
-									//if there is a game in the fourth quarter, run tick every minute instead of every hour
+									//if there is a game in the second half, run tick every minute instead of every hour
 									if(secondHalf)
 									{
 										console.log("secondHalf");
@@ -142,12 +139,39 @@ function updateData()
 													//if the game score has been achieved before (in database), increment the count and add it to the list of tracked games
 													if(res3.rows[0] || aCompleteFuckingMiracleHasHapppened)
 													{
-														queryString += "UPDATE " + scoresTable + " SET count=count+1 WHERE (pts_win=" + pts_win + " AND pts_lose=" + pts_lose + ");\n";
+														queryString += "UPDATE " + scoresTable;
+														queryString += " SET count=count+1";
+														queryString += ", last_date=to_date('" + date + "', 'YYYY-MM-DD')";
+														queryString += ", last_team_win='" + winTeam;
+														queryString += "', last_team_lose='" + loseTeam;
+														queryString += "', last_team_home='" + homeTeam;
+														queryString += "', last_team_away='" + awayTeam;
+														queryString += "', last_link='" + gamelink;
+														queryString += "' WHERE (pts_win=" + pts_win + " AND pts_lose=" + pts_lose + ");\n";
+														
+														
+														//queryString += "UPDATE " + scoresTable + " SET count=count+1 WHERE (pts_win=" + pts_win + " AND pts_lose=" + pts_lose + ");\n";
 													}
 													//if the game score has not been achieved before (not in database), add it to the database and add it to the list of tracked games
 													else
 													{
-														queryString += "INSERT INTO " + scoresTable + " VALUES (" + pts_win + ", " + pts_lose + ", 1);\n";
+														queryString += "INSERT INTO " + scoresTable + " (pts_win, pts_lose, count, first_date, first_team_win, first_team_lose, first_team_home, first_team_away, first_link, last_date, last_team_win, last_team_lose, last_team_home, last_team_away, last_link) "
+														queryString += "VALUES (" + pts_win;
+														queryString += ", " + pts_lose;
+														queryString += ", 1";
+														queryString += ", to_date('" + date + "', 'YYYY-MM-DD')";
+														queryString += ", '" + winTeam;
+														queryString += "', '" + loseTeam;
+														queryString += "', '" + homeTeam;
+														queryString += "', '" + awayTeam;
+														queryString += "', '" + gamelink;
+														queryString += "', to_date('" + date + "', 'YYYY-MM-DD')";
+														queryString += ", '" + winTeam;
+														queryString += "', '" + loseTeam;
+														queryString += "', '" + homeTeam;
+														queryString += "', '" + awayTeam;
+														queryString += "', '" + gamelink;
+														queryString += "');\n";
 													}
 													queryString += "INSERT INTO " + metadataTable + " (description, data_int) VALUES ('tracked_game', " + game.eid + ");\n";
 													finishedQueries++;
@@ -162,7 +186,8 @@ function updateData()
 															}
 															else
 															{
-																console.log("There was an error updating data");
+																console.log("There was an error updating data: 4");
+																console.log(err4);
 																getData();
 															}
 														});
@@ -170,6 +195,7 @@ function updateData()
 												}
 												else
 												{
+													console.log("There was an error updating data: 3");
 													getData();
 												}
 											});
@@ -182,7 +208,7 @@ function updateData()
 								}
 								else
 								{
-									console.log("There was an error updating data");
+									console.log("There was an error updating data: 2");
 									getData();
 								}
 							});
@@ -190,7 +216,7 @@ function updateData()
 					}
 					else
 					{
-						console.log("There was an error updating data");
+						console.log("There was an error updating data: 1");
 						getData();
 					}
 				});
@@ -203,7 +229,7 @@ function updateData()
 		}
 		else
 		{
-			console.log("There was an error updating data");
+			console.log("There was an error updating data: 0");
 			getData();
 		}
 	});
@@ -405,8 +431,6 @@ app.get('/data', function(req, res)
 app.get('/*', function(req, res)
 {
 	res.sendFile(path.join(__dirname+"/../view/index.html"));
-	hits++;
-	console.log("hits since " + startTime.toUTCString() + ": " + hits);
 });
 
 app.listen(process.env.PORT || 8081);
