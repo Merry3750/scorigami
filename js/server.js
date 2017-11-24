@@ -24,6 +24,9 @@ const client = new Client({
   ssl: true,
 });
 
+var startTime = new Date();
+var hits = 0;
+
 client.connect();
 
 app.use(express.static(__dirname + '/..'));
@@ -32,6 +35,7 @@ var json = [];
 var matrix = [];
 var maxpts = 0;
 var maxlosepts = 0;
+var maxcount = 0;
 var maxcount = 0;
 
 function updateData()
@@ -401,6 +405,8 @@ app.get('/data', function(req, res)
 app.get('/*', function(req, res)
 {
 	res.sendFile(path.join(__dirname+"/../view/index.html"));
+	hits++;
+	console.log("hits since " + startTime.toUTCString() + ": " + hits);
 });
 
 app.listen(process.env.PORT || 8081);
