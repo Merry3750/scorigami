@@ -131,6 +131,12 @@ function render()
 	}
 	table.innerHTML = htmlstring;
 	
+	var loadingTable = document.getElementById("loadingTable");
+	if(loadingTable)
+	{
+		loadingTable.classList.add("hidden");
+	}
+	
 	//populate hue spectrum (because doing this manually would be tedious)
 	htmlstringLogarithmic = "";
 	htmlstringLinear = "";
