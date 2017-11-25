@@ -20,6 +20,18 @@ iframe{
 	margin: auto;
 }
 
+footer{
+	text-align:center;
+	font-size:12px;
+	padding: 5px 0;
+	background-color:#999999;
+	margin-top:10px;
+}
+
+body{
+	margin:0;
+}
+
 .outer-wrapper{ position: relative; float: right; right: 50%; }
 .inner-wrapper { position: relative; float: right; right: -50%; }
 .clearfix:before,
