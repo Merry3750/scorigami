@@ -18,7 +18,7 @@ body{
 }
 
 .green.later{
-	background-color: white;
+	background-color: white !important;
 }
 
 .green.red{
