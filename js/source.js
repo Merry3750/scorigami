@@ -1,5 +1,10 @@
 var g_data;
 var MAX_HUE = 240.0;
+var mode;
+
+var MODE_COUNT = "count";
+var MODE_FIRST_GAME = "firstGame";
+var MODE_LAST_GAME = "lastGame";
 
 $.ajax({
 	url: '/data',						
@@ -7,6 +12,7 @@ $.ajax({
 		//console.log('success');
 		//console.log(data);
 		g_data = data;
+		console.log(data);
 		checkReady();
 	},
 	error: function(data) {
@@ -81,9 +87,9 @@ function render()
 					htmlstring += "<th id='rowHeader_" + i + "'>" + i + "</th>";
 				}
 				//color in green squares
-				else if (matrix[i][j] > 0)
+				else if (matrix[i][j].count > 0)
 				{
-					htmlstring += "<td id='cell_" + i + "-" + j + "' class='green'><a href='https://www.pro-football-reference.com/boxscores/game_scores_find.cgi?pts_win=" + j + "&pts_lose=" + i +"'><div id='hover_" + i + "-" + j + "' class='hover'><div id='count_" + i + "-" + j + "' class='count'>" + matrix[i][j] + "</div></div></a></td>";
+					htmlstring += "<td id='cell_" + i + "-" + j + "' class='green'><a href='https://www.pro-football-reference.com/boxscores/game_scores_find.cgi?pts_win=" + j + "&pts_lose=" + i +"'><div id='hover_" + i + "-" + j + "' class='hover'><div id='count_" + i + "-" + j + "' class='count'>" + matrix[i][j].count + "</div></div></a></td>";
 				}
 				//fill in empty squares
 				else
@@ -126,23 +132,33 @@ function render()
 	table.innerHTML = htmlstring;
 	
 	//populate hue spectrum (because doing this manually would be tedious)
-	htmlstring = "";
+	htmlstringLogarithmic = "";
+	htmlstringLinear = "";
 	//var cssString = "background: linear-gradient(to right";
-	var hueSpectrumColors = document.getElementById("hueSpectrumColors");
+	var hueSpectrumLogarithmicColors = document.getElementById("hueSpectrumLogarithmicColors");
+	var hueSpectrumLinearColors = document.getElementById("hueSpectrumLinearColors");
 	
 	var num = 600 / Math.log(MAX_HUE + 2);
 	
 	for(var i = 0; i <= MAX_HUE; i++)
 	{
 		var width = (Math.log(MAX_HUE + 2 - i) - Math.log(MAX_HUE + 1 - i)) * num;
-		htmlstring += "<span id='hue_" + i + "' class='hueColor' style='background-color:hsl(" + (MAX_HUE - i) + ",50%,50%);width:" + width + "px'></span>";
+		htmlstringLogarithmic += "<span id='hueLog_" + i + "' class='hueColor' style='background-color:hsl(" + (MAX_HUE - i) + ",50%,50%);width:" + width + "px'></span>";
+		htmlstringLinear += "<span id='hueLin_" + i + "' class='hueColor' style='background-color:hsl(" + (MAX_HUE - i) + ",50%,50%);width:2.5px'></span>";
 	}
-	hueSpectrumColors.innerHTML = htmlstring;
 	
-	var hueSpectrumLabelMaxCount = document.getElementById("hueSpectrumLabelMaxCount");
-	if(hueSpectrumLabelMaxCount)
+	hueSpectrumLogarithmicColors.innerHTML = htmlstringLogarithmic;
+	hueSpectrumLinearColors.innerHTML = htmlstringLinear;
+	
+	var hueSpectrumLogarithmicLabelMaxCount = document.getElementById("hueSpectrumLogarithmicLabelMaxCount");
+	if(hueSpectrumLogarithmicLabelMaxCount)
 	{
-		hueSpectrumLabelMaxCount.innerHTML = g_data.maxcount;
+		hueSpectrumLogarithmicLabelMaxCount.innerHTML = g_data.maxcount;
+	}
+	var hueSpectrumLinearLabelMaxCount = document.getElementById("hueSpectrumLinearLabelMaxCount");
+	if(hueSpectrumLinearLabelMaxCount)
+	{
+		hueSpectrumLinearLabelMaxCount.innerHTML = new Date().getFullYear();
 	}
 	
 	document.getElementById("video").src = "https://www.youtube.com/embed/9l5C8cGMueY?rel=0";
@@ -164,10 +180,17 @@ function setupEvents()
 		}
 	}
 	
+	var modeSelector = document.getElementById("modeSelector");
+	if(modeSelector)
+	{
+		mode = modeSelector.options[modeSelector.selectedIndex].value;
+		modeSelector.addEventListener('change', function(e){changeMode();});
+	}
+	
 	var countSwitch = document.getElementById("countSwitch");
 	if(countSwitch)
 	{
-		countSwitch.addEventListener('change', function(e){toggleCount(e.target.checked);});
+		countSwitch.addEventListener('change', function(e){toggleNumber(e.target.checked);});
 	}
 	
 	var gradientSwitch = document.getElementById("gradientSwitch");
@@ -182,19 +205,182 @@ function setupEvents()
 		emptyRowsSwitch.addEventListener('change', function(e){toggleEmptyRows(e.target.checked);});
 	}
 	
-	toggleCount(countSwitch.checked);
+	var yearSlider = document.getElementById("yearSlider");
+	if(yearSlider)
+	{
+		var date = new Date().getFullYear();
+		yearSlider.max = date;
+		yearSlider.value = date;
+		yearSlider.addEventListener('input', function(e){(changeYearSlider());});
+	}
+	
+	changeMode();
+}
+
+function changeMode()
+{
+	var modeSelector = document.getElementById("modeSelector");
+	if(modeSelector)
+	{
+		mode = modeSelector.options[modeSelector.selectedIndex].value;
+	}
+	
+	for(var i = 0; i <= g_data.maxpts; i++)
+	{
+		for(var j = i; j <= g_data.maxpts; j++)
+		{
+			var div = document.getElementById("count_" + i + "-" + j);
+			if(div)
+			{
+				switch(mode)
+				{
+					case MODE_FIRST_GAME:
+						div.innerHTML = g_data.matrix[i][j].first_date.substr(0,4);
+						div.style.fontSize="6px";
+						break;
+					case MODE_LAST_GAME:
+						div.innerHTML = g_data.matrix[i][j].last_date.substr(0,4);
+						div.style.fontSize="6px";
+						break;
+					case MODE_COUNT:
+					default:
+						div.innerHTML = g_data.matrix[i][j].count;
+						div.style.fontSize="8px";
+						break;
+				}
+			}
+		}
+	}
+	
+	var countSwitchText = document.getElementById("countSwitchText");
+	if(countSwitchText)
+	{
+		switch(mode)
+		{
+			case MODE_FIRST_GAME:
+			case MODE_LAST_GAME:
+				countSwitchText.innerHTML = "Show Year";
+				break;
+			case MODE_COUNT:
+			default:
+				countSwitchText.innerHTML = "Show Count";
+				break;
+		}
+	}
+	
+	switch(mode)
+	{
+		case MODE_FIRST_GAME:
+			showSlider();
+			break;
+		case MODE_LAST_GAME:
+		case MODE_COUNT:
+		default:
+			hideSlider();
+			break;
+	}
+	
+	toggleNumber(countSwitch.checked);
 	toggleGradient(gradientSwitch.checked);
 	toggleEmptyRows(emptyRowsSwitch.checked);
+}
+
+function showSlider()
+{
+	var sliderContainer = document.getElementById("sliderContainer");
+	if(sliderContainer)
+	{
+		sliderContainer.classList.remove("hidden");
+	}
+	changeYearSlider();
+}
+
+function hideSlider()
+{
+	var sliderContainer = document.getElementById("sliderContainer");
+	if(sliderContainer)
+	{
+		sliderContainer.classList.add("hidden");
+	}
+	
+	for(var i = 0; i <= g_data.maxpts; i++)
+	{
+		for(var j = i; j <= g_data.maxpts; j++)
+		{
+			var cell = document.getElementById("cell_" + i + "-" + j);
+			if(cell)
+			{
+				cell.classList.remove("later");
+				cell.classList.remove("red");
+			}
+		}
+	}
+}
+
+function changeYearSlider()
+{
+	var value = document.getElementById("yearSlider").value;
+	
+	var sliderValue = document.getElementById("sliderValue");
+	if(sliderValue)
+	{
+		sliderValue.innerHTML = value;
+	}
+	
+	for(var i = 0; i <= g_data.maxpts; i++)
+	{
+		for(var j = i; j <= g_data.maxpts; j++)
+		{
+			var cell = document.getElementById("cell_" + i + "-" + j);
+			if(cell && cell.classList.contains("green"))
+			{
+				var year = parseInt(g_data.matrix[i][j].first_date.substr(0,4))
+				if(year > value)
+				{
+					cell.classList.add("later");
+					cell.classList.remove("red");
+				}
+				else if (year == value)
+				{
+					cell.classList.add("red");
+					cell.classList.remove("later");
+				}
+				else
+				{
+					cell.classList.remove("red");
+					cell.classList.remove("later");
+				}
+			}
+		}
+	}
+	
 }
 
 //shades the cells based on the number of times that score has been achieved
 function toggleGradient(on)
 {
 	var matrix = g_data.matrix;
-	var max = Math.log(g_data.maxcount);
+	
+	var max;
+	var min
+	
+	switch(mode)
+	{
+		case MODE_FIRST_GAME:
+		case MODE_LAST_GAME:
+			max = new Date().getFullYear();
+			min = 1920;
+			break;
+		case MODE_COUNT:
+		default:
+			max = Math.log(g_data.maxcount);
+			min = 0;
+			break;
+	}
+	
 	for(var i = 0; i <= g_data.maxpts; i++)
 	{
-		for(var j = 0; j <= g_data.maxpts; j++)
+		for(var j = i; j <= g_data.maxpts; j++)
 		{
 			var cell = document.getElementById("cell_" + i + "-" + j);
 			if(cell)
@@ -204,9 +390,24 @@ function toggleGradient(on)
 					cell.classList.add("gradient");
 					if (cell.classList.contains("green"))
 					{
-						// var alpha = 0.9 * matrix[i][j] / g_data.maxcount + 0.1;
+						// var alpha = 0.9 * matrix[i][j].count / g_data.maxcount + 0.1;
 						// cell.style.backgroundColor = "rgba(0,128,0," + alpha + ")";
-						var hue = MAX_HUE - MAX_HUE * Math.log(matrix[i][j]) / max;
+						var hue;
+						switch(mode)
+						{
+							case MODE_FIRST_GAME:
+								var year = parseInt(matrix[i][j].first_date.substr(0,4));
+								hue = MAX_HUE - MAX_HUE * (year - min) / (max - min);
+								break;
+							case MODE_LAST_GAME:
+								var year = parseInt(matrix[i][j].last_date.substr(0,4));
+								hue = MAX_HUE - MAX_HUE * (year - min) / (max - min);
+								break;
+							case MODE_COUNT:
+							default:
+								var hue = MAX_HUE - MAX_HUE * Math.log(matrix[i][j].count) / max;
+								break;
+						}
 						cell.style.backgroundColor = "hsl(" + hue + ",50%,50%)";
 					}
 				}
@@ -221,25 +422,37 @@ function toggleGradient(on)
 			}
 		}
 	}
-	var spectrum = document.getElementById("hueSpectrum");
-	if(spectrum)
+	var spectrumLogarithmic = document.getElementById("hueSpectrumLogarithmic");
+	if(spectrumLogarithmic)
 	{
-		if(on)
+		if(on && mode == MODE_COUNT)
 		{
-			spectrum.classList.remove("hidden");
+			spectrumLogarithmic.classList.remove("hidden");
 		}
 		else
 		{
-			spectrum.classList.add("hidden");
+			spectrumLogarithmic.classList.add("hidden");
+		}
+	}
+	var spectrumLinear = document.getElementById("hueSpectrumLinear");
+	if(spectrumLinear)
+	{
+		if(on && (mode == MODE_FIRST_GAME || mode == MODE_LAST_GAME))
+		{
+			spectrumLinear.classList.remove("hidden");
+		}
+		else
+		{
+			spectrumLinear.classList.add("hidden");
 		}
 	}
 }
 
-function toggleCount(on)
+function toggleNumber(on)
 {
 	for(var i = 0; i <= g_data.maxpts; i++)
 	{
-		for(var j = 0; j <= g_data.maxpts; j++)
+		for(var j = i; j <= g_data.maxpts; j++)
 		{
 			var div = document.getElementById("count_" + i + "-" + j);
 			if(div)

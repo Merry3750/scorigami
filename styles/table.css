@@ -17,6 +17,18 @@ body{
 	text-align: center;
 }
 
+.green.later{
+	background-color: white;
+}
+
+.green.red{
+	background-color: red;
+}
+
+.green.later .count{
+	display:none;
+}
+
 .hover:hover{
 	background-color: rgba(187, 187, 187, 0.60);
 }
@@ -81,7 +93,7 @@ table a
 	margin: auto;
 }
 
-#hueSpectrum{
+.hueSpectrum{
 	text-align:center;
 	font-size: 15px;
 	padding: 5px;
@@ -90,7 +102,7 @@ table a
 	min-width: 700px;
 }
 
-#hueSpectrum div{
+.hueSpectrum div{
 	float:left;
 	padding: 1px;
 	font-weight: bold;

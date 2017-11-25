@@ -265,13 +265,13 @@ function getData()
 				newmatrix[i] = [];
 				for(var j = 0; j <= maxpts; j++)
 				{
-					newmatrix[i][j] = 0;
+					newmatrix[i][j] = {count: 0};
 				}
 			}
 			//fill matrix with useful data
 			for(var i = 0; i < newjson.length; i++)
 			{
-				newmatrix[newjson[i].pts_lose][newjson[i].pts_win] = newjson[i].count;
+				newmatrix[newjson[i].pts_lose][newjson[i].pts_win] = newjson[i];
 			}
 			json = newjson;
 			matrix = newmatrix;

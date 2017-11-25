@@ -11,20 +11,28 @@
 </head>
 <body>
 	<h1>NFL Scorigami</h1>
+	<div class="select">
+		<select id="modeSelector">
+			<optgroup label = "Select Mode">
+			<option value="count">Count</option>
+			<option value="firstGame">First Occurance</option>
+			<option value="lastGame">Most Recent Occurance</option>
+		</select>
+	</div>
 	<div class="clearfix">
 		<div class='outer-wrapper'>
 			<div id='switchContainer' class='inner-wrapper'>
 				<div class="switchWrapper">
 					<label class="switch">
 					  <input type="checkbox" id="countSwitch">
-					  <span class="slider"></span>
+					  <span class="switchSlider"></span>
 					</label>
-					<div class="switchText">Show Count</div>
+					<div id="countSwitchText" class="switchText">Show Count</div>
 				</div>
 				<div class="switchWrapper">
 					<label class="switch">
 					  <input type="checkbox" id="gradientSwitch">
-					  <span class="slider">
+					  <span class="switchSlider">
 					  </span>
 					</label>
 					<div class="switchText">Show Gradient</div>
@@ -32,22 +40,31 @@
 				<div class="switchWrapper">
 					<label class="switch">
 					  <input type="checkbox" id="emptyRowsSwitch">
-					  <span class="slider"></span>
+					  <span class="switchSlider"></span>
 					</label>
 					<div class="switchText">Show Empty Rows</div>
 				</div>
 			</div>
 		</div>
 	</div>
+	<div id='sliderContainer' class="hidden">
+		<input type="range" min="1920" max="" value="" class="slider" id="yearSlider">
+		<div id="sliderValue"></div>
+	</div>
 	<div id='tableContainer'>
 		<table id="scoreTable">
 		</table>
 		<div class="clearfix">
 			<div class='outer-wrapper'>
-				<div id='hueSpectrum' class='inner-wrapper hidden'>
-						<div id='hueSpectrumLabelMinCount'>1</div>
-						<div id="hueSpectrumColors">{{hueSpectrumColors}}</div>
-						<div id='hueSpectrumLabelMaxCount'>{{hueSpectrumLabelMaxCount}}</div>
+				<div id='hueSpectrumLogarithmic' class='inner-wrapper hueSpectrum hidden'>
+						<div id='hueSpectrumLogarithmicLabelMinCount'>1</div>
+						<div id="hueSpectrumLogarithmicColors">{{hueSpectrumLogarithmicColors}}</div>
+						<div id='hueSpectrumLogarithmicLabelMaxCount'>{{hueSpectrumLogarithmicLabelMaxCount}}</div>
+				</div>
+				<div id='hueSpectrumLinear' class='inner-wrapper hueSpectrum hidden'>
+						<div id='hueSpectrumLinearLabelMinCount'>1</div>
+						<div id="hueSpectrumLinearColors">{{hueSpectrumLinearColors}}</div>
+						<div id='hueSpectrumLinearLabelMaxCount'>{{hueSpectrumLinearLabelMaxCount}}</div>
 				</div>
 			</div>
 		</div>

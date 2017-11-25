@@ -4,12 +4,13 @@ h1{
 	font-size: 3em;
 }
 
-h4{
+
+.select{
 	text-align: center;
-	margin: 0;
+	margin: auto;
 }
 
-div.text{
+.text{
 	max-width: 1125px;
 	width: 100%;
 	margin: auto;
