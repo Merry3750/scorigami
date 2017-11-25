@@ -176,7 +176,7 @@ function render()
 	var lastUpdated = document.getElementById("lastUpdated");
 	if(lastUpdated)
 	{
-		lastUpdated.innerHTML = g_data.lastUpdated;
+		lastUpdated.innerHTML = "Last Updated: " + g_data.lastUpdated + ".";
 	}
 }
 
