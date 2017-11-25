@@ -167,7 +167,17 @@ function render()
 		hueSpectrumLinearLabelMaxCount.innerHTML = new Date().getFullYear();
 	}
 	
-	document.getElementById("video").src = "https://www.youtube.com/embed/9l5C8cGMueY?rel=0";
+	var video = document.getElementById("video")
+	if(video)
+	{
+		video.src = "https://www.youtube.com/embed/9l5C8cGMueY?rel=0";
+	}
+	
+	var lastUpdated = document.getElementById("lastUpdated");
+	if(lastUpdated)
+	{
+		lastUpdated.innerHTML = g_data.lastUpdated;
+	}
 }
 
 function setupEvents()

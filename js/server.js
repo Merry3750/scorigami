@@ -34,6 +34,7 @@ var maxpts = 0;
 var maxlosepts = 0;
 var maxcount = 0;
 var maxcount = 0;
+var lastUpdated;
 
 function updateData()
 {
@@ -275,8 +276,8 @@ function getData()
 			}
 			json = newjson;
 			matrix = newmatrix;
-			var date = new Date();
-			console.log("done " + date.toUTCString());
+			lastUpdated = new Date().toUTCString();
+			console.log("done " + lastUpdated);
 		}
 		else
 		{
@@ -302,7 +303,8 @@ app.get('/data', function(req, res)
 		matrix: matrix,
 		maxpts: maxpts,
 		maxlosepts: maxlosepts,
-		maxcount: maxcount
+		maxcount: maxcount,
+		lastUpdated: lastUpdated
 	};
 	//console.log(data);
 	res.json(data);
