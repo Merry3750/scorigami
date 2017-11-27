@@ -28,17 +28,45 @@ footer{
 	text-align:center;
 	font-size:12px;
 	padding: 5px 0;
-	background-color:#999999;
+	background-color:#BBBBBB;
 	margin-top:10px;
 	width:100%;
 }
 
 #infoBox{
-	background-color:#999999;
+	background-color:#BBBBBB;
 	position:absolute;
 	font-size: 10px;
 	padding: 4px;
 	border-radius:3px;
+}
+
+#helper{
+	background-color:#ffff99;
+	position:absolute;
+	font-size: 18px;
+	padding: 10px;
+	border-radius:3px;
+	text-align:center;
+	border:1px solid black;
+   cursor: pointer;
+
+	-webkit-transition: opacity 1s ease-in-out;
+	-moz-transition: opacity 1s ease-in-out;
+	-ms-transition: opacity 1s ease-in-out;
+	-o-transition: opacity 1s ease-in-out;
+	opacity: 0.9;
+
+	-webkit-touch-callout: none; /* iOS Safari */
+	-webkit-user-select: none; /* Safari */
+	-khtml-user-select: none; /* Konqueror HTML */
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* Internet Explorer/Edge */
+	user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
+}
+
+#helper.hide-opacity{
+    opacity: 0;
 }
 
 #infoBoxScore{

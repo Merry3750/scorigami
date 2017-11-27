@@ -12,7 +12,7 @@ $.ajax({
 		//console.log('success');
 		//console.log(data);
 		g_data = data;
-		console.log(data);
+		//console.log(data);
 		checkReady();
 	},
 	error: function(data) {
@@ -140,10 +140,28 @@ function render()
 			loadingTable.classList.add("hidden");
 		}
 		
+		toggleEmptyRows(false);
+		var tableRect = table.getBoundingClientRect();
+		
 		var body = document.getElementById("body");
 		if(body)
 		{
-			body.style.minWidth = table.getBoundingClientRect().width;
+			body.style.minWidth = tableRect.width;
+		}
+		
+		var helper = document.getElementById("helper");
+		if(helper)
+		{
+			var helperRect = helper.getBoundingClientRect();
+			helper.style.left = tableRect.x + tableRect.width / 2 - helperRect.width / 2;
+			helper.style.top = tableRect.y + tableRect.height / 2 - helperRect.height * 2;
+			helper.classList.remove("invisible");
+			
+			setTimeout(function()
+			{	
+				helper.classList.add("hide-opacity");
+				setTimeout(hideHelper, 1000);
+			}, 3000);
 		}
 	}
 	
@@ -620,6 +638,7 @@ function mouseOff(i, j)
 
 function onClick(i, j)
 {
+	hideHelper();
 	var data = g_data.matrix[i][j];
 	var infoBox = document.getElementById("infoBox");
 	var cell = document.getElementById("cell_" + i + "-" + j);
@@ -736,6 +755,15 @@ function closeInfoBox()
 	if(infoBox)
 	{
 		infoBox.classList.add("hidden");
+	}
+}
+
+function hideHelper()
+{
+	var helper = document.getElementById("helper");
+	if(helper)
+	{
+		helper.classList.add("hidden");
 	}
 }
 
