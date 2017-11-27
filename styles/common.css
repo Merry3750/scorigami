@@ -33,8 +33,28 @@ footer{
 	width:100%;
 }
 
+#infoBox{
+	background-color:#999999;
+	position:absolute;
+	font-size: 10px;
+	padding: 4px;
+	border-radius:3px;
+}
+
+#infoBoxScore{
+	font-size: 12px;
+	font-weight: bold;
+}
+
+#infoBoxClose{
+	font-size: 9px;
+	float: right;
+   cursor: pointer;
+}
+
 body{
 	margin:0;
+	position:relative;
 }
 
 .hidden{

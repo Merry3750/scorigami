@@ -46,95 +46,105 @@ function render()
 	var matrix = g_data.matrix;
 	
 	var table = document.getElementById('scoreTable');
-	var htmlstring = "";
-	
-	//cycle through all elements in the table (maxpts will always be the length and width of the matrix)
-	//start at -1 so labels can be added
-	for(var i = -1; i <= g_data.maxpts; i++)
+	if(table)
 	{
-		htmlstring += "<tr id='row_" + i + "'>";
-		for(var j = 0; j <= g_data.maxpts + 1; j++)
+		var htmlstring = "";
+		
+		//cycle through all elements in the table (maxpts will always be the length and width of the matrix)
+		//start at -1 so labels can be added
+		for(var i = -1; i <= g_data.maxpts; i++)
 		{
-			//if i==-1, we are in the label row
-			if(i == -1)
+			htmlstring += "<tr id='row_" + i + "'>";
+			for(var j = 0; j <= g_data.maxpts + 1; j++)
 			{
-				//do not label the top right cell, since the left column is all labels
-				if (j > g_data.maxpts)
+				//if i==-1, we are in the label row
+				if(i == -1)
 				{
-					htmlstring += "<th></th>";
+					//do not label the top right cell, since the left column is all labels
+					if (j > g_data.maxpts)
+					{
+						htmlstring += "<th></th>";
+					}
+					//adding column lables
+					else 
+					{
+						htmlstring += "<th id='colHeader_" + j + "'>" + j + "</th>";
+					}
 				}
-				//adding column lables
-				else 
-				{
-					htmlstring += "<th id='colHeader_" + j + "'>" + j + "</th>";
-				}
-			}
-			else
-			{
-				//coloring black squares
-				if(j < i - 1)
-				{
-					htmlstring += "<td class='black'></td>";
-				}
-				//adding row label
-				else if (j == i - 1)
-				{
-					htmlstring += "<th id='specialHeader_" + i + "' class='black'></th>";
-				}
-				//adding row label
-				else if (j == g_data.maxpts + 1)
-				{
-					htmlstring += "<th id='rowHeader_" + i + "'>" + i + "</th>";
-				}
-				//color in green squares
-				else if (matrix[i][j].count > 0)
-				{
-					htmlstring += "<td id='cell_" + i + "-" + j + "' class='green'><a href='https://www.pro-football-reference.com/boxscores/game_scores_find.cgi?pts_win=" + j + "&pts_lose=" + i +"'><div id='hover_" + i + "-" + j + "' class='hover'><div id='count_" + i + "-" + j + "' class='count'>" + matrix[i][j].count + "</div></div></a></td>";
-				}
-				//fill in empty squares
 				else
 				{
-					//color black squares for impossible scores along 1 point line
-					//NOTE: we can do this after coloring in the green squares since these squares will never be green
-					if( i == 1)
-					{
-						switch (j)
-						{
-							case 1:
-							case 2: 
-							case 3: 
-							case 4:
-							case 5:
-							case 7: 
-								htmlstring += "<td class='black'></td>";
-								break;
-							default:
-								htmlstring += "<td id='cell_" + i + "-" + j + "' class='blank'><div id='hover_" + i + "-" + j + "' class='hover'></div></td>";
-								break;
-								
-						}
-					}
-					//color 0,1 square black since that is also impossible
-					//NOTE: we can do this after coloring in the green squares since this square will never be green
-					else if (i == 0 && j == 1)
+					//coloring black squares
+					if(j < i - 1)
 					{
 						htmlstring += "<td class='black'></td>";
 					}
+					//adding row label
+					else if (j == i - 1)
+					{
+						htmlstring += "<th id='specialHeader_" + i + "' class='black'></th>";
+					}
+					//adding row label
+					else if (j == g_data.maxpts + 1)
+					{
+						htmlstring += "<th id='rowHeader_" + i + "'>" + i + "</th>";
+					}
+					//color in green squares
+					else if (matrix[i][j].count > 0)
+					{
+						//htmlstring += "<td id='cell_" + i + "-" + j + "' class='green'><a href='https://www.pro-football-reference.com/boxscores/game_scores_find.cgi?pts_win=" + j + "&pts_lose=" + i +"'><div id='hover_" + i + "-" + j + "' class='hover'><div id='count_" + i + "-" + j + "' class='count'>" + matrix[i][j].count + "</div></div></a></td>";
+						htmlstring += "<td id='cell_" + i + "-" + j + "' class='green'><div id='hover_" + i + "-" + j + "' class='hover'><div id='count_" + i + "-" + j + "' class='count'>" + matrix[i][j].count + "</div></div></td>";
+					}
+					//fill in empty squares
 					else
 					{
-						htmlstring += "<td id='cell_" + i + "-" + j + "' class='blank'><div id='hover_" + i + "-" + j + "' class='hover'></div></td>";
+						//color black squares for impossible scores along 1 point line
+						//NOTE: we can do this after coloring in the green squares since these squares will never be green
+						if( i == 1)
+						{
+							switch (j)
+							{
+								case 1:
+								case 2: 
+								case 3: 
+								case 4:
+								case 5:
+								case 7: 
+									htmlstring += "<td class='black'></td>";
+									break;
+								default:
+									htmlstring += "<td id='cell_" + i + "-" + j + "' class='blank'><div id='hover_" + i + "-" + j + "' class='hover'></div></td>";
+									break;
+									
+							}
+						}
+						//color 0,1 square black since that is also impossible
+						//NOTE: we can do this after coloring in the green squares since this square will never be green
+						else if (i == 0 && j == 1)
+						{
+							htmlstring += "<td class='black'></td>";
+						}
+						else
+						{
+							htmlstring += "<td id='cell_" + i + "-" + j + "' class='blank'><div id='hover_" + i + "-" + j + "' class='hover'></div></td>";
+						}
 					}
 				}
 			}
+			htmlstring += "</tr>";
 		}
-		htmlstring += "</tr>";
-	}
-	table.innerHTML = htmlstring;
-	
-	var loadingTable = document.getElementById("loadingTable");
-	if(loadingTable)
-	{
-		loadingTable.classList.add("hidden");
+		table.innerHTML = htmlstring;
+		
+		var loadingTable = document.getElementById("loadingTable");
+		if(loadingTable)
+		{
+			loadingTable.classList.add("hidden");
+		}
+		
+		var body = document.getElementById("body");
+		if(body)
+		{
+			body.style.minWidth = table.getBoundingClientRect().width;
+		}
 	}
 	
 	//populate hue spectrum (because doing this manually would be tedious)
@@ -192,6 +202,7 @@ function setupEvents()
 			{
 				cell.addEventListener('mouseover', mouseOverDelegate(i, j));
 				cell.addEventListener('mouseout', mouseOffDelegate(i, j));
+				cell.addEventListener('click', onClickDelegate(i, j));
 			}
 		}
 	}
@@ -578,16 +589,6 @@ function mouseOff(i, j)
 {
 	for(var k = 0; k <= g_data.maxpts; k++)
 	{
-		// var cell = document.getElementById("cell_" + i + "-" + k);
-		// if(cell && k != j)
-		// {
-			// cell.classList.remove("adjhoverH");
-		// }
-		// var cell = document.getElementById("cell_" + k + "-" + j);
-		// if(cell && k != i)
-		// {
-			// cell.classList.remove("adjhoverV");
-		// }
 		var cell = document.getElementById("hover_" + i + "-" + k);
 		if(cell && k != j)
 		{
@@ -617,7 +618,133 @@ function mouseOff(i, j)
 	}
 }
 
+function onClick(i, j)
+{
+	var data = g_data.matrix[i][j];
+	var infoBox = document.getElementById("infoBox");
+	var cell = document.getElementById("cell_" + i + "-" + j);
+	if(infoBox)
+	{
+		infoBox.classList.add("hidden");
+	
+		if(cell && !cell.classList.contains("later") && data.count > 0)
+		{
+			var htmlString = "";
+			
+			htmlString += "<span id=infoBoxScore>Score: " + j + "-" + i + "</span> ";
+			if(data.count > 1)
+			{
+				htmlString += "(<a href='https://www.pro-football-reference.com/boxscores/game_scores_find.cgi?pts_win=" + j + "&pts_lose=" + i +"'>view all " + data.count + " games</a>)";
+			}
+			
+			htmlString += "<span id='infoBoxClose' onclick='closeInfoBox()'>(<u>close</u>)</span>";
+			
+			var dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+			var firstDate = new Date(data.first_date).toLocaleDateString("en-US", dateOptions);
+			
+			htmlString += "<br/>First Game: ";
+			if(i != j)
+			{
+				htmlString += "<b>"
+			}
+			htmlString += data.first_team_win + " " + j + " ";
+			if(i != j)
+			{
+				htmlString += "</b>"
+			}
+			if(data.first_team_win == data.first_team_home)
+			{
+				htmlString += "vs"
+			}
+			else
+			{
+				htmlString += "@"
+			}
+			htmlString += " " + i + " " + data.first_team_lose + " ";
+			htmlString += firstDate + " ";
+			htmlString += "(<a href='" + data.first_link + "'>boxscore</a>)<br/>";
+			
+			if(data.count > 1)
+			{
+				var lastDate = new Date(data.last_date).toLocaleDateString("en-US", dateOptions);
+				
+				htmlString += "Last Game: ";
+				if(i != j)
+				{
+					htmlString += "<b>"
+				}
+				htmlString += data.last_team_win + " " + j + " ";
+				if(i != j)
+				{
+					htmlString += "</b>"
+				}
+				if(data.last_team_win == data.last_team_home)
+				{
+					htmlString += "vs"
+				}
+				else
+				{
+					htmlString += "@"
+				}
+				htmlString += " " + i + " " + data.last_team_lose + " ";
+				htmlString += lastDate + " ";
+				htmlString += "(<a href='" + data.last_link + "'>boxscore</a>)<br/>";
+			}
+			infoBox.innerHTML = htmlString;
+			infoBox.classList.remove("hidden");
+			
+			infoBox.style.left = 0;
+			infoBox.style.right = "";
+			infoBox.style.top = 0;
+			
+			var cellRect = cell.getBoundingClientRect();
+			var infoBoxRect = infoBox.getBoundingClientRect();
+			var windowRight = window.pageXOffset + document.documentElement.clientWidth;
+			var boxLeft;
+			var boxRight;
+			if(window.pageXOffset + cellRect.x - (infoBoxRect.width + cellRect.width) / 2 + infoBoxRect.width > windowRight)
+			{
+				boxRight = document.body.offsetWidth - document.documentElement.clientWidth - window.pageXOffset;
+				boxLeft = Math.floor(windowRight - infoBoxRect.width);
+			}
+			else
+			{
+				boxLeft =  window.pageXOffset + cellRect.x - (infoBoxRect.width + cellRect.width) / 2;
+			}
+			if(boxLeft < window.pageXOffset)
+			{
+				 boxLeft = window.pageXOffset;
+			}
+			infoBox.style.left = boxLeft;
+			infoBox.style.right = boxRight;
+			infoBoxRect = infoBox.getBoundingClientRect();
+			if(cellRect.y - 2 * infoBoxRect.height - 10 < 0)
+			{
+				infoBox.style.top = window.pageYOffset + cellRect.y + cellRect.height - 10; // - 10 is because browsers were adding 10 for some reason
+			}
+			else
+			{
+				infoBox.style.top = window.pageYOffset + cellRect.y - infoBoxRect.height - 10; // - 10 is because browsers were adding 10 for some reason
+			}
+		}
+	}
+}
+
+function closeInfoBox()
+{
+	var infoBox = document.getElementById("infoBox");
+	if(infoBox)
+	{
+		infoBox.classList.add("hidden");
+	}
+}
+
 //delegate functions to make it possible to create event liteners in a loop
+function onClickDelegate(i, j) {
+  return function(){
+      onClick(i, j);
+  }
+}
 function mouseOverDelegate(i, j) {
   return function(){
       mouseOver(i, j);

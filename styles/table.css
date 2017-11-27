@@ -11,10 +11,12 @@ body{
 	background-color: green;
 	color: white;
 	text-align: center;
+   cursor: pointer;
 }
 
 .green.later{
 	background-color: white !important;
+   cursor: default;
 }
 
 .green.red{
@@ -23,11 +25,6 @@ body{
 
 .green.later .count{
 	display:none;
-}
-
-.green.later a{
-	pointer-events: none;
-   cursor: default;
 }
 
 .hover:hover{

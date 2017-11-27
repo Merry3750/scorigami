@@ -276,7 +276,10 @@ function getData()
 			}
 			json = newjson;
 			matrix = newmatrix;
-			lastUpdated = new Date().toUTCString();
+			var dateOptions = { weekday: 'short', year:'numeric', month:'short', day:'numeric',  hour:'numeric', minute:'numeric', second:'numeric', timeZoneName:'short'};
+			//lastUpdated = new Date().toUTCString();
+			lastUpdated = new Date().toLocaleDateString("en-US", dateOptions);
+			
 			console.log("done " + lastUpdated);
 		}
 		else
