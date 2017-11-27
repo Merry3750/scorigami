@@ -4,6 +4,10 @@ h1{
 	font-size: 3em;
 }
 
+h2 {
+	margin:0;
+}
+
 
 .select{
 	text-align: center;
@@ -26,10 +30,19 @@ footer{
 	padding: 5px 0;
 	background-color:#999999;
 	margin-top:10px;
+	width:100%;
 }
 
 body{
 	margin:0;
+}
+
+.hidden{
+	display:none;
+}
+
+.invisible{
+	visibility:hidden;
 }
 
 .outer-wrapper{ position: relative; float: right; right: 50%; }

@@ -296,6 +296,29 @@ function changeMode()
 			break;
 	}
 	
+	var spectrumLogarithmic = document.getElementById("hueSpectrumLogarithmic");
+	var spectrumLinear = document.getElementById("hueSpectrumLinear");
+	if(spectrumLogarithmic && spectrumLinear)
+	{
+		switch(mode)
+		{
+			case MODE_FIRST_GAME:
+			case MODE_LAST_GAME:
+				spectrumLogarithmic.classList.remove("invisible");
+				spectrumLogarithmic.classList.add("hidden");
+				spectrumLinear.classList.remove("hidden");
+				spectrumLinear.classList.add("invisible");
+				break;
+			case MODE_COUNT:
+			default:
+				spectrumLogarithmic.classList.add("invisible");
+				spectrumLogarithmic.classList.remove("hidden");
+				spectrumLinear.classList.add("hidden");
+				spectrumLinear.classList.remove("invisible");
+				break;
+		}
+	}
+	
 	toggleNumber(countSwitch.checked);
 	toggleGradient(gradientSwitch.checked);
 	toggleEmptyRows(emptyRowsSwitch.checked);
@@ -306,7 +329,7 @@ function showSlider()
 	var sliderContainer = document.getElementById("sliderContainer");
 	if(sliderContainer)
 	{
-		sliderContainer.classList.remove("hidden");
+		sliderContainer.classList.remove("invisible");
 	}
 	changeYearSlider();
 }
@@ -316,7 +339,7 @@ function hideSlider()
 	var sliderContainer = document.getElementById("sliderContainer");
 	if(sliderContainer)
 	{
-		sliderContainer.classList.add("hidden");
+		sliderContainer.classList.add("invisible");
 	}
 	
 	for(var i = 0; i <= g_data.maxpts; i++)
@@ -439,27 +462,27 @@ function toggleGradient(on)
 		}
 	}
 	var spectrumLogarithmic = document.getElementById("hueSpectrumLogarithmic");
-	if(spectrumLogarithmic)
+	if(spectrumLogarithmic && mode == MODE_COUNT)
 	{
-		if(on && mode == MODE_COUNT)
+		if(on )
 		{
-			spectrumLogarithmic.classList.remove("hidden");
+			spectrumLogarithmic.classList.remove("invisible");
 		}
 		else
 		{
-			spectrumLogarithmic.classList.add("hidden");
+			spectrumLogarithmic.classList.add("invisible");
 		}
 	}
 	var spectrumLinear = document.getElementById("hueSpectrumLinear");
-	if(spectrumLinear)
+	if(spectrumLinear && (mode == MODE_FIRST_GAME || mode == MODE_LAST_GAME))
 	{
-		if(on && (mode == MODE_FIRST_GAME || mode == MODE_LAST_GAME))
+		if(on)
 		{
-			spectrumLinear.classList.remove("hidden");
+			spectrumLinear.classList.remove("invisible");
 		}
 		else
 		{
-			spectrumLinear.classList.add("hidden");
+			spectrumLinear.classList.add("invisible");
 		}
 	}
 }

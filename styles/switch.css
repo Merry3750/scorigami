@@ -61,13 +61,13 @@ input:checked + .switchSlider:before {
 
 .switchWrapper{
 	float:left;
-	margin: 10px;
+	margin: 0 10px;
 }
 
 .switchText{
 	line-height: var(--switch-height);
 	height: var(--switch-height);
-	float:right;
+	float: right;
 	padding-left: 2px;
 	/* display:inline-block; */
 }
@@ -77,15 +77,18 @@ input:checked + .switchSlider:before {
 
 #sliderContainer{
 	margin: 5px auto;
-    width: 100%;
+   width: 100%;
 	max-width: 1000px;
 	text-align: center;
+	font-weight:bold;
+	height: var(--switch-height);
+	line-height: var(--switch-height);
 }
 
 .slider {
     -webkit-appearance: none;
     height: 15px;
-    width: 100%;
+    width: 90%;
     border-radius: 5px;   
     background: #d3d3d3;
     outline: none;
@@ -97,16 +100,16 @@ input:checked + .switchSlider:before {
 .slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 20px;
-    height: 20px;
+    width: var(--switch-height);
+    height: var(--switch-height);
     border-radius: 50%; 
     background: #2196F3;
     cursor: pointer;
 }
 
 .slider::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
+    width: var(--switch-height);
+    height: var(--switch-height);
     border-radius: 50%;
     background: #2196F3;
     cursor: pointer;

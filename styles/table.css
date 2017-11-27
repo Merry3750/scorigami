@@ -2,10 +2,6 @@ body{
 	font-family: sans-serif;
 }
 
-.hidden{
-	display:none;
-}
-
 .black {
 	background-color: black;
 	color: white;
@@ -27,6 +23,11 @@ body{
 
 .green.later .count{
 	display:none;
+}
+
+.green.later a{
+	pointer-events: none;
+   cursor: default;
 }
 
 .hover:hover{
