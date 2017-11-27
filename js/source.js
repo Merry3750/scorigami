@@ -679,7 +679,7 @@ function onClick(i, j)
 			{
 				htmlString += "@"
 			}
-			htmlString += " " + i + " " + data.first_team_lose + " ";
+			htmlString += " " + i + " " + data.first_team_lose + " | ";
 			htmlString += firstDate + " ";
 			htmlString += "(<a href='" + data.first_link + "'>boxscore</a>)<br/>";
 			
@@ -705,7 +705,7 @@ function onClick(i, j)
 				{
 					htmlString += "@"
 				}
-				htmlString += " " + i + " " + data.last_team_lose + " ";
+				htmlString += " " + i + " " + data.last_team_lose + " | ";
 				htmlString += lastDate + " ";
 				htmlString += "(<a href='" + data.last_link + "'>boxscore</a>)<br/>";
 			}
