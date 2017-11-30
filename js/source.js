@@ -767,7 +767,7 @@ function hideHelper()
 	}
 }
 
-//delegate functions to make it possible to create event liteners in a loop
+//delegate functions to make it possible to create event listeners in a loop
 function onClickDelegate(i, j) {
   return function(){
       onClick(i, j);
