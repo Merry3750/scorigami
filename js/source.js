@@ -661,7 +661,7 @@ function onClick(i, j)
 			var dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
 			var firstDate = new Date(data.first_date).toLocaleDateString("en-US", dateOptions);
 			
-			htmlString += "<br/>First Game: ";
+			htmlString += "<br/>Scorigami Achieved: ";
 			if(i != j)
 			{
 				htmlString += "<b>"
@@ -687,7 +687,7 @@ function onClick(i, j)
 			{
 				var lastDate = new Date(data.last_date).toLocaleDateString("en-US", dateOptions);
 				
-				htmlString += "Last Game: ";
+				htmlString += "Latest Game: ";
 				if(i != j)
 				{
 					htmlString += "<b>"
