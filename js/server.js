@@ -20,8 +20,8 @@ if(process.env.DEBUG)
 }
 
 const client = new Client({
-  connectionString: process.env.DATABASE_URL,
-  ssl: true,
+	connectionString: process.env.DATABASE_URL,
+	ssl: true,
 });
 
 client.connect();
@@ -95,7 +95,7 @@ function updateData()
 											//console.log("game " + game.eid + " not tracked because it has not ended");
 										}
 										//if there is a game in the second half, set secondHalf to true
-										if(game.q == 3 || game.q == 4)
+										if(game.q == 3 || game.q == 4 || game.q == 5)
 										{
 											secondHalf = true;
 										}
@@ -134,7 +134,7 @@ function updateData()
 													var loseTeam = teamParser.getFullName(homeWin ? game.v : game.h);
 													var homeTeam = teamParser.getFullName(game.h);
 													var awayTeam = teamParser.getFullName(game.v);
-													var date =  Math.floor(game.eid / 100).toString();
+													var date =	Math.floor(game.eid / 100).toString();
 													var gamelink = "https://www.pro-football-reference.com/boxscores/" + date + "0" + teamParser.getShorthandName(game.h) + ".htm";
 													date = date.substr(0, 4) + "-" + date.substr(4, 2) + "-" + date.substr(6, 2);
 													//if the game score has been achieved before (in database), increment the count and add it to the list of tracked games
@@ -276,7 +276,7 @@ function getData()
 			}
 			json = newjson;
 			matrix = newmatrix;
-			var dateOptions = { weekday: 'short', year:'numeric', month:'short', day:'numeric',  hour:'numeric', minute:'numeric', second:'numeric', timeZoneName:'short'};
+			var dateOptions = { weekday: 'short', year:'numeric', month:'short', day:'numeric',	hour:'numeric', minute:'numeric', second:'numeric', timeZoneName:'short'};
 			//lastUpdated = new Date().toUTCString();
 			lastUpdated = new Date().toLocaleDateString("en-US", dateOptions);
 			

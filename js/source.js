@@ -728,7 +728,7 @@ function onClick(i, j)
 			}
 			else
 			{
-				boxLeft =  window.pageXOffset + cellRect.x - (infoBoxRect.width + cellRect.width) / 2;
+				boxLeft =	window.pageXOffset + cellRect.x - (infoBoxRect.width + cellRect.width) / 2;
 			}
 			if(boxLeft < window.pageXOffset)
 			{
@@ -769,17 +769,17 @@ function hideHelper()
 
 //delegate functions to make it possible to create event listeners in a loop
 function onClickDelegate(i, j) {
-  return function(){
-      onClick(i, j);
-  }
+	return function(){
+			onClick(i, j);
+	}
 }
 function mouseOverDelegate(i, j) {
-  return function(){
-      mouseOver(i, j);
-  }
+	return function(){
+			mouseOver(i, j);
+	}
 }
 function mouseOffDelegate(i, j) {
-  return function(){
-      mouseOff(i, j);
-  }
+	return function(){
+			mouseOff(i, j);
+	}
 }

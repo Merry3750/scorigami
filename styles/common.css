@@ -50,7 +50,7 @@ footer{
 	border-radius:3px;
 	text-align:center;
 	border:1px solid black;
-   cursor: pointer;
+	cursor: pointer;
 
 	-webkit-transition: opacity 1s ease-in-out;
 	-moz-transition: opacity 1s ease-in-out;
@@ -67,7 +67,7 @@ footer{
 }
 
 #helper.hide-opacity{
-    opacity: 0;
+	opacity: 0;
 }
 
 #infoBoxScore{
@@ -78,7 +78,7 @@ footer{
 #infoBoxClose{
 	font-size: 9px;
 	float: right;
-   cursor: pointer;
+	cursor: pointer;
 }
 
 body{

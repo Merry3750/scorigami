@@ -1,19 +1,19 @@
 {
-  "name": "scorigami",
-  "version": "1.0.0",
-  "description": "All NFL scores ever",
-  "main": "js/server.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node js/server.js"
-  },
-  "author": "Andrew Merriman",
-  "license": "ISC",
-  "dependencies": {
-    "cheerio": "^1.0.0-rc.2",
-    "dotenv": "^4.0.0",
-    "express": "^4.15.4",
-    "pg": "^7.3.0",
-    "request": "^2.82.0"
-  }
+	"name": "scorigami",
+	"version": "1.0.0",
+	"description": "All NFL scores ever",
+	"main": "js/server.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "node js/server.js"
+	},
+	"author": "Andrew Merriman",
+	"license": "ISC",
+	"dependencies": {
+		"cheerio": "^1.0.0-rc.2",
+		"dotenv": "^4.0.0",
+		"express": "^4.15.4",
+		"pg": "^7.3.0",
+		"request": "^2.82.0"
+	}
 }

@@ -11,12 +11,12 @@ body{
 	background-color: green;
 	color: white;
 	text-align: center;
-   cursor: pointer;
+	cursor: pointer;
 }
 
 .green.later{
 	background-color: white !important;
-   cursor: default;
+	cursor: default;
 }
 
 .green.red{
@@ -58,13 +58,6 @@ th, td{
 	line-height:12px;
 	padding: 0;
 	margin: 0;
-	-webkit-touch-callout: none; /* iOS Safari */
-	-webkit-user-select: none; /* Safari */
-	-khtml-user-select: none; /* Konqueror HTML */
-	-moz-user-select: none; /* Firefox */
-	-ms-user-select: none; /* Internet Explorer/Edge */
-	user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
-	
 }
 
 th{
