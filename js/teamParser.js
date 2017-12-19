@@ -159,7 +159,7 @@ function getShorthandName(string)
 			return "ram";
 			break;
 		case "LAC":
-			return "ram";
+			return "sdg";
 			break;
 		case "MIA":
 			return "mia";
