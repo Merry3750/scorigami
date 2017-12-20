@@ -68,11 +68,26 @@ th, td{
 }
 
 th{
-	font-size:11px;
+	font-size: 11px;
 }
 
 td{
-	font-size:8px;
+	font-size: 8px;
+}
+
+td.axisLabel{
+	font-size: 13px;
+	text-align: center;
+	font-weight: bold;
+}
+
+td#vAxisLabel{
+	padding-top: 12px;
+}
+
+.vertical{
+	white-space: nowrap;
+	writing-mode: tb-rl;
 }
 
 table{

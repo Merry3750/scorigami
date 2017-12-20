@@ -50,6 +50,9 @@ function render()
 	{
 		var htmlstring = "";
 		
+		htmlstring += "<tr><td id='hAxisLabel' class='axisLabel' colspan=" + (g_data.maxpts + 2) + ">Winning Team Score</td>";
+		htmlstring += "<td id='vAxisLabel' class='axisLabel' rowspan=" + (g_data.maxpts + 3) + "><div class='vertical'>Losing Team Score</div></td></tr>";
+
 		//cycle through all elements in the table (maxpts will always be the length and width of the matrix)
 		//start at -1 so labels can be added
 		for(var i = -1; i <= g_data.maxpts; i++)
