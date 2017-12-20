@@ -687,7 +687,7 @@ function onClick(i, j)
 			{
 				var lastDate = new Date(data.last_date).toLocaleDateString("en-US", dateOptions);
 				
-				htmlString += "Last Game: ";
+				htmlString += "Latest Game: ";
 				if(i != j)
 				{
 					htmlString += "<b>"
