@@ -6,6 +6,13 @@ var MODE_COUNT = "count";
 var MODE_FIRST_GAME = "firstGame";
 var MODE_LAST_GAME = "lastGame";
 
+var debug = window.location.href.startsWith("http://localhost");
+
+if(debug)
+{
+	document.title = "Scorigami (DEBUG)";
+}
+
 $.ajax({
 	url: '/data',						
 	success: function(data) {
@@ -43,6 +50,7 @@ function checkReady()
 //sets up table
 function render()
 {
+
 	var matrix = g_data.matrix;
 	
 	var table = document.getElementById('scoreTable');
