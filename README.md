@@ -21,7 +21,7 @@ A step by step series of examples that tell you have to get a development env ru
 Clone the repository and install dependencies
 
 ```
-git clone git@github.com:ACMerriman/scorigami.git # or clone your own fork
+git clone https://github.com/ACMerriman/scorigami.git # or clone your own fork
 cd scorigami
 npm install
 ```
@@ -29,7 +29,7 @@ npm install
 go to /js/dbVars.js and change DATABASE_URL to your database URL. You may also change ADD_DEBUG_TABLES, but it is recommended you keep it true unless you have limited space. 
 
 ```
-var DATABASE_URL = "postgres://{{USERNAME}}:{{PASSWORD}}@{{SERVER HOST}}:{{PORT}}/{{DATABASE NAME}}"; //
+var DATABASE_URL = "postgres://{{USERNAME}}:{{PASSWORD}}@{{SERVER HOST}}:{{PORT}}/{{DATABASE NAME}}";
 var ADD_DEBUG_TABLES = true; //creates a second set of tables, identical to the first set that can be used for testing
 ```
 
