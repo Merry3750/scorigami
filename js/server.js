@@ -22,14 +22,16 @@ if(process.env.DEBUG)
 }
 
 var DATABASE_URL = process.env.DATABASE_URL;
+var ssl = true;
 if(!DATABASE_URL)
 {
 	DATABASE_URL = dbVars.DATABASE_URL;
+	ssl = false;
 }
 
 const client = new Client({
 	connectionString: DATABASE_URL,
-	ssl: true,
+	ssl: ssl,
 });
 
 client.connect();
