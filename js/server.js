@@ -7,6 +7,7 @@ const { Client } = require("pg");
 require("dotenv").load();
 var request = require("request");
 var teamParser = require("./teamParser.js");
+var dbVars = require("./dbVars");
 
 var url = "http://www.nfl.com/liveupdate/scorestrip/ss.json";
 
@@ -20,8 +21,14 @@ if(process.env.DEBUG)
 	metadataTable = "metadata_DEBUG";
 }
 
+var DATABASE_URL = process.env.DATABASE_URL;
+if(!DATABASE_URL)
+{
+	DATABASE_URL = dbVars.DATABASE_URL;
+}
+
 const client = new Client({
-	connectionString: process.env.DATABASE_URL,
+	connectionString: DATABASE_URL,
 	ssl: true,
 });
 

@@ -4,9 +4,6 @@ const { Client } = require("pg");
 var request = require("request");
 var dbVars = require("./dbVars");
 
-//BEGIN EDITABLE VARIABLES
-//END EDITABLE VARIABLES
-
 const client = new Client({
 	connectionString: dbVars.DATABASE_URL,
 });
