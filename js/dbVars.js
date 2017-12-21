@@ -1,0 +1,9 @@
+"use strict";
+
+var DATABASE_URL = "postgres://{{USERNAME}}:{{PASSWORD}}@{{SERVER HOST}}:{{PORT}}/{{DATABASE NAME}}";
+var ADD_DEBUG_TABLES = true;
+
+module.exports = {
+	DATABASE_URL: DATABASE_URL,
+	ADD_DEBUG_TABLES: ADD_DEBUG_TABLES
+};

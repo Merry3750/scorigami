@@ -2,19 +2,18 @@
 
 const { Client } = require("pg");
 var request = require("request");
+var dbVars = require("./dbVars");
 
 //BEGIN EDITABLE VARIABLES
-var DATABASE_URL = "postgres://{{USERNAME}}:{{PASSWORD}}@{{SERVER HOST}}:{{PORT}}/{{DATABASE NAME}}";
-var ADD_DEBUG_TABLES = true;
 //END EDITABLE VARIABLES
 
 const client = new Client({
-	connectionString: DATABASE_URL,
+	connectionString: dbVars.DATABASE_URL,
 });
 
 client.connect();
 
-var numTables = (ADD_DEBUG_TABLES ? 4 : 2);
+var numTables = (dbVars.ADD_DEBUG_TABLES ? 4 : 2);
 var numDone = 0;
 
 request("http://nflscorigami.com/copydb", function(error, response, data)
@@ -75,7 +74,7 @@ request("http://nflscorigami.com/copydb", function(error, response, data)
 		}
 	});
 
-	if(ADD_DEBUG_TABLES)
+	if(dbVars.ADD_DEBUG_TABLES)
 	{
 		queryString = queryString.split("scores").join("scores_DEBUG");
 		client.query(queryString, (err, res) => 
