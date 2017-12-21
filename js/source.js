@@ -1,3 +1,5 @@
+"use strict";
+
 var g_data;
 var MAX_HUE = 240.0;
 var mode;
@@ -14,7 +16,7 @@ if(debug)
 }
 
 $.ajax({
-	url: '/data',						
+	url: "/data",						
 	success: function(data) {
 		//console.log('success');
 		//console.log(data);
@@ -23,7 +25,7 @@ $.ajax({
 		checkReady();
 	},
 	error: function(data) {
-		console.log('error');
+		console.log("error");
 		console.log(data);
 		
 		// two arguments: the id of the Timeline container (no '#')
@@ -53,7 +55,7 @@ function render()
 
 	var matrix = g_data.matrix;
 	
-	var table = document.getElementById('scoreTable');
+	var table = document.getElementById("scoreTable");
 	if(table)
 	{
 		var htmlstring = "";
@@ -68,8 +70,8 @@ function render()
 			htmlstring += "<tr id='row_" + i + "'>";
 			for(var j = 0; j <= g_data.maxpts + 1; j++)
 			{
-				//if i==-1, we are in the label row
-				if(i == -1)
+				//if i===-1, we are in the label row
+				if(i === -1)
 				{
 					//do not label the top right cell, since the left column is all labels
 					if (j > g_data.maxpts)
@@ -90,12 +92,12 @@ function render()
 						htmlstring += "<td class='black'></td>";
 					}
 					//adding row label
-					else if (j == i - 1)
+					else if (j === i - 1)
 					{
 						htmlstring += "<th id='specialHeader_" + i + "' class='black'></th>";
 					}
 					//adding row label
-					else if (j == g_data.maxpts + 1)
+					else if (j === g_data.maxpts + 1)
 					{
 						htmlstring += "<th id='rowHeader_" + i + "'>" + i + "</th>";
 					}
@@ -110,15 +112,20 @@ function render()
 					{
 						//color black squares for impossible scores along 1 point line
 						//NOTE: we can do this after coloring in the green squares since these squares will never be green
-						if( i == 1)
+						if( i === 1)
 						{
 							switch (j)
 							{
 								case 1:
+									/* falls through */
 								case 2: 
+									/* falls through */
 								case 3: 
+									/* falls through */
 								case 4:
+									/* falls through */
 								case 5:
+									/* falls through */
 								case 7: 
 									htmlstring += "<td class='black'></td>";
 									break;
@@ -130,7 +137,7 @@ function render()
 						}
 						//color 0,1 square black since that is also impossible
 						//NOTE: we can do this after coloring in the green squares since this square will never be green
-						else if (i == 0 && j == 1)
+						else if (i === 0 && j === 1)
 						{
 							htmlstring += "<td class='black'></td>";
 						}
@@ -177,8 +184,8 @@ function render()
 	}
 	
 	//populate hue spectrum (because doing this manually would be tedious)
-	htmlstringLogarithmic = "";
-	htmlstringLinear = "";
+	var htmlstringLogarithmic = "";
+	var htmlstringLinear = "";
 	//var cssString = "background: linear-gradient(to right";
 	var hueSpectrumLogarithmicColors = document.getElementById("hueSpectrumLogarithmicColors");
 	var hueSpectrumLinearColors = document.getElementById("hueSpectrumLinearColors");
@@ -206,7 +213,7 @@ function render()
 		hueSpectrumLinearLabelMaxCount.innerHTML = new Date().getFullYear();
 	}
 	
-	var video = document.getElementById("video")
+	var video = document.getElementById("video");
 	if(video)
 	{
 		video.src = "https://www.youtube.com/embed/9l5C8cGMueY?rel=0";
@@ -229,9 +236,9 @@ function setupEvents()
 			var cell = document.getElementById("cell_" + i + "-" + j);
 			if(cell)
 			{
-				cell.addEventListener('mouseover', mouseOverDelegate(i, j));
-				cell.addEventListener('mouseout', mouseOffDelegate(i, j));
-				cell.addEventListener('click', onClickDelegate(i, j));
+				cell.addEventListener("mouseover", mouseOverDelegate(i, j));
+				cell.addEventListener("mouseout", mouseOffDelegate(i, j));
+				cell.addEventListener("click", onClickDelegate(i, j));
 			}
 		}
 	}
@@ -240,25 +247,25 @@ function setupEvents()
 	if(modeSelector)
 	{
 		mode = modeSelector.options[modeSelector.selectedIndex].value;
-		modeSelector.addEventListener('change', function(e){changeMode();});
+		modeSelector.addEventListener("change", function(e){changeMode();});
 	}
 	
 	var countSwitch = document.getElementById("countSwitch");
 	if(countSwitch)
 	{
-		countSwitch.addEventListener('change', function(e){toggleNumber(e.target.checked);});
+		countSwitch.addEventListener("change", function(e){toggleNumber(e.target.checked);});
 	}
 	
 	var gradientSwitch = document.getElementById("gradientSwitch");
 	if(gradientSwitch)
 	{
-		gradientSwitch.addEventListener('change', function(e){toggleGradient(e.target.checked);});
+		gradientSwitch.addEventListener("change", function(e){toggleGradient(e.target.checked);});
 	}
 	
 	var emptyRowsSwitch = document.getElementById("emptyRowsSwitch");
 	if(emptyRowsSwitch)
 	{
-		emptyRowsSwitch.addEventListener('change', function(e){toggleEmptyRows(e.target.checked);});
+		emptyRowsSwitch.addEventListener("change", function(e){toggleEmptyRows(e.target.checked);});
 	}
 	
 	var yearSlider = document.getElementById("yearSlider");
@@ -267,14 +274,14 @@ function setupEvents()
 		var date = new Date().getFullYear();
 		yearSlider.max = date;
 		yearSlider.value = date;
-		yearSlider.addEventListener('input', function(e){(changeYearSlider());});
+		yearSlider.addEventListener("input", function(e){(changeYearSlider());});
 	}
 	
 	changeMode();
 }
 
 function changeMode()
-{
+{	
 	var modeSelector = document.getElementById("modeSelector");
 	if(modeSelector)
 	{
@@ -299,6 +306,7 @@ function changeMode()
 						div.style.fontSize="6px";
 						break;
 					case MODE_COUNT:
+						/* falls through */
 					default:
 						div.innerHTML = g_data.matrix[i][j].count;
 						div.style.fontSize="8px";
@@ -314,10 +322,12 @@ function changeMode()
 		switch(mode)
 		{
 			case MODE_FIRST_GAME:
+				/* falls through */
 			case MODE_LAST_GAME:
 				countSwitchText.innerHTML = "Show Year";
 				break;
 			case MODE_COUNT:
+						/* falls through */
 			default:
 				countSwitchText.innerHTML = "Show Count";
 				break;
@@ -330,7 +340,9 @@ function changeMode()
 			showSlider();
 			break;
 		case MODE_LAST_GAME:
+			/* falls through */
 		case MODE_COUNT:
+			/* falls through */
 		default:
 			hideSlider();
 			break;
@@ -343,6 +355,7 @@ function changeMode()
 		switch(mode)
 		{
 			case MODE_FIRST_GAME:
+				/* falls through */
 			case MODE_LAST_GAME:
 				spectrumLogarithmic.classList.remove("invisible");
 				spectrumLogarithmic.classList.add("hidden");
@@ -350,6 +363,7 @@ function changeMode()
 				spectrumLinear.classList.add("invisible");
 				break;
 			case MODE_COUNT:
+				/* falls through */
 			default:
 				spectrumLogarithmic.classList.add("invisible");
 				spectrumLogarithmic.classList.remove("hidden");
@@ -358,6 +372,10 @@ function changeMode()
 				break;
 		}
 	}
+
+	var countSwitch = document.getElementById("countSwitch");
+	var gradientSwitch = document.getElementById("gradientSwitch");
+	var emptyRowsSwitch = document.getElementById("emptyRowsSwitch");
 	
 	toggleNumber(countSwitch.checked);
 	toggleGradient(gradientSwitch.checked);
@@ -398,7 +416,7 @@ function hideSlider()
 
 function changeYearSlider()
 {
-	var value = document.getElementById("yearSlider").value;
+	var value = parseInt(document.getElementById("yearSlider").value);
 	
 	var sliderValue = document.getElementById("sliderValue");
 	if(sliderValue)
@@ -413,13 +431,13 @@ function changeYearSlider()
 			var cell = document.getElementById("cell_" + i + "-" + j);
 			if(cell && cell.classList.contains("green"))
 			{
-				var year = parseInt(g_data.matrix[i][j].first_date.substr(0,4))
+				var year = parseInt(g_data.matrix[i][j].first_date.substr(0,4));
 				if(year > value)
 				{
 					cell.classList.add("later");
 					cell.classList.remove("red");
 				}
-				else if (year == value)
+				else if (year === value)
 				{
 					cell.classList.add("red");
 					cell.classList.remove("later");
@@ -441,16 +459,18 @@ function toggleGradient(on)
 	var matrix = g_data.matrix;
 	
 	var max;
-	var min
+	var min;
 	
 	switch(mode)
 	{
 		case MODE_FIRST_GAME:
+			/* falls through */
 		case MODE_LAST_GAME:
 			max = new Date().getFullYear();
 			min = 1920;
 			break;
 		case MODE_COUNT:
+			/* falls through */
 		default:
 			max = Math.log(g_data.maxcount);
 			min = 0;
@@ -483,8 +503,9 @@ function toggleGradient(on)
 								hue = MAX_HUE - MAX_HUE * (year - min) / (max - min);
 								break;
 							case MODE_COUNT:
+								/* falls through */
 							default:
-								var hue = MAX_HUE - MAX_HUE * Math.log(matrix[i][j].count) / max;
+								hue = MAX_HUE - MAX_HUE * Math.log(matrix[i][j].count) / max;
 								break;
 						}
 						cell.style.backgroundColor = "hsl(" + hue + ",50%,50%)";
@@ -502,7 +523,7 @@ function toggleGradient(on)
 		}
 	}
 	var spectrumLogarithmic = document.getElementById("hueSpectrumLogarithmic");
-	if(spectrumLogarithmic && mode == MODE_COUNT)
+	if(spectrumLogarithmic && mode === MODE_COUNT)
 	{
 		if(on )
 		{
@@ -514,7 +535,7 @@ function toggleGradient(on)
 		}
 	}
 	var spectrumLinear = document.getElementById("hueSpectrumLinear");
-	if(spectrumLinear && (mode == MODE_FIRST_GAME || mode == MODE_LAST_GAME))
+	if(spectrumLinear && (mode === MODE_FIRST_GAME || mode === MODE_LAST_GAME))
 	{
 		if(on)
 		{
@@ -585,12 +606,12 @@ function mouseOver(i, j)
 			// cell.classList.add("adjhoverV");
 		// }
 		var cell = document.getElementById("hover_" + i + "-" + k);
-		if(cell && k != j)
+		if(cell && k !== j)
 		{
 			cell.classList.add("adjhover");
 		}
-		var cell = document.getElementById("hover_" + k + "-" + j);
-		if(cell && k != i)
+		cell = document.getElementById("hover_" + k + "-" + j);
+		if(cell && k !== i)
 		{
 			cell.classList.add("adjhover");
 		}
@@ -619,12 +640,12 @@ function mouseOff(i, j)
 	for(var k = 0; k <= g_data.maxpts; k++)
 	{
 		var cell = document.getElementById("hover_" + i + "-" + k);
-		if(cell && k != j)
+		if(cell && k !== j)
 		{
 			cell.classList.remove("adjhover");
 		}
-		var cell = document.getElementById("hover_" + k + "-" + j);
-		if(cell && k != i)
+		cell = document.getElementById("hover_" + k + "-" + j);
+		if(cell && k !== i)
 		{
 			cell.classList.remove("adjhover");
 		}
@@ -669,26 +690,26 @@ function onClick(i, j)
 			
 			htmlString += "<span id='infoBoxClose' onclick='closeInfoBox()'>(<u>close</u>)</span>";
 			
-			var dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+			var dateOptions = { year: "numeric", month: "long", day: "numeric" };
 			var firstDate = new Date(data.first_date).toLocaleDateString("en-US", dateOptions);
 			
 			htmlString += "<br/>First Game: ";
-			if(i != j)
+			if(i !== j)
 			{
-				htmlString += "<b>"
+				htmlString += "<b>";
 			}
 			htmlString += data.first_team_win + " " + j + " ";
-			if(i != j)
+			if(i !== j)
 			{
-				htmlString += "</b>"
+				htmlString += "</b>";
 			}
-			if(data.first_team_win == data.first_team_home)
+			if(data.first_team_win === data.first_team_home)
 			{
-				htmlString += "vs"
+				htmlString += "vs";
 			}
 			else
 			{
-				htmlString += "@"
+				htmlString += "@";
 			}
 			htmlString += " " + i + " " + data.first_team_lose + " | ";
 			htmlString += firstDate + " ";
@@ -699,22 +720,22 @@ function onClick(i, j)
 				var lastDate = new Date(data.last_date).toLocaleDateString("en-US", dateOptions);
 				
 				htmlString += "Latest Game: ";
-				if(i != j)
+				if(i !== j)
 				{
-					htmlString += "<b>"
+					htmlString += "<b>";
 				}
 				htmlString += data.last_team_win + " " + j + " ";
-				if(i != j)
+				if(i !== j)
 				{
-					htmlString += "</b>"
+					htmlString += "</b>";
 				}
-				if(data.last_team_win == data.last_team_home)
+				if(data.last_team_win === data.last_team_home)
 				{
-					htmlString += "vs"
+					htmlString += "vs";
 				}
 				else
 				{
-					htmlString += "@"
+					htmlString += "@";
 				}
 				htmlString += " " + i + " " + data.last_team_lose + " | ";
 				htmlString += lastDate + " ";
@@ -760,6 +781,7 @@ function onClick(i, j)
 	}
 }
 
+/* exported closeInfoBox */
 function closeInfoBox()
 {
 	var infoBox = document.getElementById("infoBox");
@@ -767,7 +789,7 @@ function closeInfoBox()
 	{
 		infoBox.classList.add("hidden");
 	}
-}
+} 
 
 function hideHelper()
 {
@@ -779,18 +801,24 @@ function hideHelper()
 }
 
 //delegate functions to make it possible to create event listeners in a loop
-function onClickDelegate(i, j) {
-	return function(){
+function onClickDelegate(i, j) 
+{
+	return function()
+	{
 			onClick(i, j);
-	}
+	};
 }
-function mouseOverDelegate(i, j) {
-	return function(){
+function mouseOverDelegate(i, j) 
+{
+	return function()
+	{
 			mouseOver(i, j);
-	}
+	};
 }
-function mouseOffDelegate(i, j) {
-	return function(){
+function mouseOffDelegate(i, j) 
+{
+	return function()
+	{
 			mouseOff(i, j);
-	}
+	};
 }

@@ -1,13 +1,14 @@
-var express = require('express');
+"use strict";
+
+var express = require("express");
 var app = express();
 var path = require("path");
-const { Client } = require('pg');
-require('dotenv').load();
-var request = require('request');
-var fs = require('fs');
+const { Client } = require("pg");
+require("dotenv").load();
+var request = require("request");
 var teamParser = require("./teamParser.js");
 
-var url = 'http://www.nfl.com/liveupdate/scorestrip/ss.json';
+var url = "http://www.nfl.com/liveupdate/scorestrip/ss.json";
 
 var scoresTable = "scores";
 var metadataTable = "metadata";
@@ -26,7 +27,7 @@ const client = new Client({
 
 client.connect();
 
-app.use(express.static(__dirname + '/..'));
+app.use(express.static(__dirname + "/.."));
 
 var json = [];
 var matrix = [];
@@ -45,7 +46,7 @@ function updateData()
 		{
 			data = JSON.parse(data);
 			//if the game is regular or post season, continue, otherwise (preseason) ignore it
-			if (data.t == "REG" || data.t == "POST")
+			if (data.t === "REG" || data.t === "POST")
 			{
 				//check the current week
 				client.query("SELECT data_int FROM " + metadataTable + " WHERE description='current_week';", (err1, res1) =>
@@ -54,9 +55,9 @@ function updateData()
 					{
 						var current_week = res1.rows[0].data_int;
 						//if the current week does not match the current tracked week, change the current week and delete the tracked games (we won't be needing them any more)
-						if(current_week != data.w)
+						if(current_week !== data.w)
 						{
-							client.query("UPDATE " + metadataTable + " SET data_int=" + data.w + " WHERE description='current_week';DELETE FROM " + metadataTable + " WHERE description='tracked_game';", (err2, res2) => {updateData()});
+							client.query("UPDATE " + metadataTable + " SET data_int=" + data.w + " WHERE description='current_week';DELETE FROM " + metadataTable + " WHERE description='tracked_game';", (err2, res2) => {updateData();});
 						}
 						else
 						{
@@ -71,13 +72,13 @@ function updateData()
 									for (let game of data.gms)
 									{
 										//if the game is not over, ignore it
-										if(game.q == "F")
+										if(game.q === "F")
 										{	
 											var tracked = false;
 											//if the game has already been tracked, ignore it
 											for (let row of res2.rows) 
 											{
-												if(game.eid == row.data_int)
+												if(game.eid === row.data_int)
 												{
 													tracked = true;
 													//console.log("game " + game.eid + " not tracked because it has already been tracked");
@@ -95,7 +96,7 @@ function updateData()
 											//console.log("game " + game.eid + " not tracked because it has not ended");
 										}
 										//if there is a game in the second half, set secondHalf to true
-										if(game.q == 3 || game.q == 4 || game.q == 5)
+										if(game.q === 3 || game.q === 4 || game.q === 5)
 										{
 											secondHalf = true;
 										}
@@ -125,7 +126,7 @@ function updateData()
 													var aCompleteFuckingMiracleHasHapppened = false;
 													for (let game2 of newgames)
 													{
-														if(game.hs == game2.hs && game.vs == game2.vs && game.eid > game2.eid)
+														if(game.hs === game2.hs && game.vs === game2.vs && game.eid > game2.eid)
 														{
 															aCompleteFuckingMiracleHasHapppened = true;
 														}
@@ -134,7 +135,7 @@ function updateData()
 													var loseTeam = teamParser.getFullName(homeWin ? game.v : game.h);
 													var homeTeam = teamParser.getFullName(game.h);
 													var awayTeam = teamParser.getFullName(game.v);
-													var date =	Math.floor(game.eid / 100).toString();
+													var date = Math.floor(game.eid / 100).toString();
 													var gamelink = "https://www.pro-football-reference.com/boxscores/" + date + "0" + teamParser.getShorthandName(game.h) + ".htm";
 													date = date.substr(0, 4) + "-" + date.substr(4, 2) + "-" + date.substr(6, 2);
 													//if the game score has been achieved before (in database), increment the count and add it to the list of tracked games
@@ -156,7 +157,7 @@ function updateData()
 													//if the game score has not been achieved before (not in database), add it to the database and add it to the list of tracked games
 													else
 													{
-														queryString += "INSERT INTO " + scoresTable + " (pts_win, pts_lose, count, first_date, first_team_win, first_team_lose, first_team_home, first_team_away, first_link, last_date, last_team_win, last_team_lose, last_team_home, last_team_away, last_link) "
+														queryString += "INSERT INTO " + scoresTable + " (pts_win, pts_lose, count, first_date, first_team_win, first_team_lose, first_team_home, first_team_away, first_link, last_date, last_team_win, last_team_lose, last_team_home, last_team_away, last_link) ";
 														queryString += "VALUES (" + pts_win;
 														queryString += ", " + pts_lose;
 														queryString += ", 1";
@@ -182,7 +183,6 @@ function updateData()
 														{
 															if(!err4)
 															{
-																updated = true;
 																getData();
 															}
 															else
@@ -201,7 +201,7 @@ function updateData()
 											});
 										})(game);
 									}
-									if(newgames.length == 0)
+									if(newgames.length === 0)
 									{
 										getData();
 									}
@@ -276,7 +276,7 @@ function getData()
 			}
 			json = newjson;
 			matrix = newmatrix;
-			var dateOptions = { weekday: 'short', year:'numeric', month:'short', day:'numeric',	hour:'numeric', minute:'numeric', second:'numeric', timeZoneName:'short'};
+			var dateOptions = { weekday: "short", year:"numeric", month:"short", day:"numeric", hour:"numeric", minute:"numeric", second:"numeric", timeZoneName:"short"};
 			//lastUpdated = new Date().toUTCString();
 			lastUpdated = new Date().toLocaleDateString("en-US", dateOptions);
 			
@@ -300,7 +300,7 @@ tick();
 
 setInterval(tick, 1000 * 60 * 60);
 	
-app.get('/data', function(req, res)
+app.get("/data", function(req, res)
 {
 	var data = {
 		matrix: matrix,
@@ -313,7 +313,7 @@ app.get('/data', function(req, res)
 	res.json(data);
 });
 
-app.get('/*', function(req, res)
+app.get("/*", function(req, res)
 {
 	res.sendFile(path.join(__dirname+"/../view/index.html"));
 });
