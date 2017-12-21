@@ -3,11 +3,13 @@
 const { Client } = require("pg");
 var request = require("request");
 
+//BEGIN EDITABLE VARIABLES
 var DATABASE_URL = "postgres://{{USERNAME}}:{{PASSWORD}}@{{SERVER HOST}}:{{PORT}}/{{DATABASE NAME}}";
 var ADD_DEBUG_TABLES = true;
+//END EDITABLE VARIABLES
 
 const client = new Client({
-	connectionString: DATABASE_URL
+	connectionString: DATABASE_URL,
 });
 
 client.connect();
@@ -147,7 +149,7 @@ function setupScoresTable(data, isDebugTable)
 		}
 		else
 		{
-			console.log("added scores table " + isDebugTable);
+			console.log("added scores table" + (isDebugTable ? " (DEBUG)" : ""));
 		}
 		checkDone();
 	});
@@ -181,7 +183,7 @@ function setupMetadataTable(data, isDebugTable)
 		}
 		else
 		{
-			console.log("added metadata table " + isDebugTable);
+			console.log("added metadata table" + (isDebugTable ? " (DEBUG)" : ""));
 		}
 		checkDone();
 	});
