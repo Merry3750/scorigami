@@ -29,13 +29,13 @@ client.connect();
 
 app.use(express.static(__dirname + "/.."));
 
-var json = [];
 var matrix = [];
 var maxpts = 0;
 var maxlosepts = 0;
 var maxcount = 0;
 var maxcount = 0;
 var lastUpdated;
+var tables = {scores:[], metadata:[]};
 
 function updateData()
 {
@@ -241,11 +241,11 @@ function getData()
 	{
 		if(!err)
 		{
-			var newjson = [];
+			var newScores = [];
 			var newmatrix = [];
 			for (let row of res.rows) 
 			{
-				newjson.push(row);
+				newScores.push(row);
 				if(row.pts_lose > maxlosepts)
 				{
 					maxlosepts = row.pts_lose;
@@ -270,11 +270,11 @@ function getData()
 				}
 			}
 			//fill matrix with useful data
-			for(var i = 0; i < newjson.length; i++)
+			for(var i = 0; i < newScores.length; i++)
 			{
-				newmatrix[newjson[i].pts_lose][newjson[i].pts_win] = newjson[i];
+				newmatrix[newScores[i].pts_lose][newScores[i].pts_win] = newScores[i];
 			}
-			json = newjson;
+			tables.scores = newScores;
 			matrix = newmatrix;
 			var dateOptions = { weekday: "short", year:"numeric", month:"short", day:"numeric", hour:"numeric", minute:"numeric", second:"numeric", timeZoneName:"short"};
 			//lastUpdated = new Date().toUTCString();
@@ -288,6 +288,19 @@ function getData()
 			throw err;
 		}
 		//renderPage();
+	});
+
+	client.query("SELECT * FROM " + metadataTable + ";", (err, res) =>
+	{
+		if(!err)
+		{
+			var newMetadata = [];
+			for (let row of res.rows) 
+			{
+				newMetadata.push(row);
+			}
+			tables.metadata = newMetadata;
+		}
 	});
 }
 
@@ -311,6 +324,11 @@ app.get("/data", function(req, res)
 	};
 	//console.log(data);
 	res.json(data);
+});
+	
+app.get("/copydb", function(req, res)
+{
+	res.json(tables);
 });
 
 app.get("/*", function(req, res)
