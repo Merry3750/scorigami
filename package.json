@@ -15,5 +15,8 @@
 		"express": "^4.15.4",
 		"pg": "^7.3.0",
 		"request": "^2.82.0"
+	},
+	"devDependencies": {
+		"jshint": "^2.9.5"
 	}
 }
