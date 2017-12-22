@@ -10,75 +10,77 @@
 	<link rel="icon" href="/favicon.ico" type="image/x-icon">
 </head>
 <body id="body">
-	<h1>NFL Scorigami</h1>
-	<div class="clearfix">
-		<div class='outer-wrapper'>
-			<div id='switchContainer' class='inner-wrapper'>
-				<div class="switchWrapper">
-					<label class="switch">
-						<input type="checkbox" id="countSwitch">
-						<span class="switchSlider"></span>
-					</label>
-					<div id="countSwitchText" class="switchText">Show Count</div>
-				</div>
-				<div class="switchWrapper">
-					<label class="switch">
-						<input type="checkbox" id="gradientSwitch">
-						<span class="switchSlider">
-						</span>
-					</label>
-					<div class="switchText">Show Gradient</div>
-				</div>
-				<div class="switchWrapper">
-					<label class="switch">
-						<input type="checkbox" id="emptyRowsSwitch">
-						<span class="switchSlider"></span>
-					</label>
-					<div class="switchText">Show Empty Rows</div>
-				</div>				
-				<div class="switchWrapper">
-					<select id="modeSelector">
-						<option value="count" selected disabled>Select a Mode</option>
-						<option value="count">Count</option>
-						<option value="firstGame">First Game</option>
-						<option value="lastGame">Latest Game</option>
-					</select>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div id='sliderContainer' class="invisible">
-		<input type="range" min="1920" max="" value="" class="slider" id="yearSlider">
-		<span id="sliderValue"></span>
-	</div>
-	<div id='tableContainer'>
-		<img id="loadingTable" src="../images/loading.gif" alt="Loading"/>
-		<table id="scoreTable">
-		</table>
+	<div id="content">
+		<h1>NFL Scorigami</h1>
 		<div class="clearfix">
 			<div class='outer-wrapper'>
-				<div id='hueSpectrumLogarithmic' class='inner-wrapper hueSpectrum invisible'>
-						<div id='hueSpectrumLogarithmicLabelMinCount'>1</div>
-						<div id="hueSpectrumLogarithmicColors">{{hueSpectrumLogarithmicColors}}</div>
-						<div id='hueSpectrumLogarithmicLabelMaxCount'>{{hueSpectrumLogarithmicLabelMaxCount}}</div>
-				</div>
-				<div id='hueSpectrumLinear' class='inner-wrapper hueSpectrum hidden'>
-						<div id='hueSpectrumLinearLabelMinCount'>1920</div>
-						<div id="hueSpectrumLinearColors">{{hueSpectrumLinearColors}}</div>
-						<div id='hueSpectrumLinearLabelMaxCount'>{{hueSpectrumLinearLabelMaxCount}}</div>
+				<div id='switchContainer' class='inner-wrapper'>
+					<div class="switchWrapper">
+						<label class="switch">
+							<input type="checkbox" id="countSwitch">
+							<span class="switchSlider"></span>
+						</label>
+						<div id="countSwitchText" class="switchText">Show Count</div>
+					</div>
+					<div class="switchWrapper">
+						<label class="switch">
+							<input type="checkbox" id="gradientSwitch">
+							<span class="switchSlider">
+							</span>
+						</label>
+						<div class="switchText">Show Gradient</div>
+					</div>
+					<div class="switchWrapper">
+						<label class="switch">
+							<input type="checkbox" id="emptyRowsSwitch">
+							<span class="switchSlider"></span>
+						</label>
+						<div class="switchText">Show Empty Rows</div>
+					</div>				
+					<div class="switchWrapper">
+						<select id="modeSelector">
+							<option value="count" selected disabled>Select a Mode</option>
+							<option value="count">Count</option>
+							<option value="firstGame">First Game</option>
+							<option value="lastGame">Latest Game</option>
+						</select>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-	<div class="text">
-		<h2>What is Scorigami?</h2>
-		<p style="margin-top:2px">Scorigami is a concept thought up by Jon Bois. It is the art of building final scores that have never happened before in NFL history. Due to the unique nature of how points are scored in (American) Football, where it is impossible to score 1 point on its own, as well as the rarity of the 2 point safety and 8 point touchdown and 2 point conversion, there are a lot of scores that are possible, but have never happened. For more info, check out the video made by Jon Bois about Scorigami below.</p>
-		<div style="text-align: center">
-			<iframe id='video' width="560" height="315" src="" frameborder="0" allowfullscreen></iframe>
+		<div id='sliderContainer' class="invisible">
+			<input type="range" min="1920" max="" value="" class="slider" id="yearSlider">
+			<span id="sliderValue"></span>
 		</div>
+		<div id='tableContainer'>
+			<img id="loadingTable" src="../images/loading.gif" alt="Loading"/>
+			<table id="scoreTable">
+			</table>
+			<div class="clearfix">
+				<div class='outer-wrapper'>
+					<div id='hueSpectrumLogarithmic' class='inner-wrapper hueSpectrum invisible'>
+							<div id='hueSpectrumLogarithmicLabelMinCount'>1</div>
+							<div id="hueSpectrumLogarithmicColors">{{hueSpectrumLogarithmicColors}}</div>
+							<div id='hueSpectrumLogarithmicLabelMaxCount'>{{hueSpectrumLogarithmicLabelMaxCount}}</div>
+					</div>
+					<div id='hueSpectrumLinear' class='inner-wrapper hueSpectrum hidden'>
+							<div id='hueSpectrumLinearLabelMinCount'>1920</div>
+							<div id="hueSpectrumLinearColors">{{hueSpectrumLinearColors}}</div>
+							<div id='hueSpectrumLinearLabelMaxCount'>{{hueSpectrumLinearLabelMaxCount}}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="text">
+			<h2>What is Scorigami?</h2>
+			<p style="margin-top:2px">Scorigami is a concept thought up by Jon Bois. It is the art of building final scores that have never happened before in NFL history. Due to the unique nature of how points are scored in (American) Football, where it is impossible to score 1 point on its own, as well as the rarity of the 2 point safety and 8 point touchdown and 2 point conversion, there are a lot of scores that are possible, but have never happened. For more info, check out the video made by Jon Bois about Scorigami below.</p>
+			<div style="text-align: center">
+				<iframe id='video' width="560" height="315" src="" frameborder="0" allowfullscreen></iframe>
+			</div>
+		</div>
+		<div id="helper" class="invisible" onclick="hideHelper()">Click on a cell for<br />additional info.</div>
+		<div id="infoBox" class="hidden"></div>
 	</div>
-	<div id="helper" class="invisible" onclick="hideHelper()">Click on a cell for<br />additional info.</div>
-	<div id="infoBox" class="hidden"></div>
 	<footer>
 		<span id=lastUpdated></span> Spot a bug? Let me know <a href="https://github.com/ACMerriman/scorigami">here</a>.
 	</footer>
