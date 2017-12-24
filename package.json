@@ -5,8 +5,8 @@
 	"main": "js/server.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"start": "node js/server.js",
-		"setup": "node js/copyDB_PG.js & git update-index --assume-unchanged js/dbVars.js"
+		"start": "node js/Node/server.js",
+		"setup": "node js/Node/copyDB_PG.js & git update-index --assume-unchanged js/Node/dbVars.js"
 	},
 	"author": "Andrew Merriman",
 	"license": "MIT",

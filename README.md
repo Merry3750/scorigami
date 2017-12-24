@@ -26,7 +26,7 @@ cd scorigami
 npm install
 ```
 
-go to /js/dbVars.js and change DATABASE_URL to your database URL. You may also change ADD_DEBUG_TABLES, but it is recommended you keep it true unless you have limited space. 
+go to /js/Node/dbVars.js and change DATABASE_URL to your database URL. You may also change ADD_DEBUG_TABLES, but it is recommended you keep it true unless you have limited space. 
 
 ```
 var DATABASE_URL = "postgres://{{USERNAME}}:{{PASSWORD}}@{{SERVER HOST}}:{{PORT}}/{{DATABASE NAME}}";

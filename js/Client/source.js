@@ -1,6 +1,7 @@
 "use strict";
 
 var g_data;
+var g_liveGames;
 var MAX_HUE = 240.0;
 var mode;
 
@@ -27,17 +28,30 @@ $.ajax({
 	error: function(data) {
 		console.log("error");
 		console.log(data);
-		
-		// two arguments: the id of the Timeline container (no '#')
-		// and the JSON object or an instance of TL.TimelineConfig created from
-		// a suitable JSON object
-		//window.timeline = new TL.Timeline('timeline-embed', 'marktwain_test.json');
 	}
 });
+
+(function updateLiveGames()
+{
+	$.ajax({
+		url: "http://www.nfl.com/liveupdate/scores/scores.json",						
+		success: function(data) {
+			console.log(data);
+			g_liveGames = data;
+			checkLiveGamesReady();
+		},
+		error: function(data) {
+			console.log("error");
+			console.log(data);
+		}
+	});
+	setTimeout(updateLiveGames, 30 * 1000);
+})();
 
 window.onload = function()
 {
 	checkReady();
+	checkLiveGamesReady();
 };
 
 function checkReady()
@@ -46,6 +60,14 @@ function checkReady()
 	{ 
 		render(); 
 		setupEvents();
+	}
+}
+
+function checkLiveGamesReady()
+{
+	if(g_liveGames && document.readyState === "complete") 
+	{ 
+		renderLiveGames(); 
 	}
 }
 
@@ -58,16 +80,16 @@ function render()
 	var table = document.getElementById("scoreTable");
 	if(table)
 	{
-		var htmlstring = "";
+		var htmlString = "";
 		
-		htmlstring += "<tr><td id='hAxisLabel' class='axisLabel' colspan=" + (g_data.maxpts + 2) + ">Winning Team Score</td>";
-		htmlstring += "<td id='vAxisLabel' class='axisLabel' rowspan=" + (g_data.maxpts + 3) + "><div class='vertical'>Losing Team Score</div></td></tr>";
+		htmlString += "<tr><td id='hAxisLabel' class='axisLabel' colspan=" + (g_data.maxpts + 2) + ">Winning Team Score</td>";
+		htmlString += "<td id='vAxisLabel' class='axisLabel' rowspan=" + (g_data.maxpts + 3) + "><div class='vertical'>Losing Team Score</div></td></tr>";
 
 		//cycle through all elements in the table (maxpts will always be the length and width of the matrix)
 		//start at -1 so labels can be added
 		for(var i = -1; i <= g_data.maxpts; i++)
 		{
-			htmlstring += "<tr id='row_" + i + "'>";
+			htmlString += "<tr id='row_" + i + "'>";
 			for(var j = 0; j <= g_data.maxpts + 1; j++)
 			{
 				//if i===-1, we are in the label row
@@ -76,12 +98,12 @@ function render()
 					//do not label the top right cell, since the left column is all labels
 					if (j > g_data.maxpts)
 					{
-						htmlstring += "<th></th>";
+						htmlString += "<th></th>";
 					}
 					//adding column lables
 					else 
 					{
-						htmlstring += "<th id='colHeader_" + j + "'>" + j + "</th>";
+						htmlString += "<th id='colHeader_" + j + "'>" + j + "</th>";
 					}
 				}
 				else
@@ -89,23 +111,23 @@ function render()
 					//coloring black squares
 					if(j < i - 1)
 					{
-						htmlstring += "<td class='black'></td>";
+						htmlString += "<td class='black'></td>";
 					}
 					//adding row label
 					else if (j === i - 1)
 					{
-						htmlstring += "<th id='specialHeader_" + i + "' class='black'></th>";
+						htmlString += "<th id='specialHeader_" + i + "' class='black'></th>";
 					}
 					//adding row label
 					else if (j === g_data.maxpts + 1)
 					{
-						htmlstring += "<th id='rowHeader_" + i + "'>" + i + "</th>";
+						htmlString += "<th id='rowHeader_" + i + "'>" + i + "</th>";
 					}
 					//color in green squares
 					else if (matrix[i][j].count > 0)
 					{
-						//htmlstring += "<td id='cell_" + i + "-" + j + "' class='green'><a href='https://www.pro-football-reference.com/boxscores/game_scores_find.cgi?pts_win=" + j + "&pts_lose=" + i +"'><div id='hover_" + i + "-" + j + "' class='hover'><div id='count_" + i + "-" + j + "' class='count'>" + matrix[i][j].count + "</div></div></a></td>";
-						htmlstring += "<td id='cell_" + i + "-" + j + "' class='green'><div id='hover_" + i + "-" + j + "' class='hover'><div id='count_" + i + "-" + j + "' class='count'>" + matrix[i][j].count + "</div></div></td>";
+						//htmlString += "<td id='cell_" + i + "-" + j + "' class='green'><a href='https://www.pro-football-reference.com/boxscores/game_scores_find.cgi?pts_win=" + j + "&pts_lose=" + i +"'><div id='hover_" + i + "-" + j + "' class='hover'><div id='count_" + i + "-" + j + "' class='count'>" + matrix[i][j].count + "</div></div></a></td>";
+						htmlString += "<td id='cell_" + i + "-" + j + "' class='green'><div id='hover_" + i + "-" + j + "' class='hover'><div id='count_" + i + "-" + j + "' class='count'>" + matrix[i][j].count + "</div></div></td>";
 					}
 					//fill in empty squares
 					else
@@ -127,10 +149,10 @@ function render()
 								case 5:
 									/* falls through */
 								case 7: 
-									htmlstring += "<td class='black'></td>";
+									htmlString += "<td class='black'></td>";
 									break;
 								default:
-									htmlstring += "<td id='cell_" + i + "-" + j + "' class='blank'><div id='hover_" + i + "-" + j + "' class='hover'></div></td>";
+									htmlString += "<td id='cell_" + i + "-" + j + "' class='blank'><div id='hover_" + i + "-" + j + "' class='hover'></div></td>";
 									break;
 									
 							}
@@ -139,18 +161,18 @@ function render()
 						//NOTE: we can do this after coloring in the green squares since this square will never be green
 						else if (i === 0 && j === 1)
 						{
-							htmlstring += "<td class='black'></td>";
+							htmlString += "<td class='black'></td>";
 						}
 						else
 						{
-							htmlstring += "<td id='cell_" + i + "-" + j + "' class='blank'><div id='hover_" + i + "-" + j + "' class='hover'></div></td>";
+							htmlString += "<td id='cell_" + i + "-" + j + "' class='blank'><div id='hover_" + i + "-" + j + "' class='hover'></div></td>";
 						}
 					}
 				}
 			}
-			htmlstring += "</tr>";
+			htmlString += "</tr>";
 		}
-		table.innerHTML = htmlstring;
+		table.innerHTML = htmlString;
 		
 		var loadingTable = document.getElementById("loadingTable");
 		if(loadingTable)
@@ -184,8 +206,8 @@ function render()
 	}
 	
 	//populate hue spectrum (because doing this manually would be tedious)
-	var htmlstringLogarithmic = "";
-	var htmlstringLinear = "";
+	var htmlStringLogarithmic = "";
+	var htmlStringLinear = "";
 	//var cssString = "background: linear-gradient(to right";
 	var hueSpectrumLogarithmicColors = document.getElementById("hueSpectrumLogarithmicColors");
 	var hueSpectrumLinearColors = document.getElementById("hueSpectrumLinearColors");
@@ -195,12 +217,12 @@ function render()
 	for(var i = 0; i <= MAX_HUE; i++)
 	{
 		var width = (Math.log(MAX_HUE + 2 - i) - Math.log(MAX_HUE + 1 - i)) * num;
-		htmlstringLogarithmic += "<span id='hueLog_" + i + "' class='hueColor' style='background-color:hsl(" + (MAX_HUE - i) + ",50%,50%);width:" + width + "px'></span>";
-		htmlstringLinear += "<span id='hueLin_" + i + "' class='hueColor' style='background-color:hsl(" + (MAX_HUE - i) + ",50%,50%);width:2.5px'></span>";
+		htmlStringLogarithmic += "<span id='hueLog_" + i + "' class='hueColor' style='background-color:hsl(" + (MAX_HUE - i) + ",50%,50%);width:" + width + "px'></span>";
+		htmlStringLinear += "<span id='hueLin_" + i + "' class='hueColor' style='background-color:hsl(" + (MAX_HUE - i) + ",50%,50%);width:2.5px'></span>";
 	}
 	
-	hueSpectrumLogarithmicColors.innerHTML = htmlstringLogarithmic;
-	hueSpectrumLinearColors.innerHTML = htmlstringLinear;
+	hueSpectrumLogarithmicColors.innerHTML = htmlStringLogarithmic;
+	hueSpectrumLinearColors.innerHTML = htmlStringLinear;
 	
 	var hueSpectrumLogarithmicLabelMaxCount = document.getElementById("hueSpectrumLogarithmicLabelMaxCount");
 	if(hueSpectrumLogarithmicLabelMaxCount)
@@ -595,16 +617,6 @@ function mouseOver(i, j)
 {
 	for(var k = 0; k <= g_data.maxpts; k++)
 	{
-		// var cell = document.getElementById("cell_" + i + "-" + k);
-		// if(cell && k != j)
-		// {
-			// cell.classList.add("adjhoverH");
-		// }
-		// var cell = document.getElementById("cell_" + k + "-" + j);
-		// if(cell && k != i)
-		// {
-			// cell.classList.add("adjhoverV");
-		// }
 		var cell = document.getElementById("hover_" + i + "-" + k);
 		if(cell && k !== j)
 		{
@@ -798,6 +810,25 @@ function hideHelper()
 	{
 		helper.classList.add("hidden");
 	}
+}
+
+/* imported getFullName */
+function renderLiveGames()
+{
+	var htmlString = "";
+
+	for(let key in g_liveGames)
+	{
+		var game = g_liveGames[key];
+		console.log(game);
+
+		htmlString += "<div class='liveGame'>";
+		htmlString += getFullName(game.away.abbr) + ": " + game.away.score.T + "<br />";
+		htmlString += getFullName(game.home.abbr) + ": " + game.home.score.T + "<br />";
+		htmlString += "</div>";
+	}
+
+	//document.getElementById("liveGames").innerHTML = htmlString;
 }
 
 //delegate functions to make it possible to create event listeners in a loop

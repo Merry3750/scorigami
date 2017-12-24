@@ -36,7 +36,7 @@ const client = new Client({
 
 client.connect();
 
-app.use(express.static(__dirname + "/.."));
+app.use(express.static(__dirname + "/../.."));
 
 var matrix = [];
 var maxpts = 0;
@@ -342,7 +342,7 @@ app.get("/copydb", function(req, res)
 
 app.get("/*", function(req, res)
 {
-	res.sendFile(path.join(__dirname+"/../view/index.html"));
+	res.sendFile(path.join(__dirname+"/../../view/index.html"));
 });
 
 app.listen(process.env.PORT || 8081);

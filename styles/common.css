@@ -5,7 +5,7 @@ h1{
 }
 
 h2 {
-	margin:0;
+	margin: 0;
 }
 
 #content{
@@ -28,31 +28,46 @@ iframe{
 }
 
 footer{
-	text-align:center;
-	font-size:12px;
+	text-align: center;
+	font-size: 12px;
 	padding: 5px 0;
-	background-color:#BBBBBB;
-	margin-top:10px;
-	width:100%;
+	background-color: #BBBBBB;
+	margin-top: 10px;
+	width: 100%;
 }
 
 #infoBox{
-	background-color:#BBBBBB;
-	position:absolute;
+	background-color: #BBBBBB;
+	position: absolute;
 	font-size: 10px;
 	padding: 4px;
-	border-radius:3px;
-	border:1px solid black;
+	border-radius: 3px;
+	border: 1px solid black;
+}
+
+#liveGames{
+	max-width: 1125px;
+	width: 100%;
+	margin: auto;
+}
+
+.liveGame{
+	background-color: #BBBBBB;
+	font-size: 10px;
+	border-radius: 3px;
+	border: 1px solid black;
+	width: 50%;
+	float: left;
 }
 
 #helper{
-	background-color:#ffff99;
-	position:absolute;
+	background-color: #ffff99;
+	position: absolute;
 	font-size: 18px;
 	padding: 10px;
-	border-radius:3px;
-	text-align:center;
-	border:1px solid black;
+	border-radius: 3px;
+	text-align: center;
+	border: 1px solid black;
 	cursor: pointer;
 
 	-webkit-transition: opacity 1s ease-in-out;
@@ -85,21 +100,21 @@ footer{
 }
 
 body{
-	margin:0;
-	position:relative;
+	margin: 0;
+	position: relative;
 }
 
 .hidden{
-	display:none;
+	display: none;
 }
 
 .invisible{
-	visibility:hidden;
+	visibility: hidden;
 }
 
 .outer-wrapper{ position: relative; float: right; right: 50%; }
 .inner-wrapper { position: relative; float: right; right: -50%; }
-.clearfix:before,
-.clearfix:after { content: " "; display: table; }
-.clearfix:after { clear: both; }
+.clearfix: before,
+.clearfix: after { content: " "; display: table; }
+.clearfix: after { clear: both; }
 .clearfix { *zoom: 1; }

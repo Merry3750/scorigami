@@ -32,6 +32,7 @@ function getFullName(string)
 			return "Houston Texans";
 		case "IND":
 			return "Indianapolis Colts";
+		case "JAC":
 		case "JAX":
 			return "Jacksonville Jaguars";
 		case "KC":
@@ -105,6 +106,7 @@ function getShorthandName(string)
 			return "htx";
 		case "IND":
 			return "clt";
+		case "JAC":
 		case "JAX":
 			return "jax";
 		case "KC":
