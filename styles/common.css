@@ -1,3 +1,7 @@
+:root{
+	--team-image-height: 30px;
+}
+
 h1{
 	text-align: center;
 	margin: 10px;
@@ -45,10 +49,27 @@ footer{
 	border: 1px solid black;
 }
 
+#infoBoxScore{
+	font-size: 12px;
+	font-weight: bold;
+}
+
+#infoBoxClose{
+	font-size: 9px;
+	float: right;
+	cursor: pointer;
+}
+
 #liveGames{
 	max-width: 1125px;
 	width: 100%;
 	margin: auto;
+}
+
+.liveGameContainer{
+	width: 33%;
+	float: left;
+	min-width: 250px;
 }
 
 .liveGame{
@@ -56,8 +77,43 @@ footer{
 	font-size: 10px;
 	border-radius: 3px;
 	border: 1px solid black;
-	width: 50%;
+	max-width: 350px;
+	margin: 5px auto;
+	padding: 2px;
+	font-size: 15px;
+	height: 76px;
+}
+
+.liveGame img{
+	width: 45px;
+	height: var(--team-image-height);
+	border: 1px solid black;
+	vertical-align: middle;
+}
+
+.teams{
+	width: 80%;
 	float: left;
+}
+
+.teamInfo{
+	line-height: var(--team-image-height);
+	margin: 3px;
+}
+
+.teamScore{
+	float: right;
+}
+
+.gameInfoWrapper{
+	float: right;
+	width: 20%;
+	height: 65px;
+	vertical-align: middle;
+}
+
+.gameInfo{
+	margin: 3px;
 }
 
 #helper{
@@ -88,17 +144,6 @@ footer{
 	opacity: 0;
 }
 
-#infoBoxScore{
-	font-size: 12px;
-	font-weight: bold;
-}
-
-#infoBoxClose{
-	font-size: 9px;
-	float: right;
-	cursor: pointer;
-}
-
 body{
 	margin: 0;
 	position: relative;
@@ -114,7 +159,7 @@ body{
 
 .outer-wrapper{ position: relative; float: right; right: 50%; }
 .inner-wrapper { position: relative; float: right; right: -50%; }
-.clearfix: before,
-.clearfix: after { content: " "; display: table; }
-.clearfix: after { clear: both; }
+.clearfix:before,
+.clearfix:after { content: " "; display: table; }
+.clearfix:after { clear: both; }
 .clearfix { *zoom: 1; }

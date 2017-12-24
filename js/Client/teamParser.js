@@ -1,5 +1,6 @@
 "use strict";
 
+/* exported getFullName */
 function getFullName(string)
 {
 	switch(string)
@@ -73,6 +74,7 @@ function getFullName(string)
 
 }
 
+/* exported getShorthandName */
 function getShorthandName(string)
 {
 	

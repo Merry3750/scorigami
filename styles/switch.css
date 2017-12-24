@@ -73,8 +73,6 @@ input:checked + .switchSlider:before {
 }
 
 
-
-
 #sliderContainer{
 	margin: 5px auto;
 	width: 100%;

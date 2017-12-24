@@ -1,3 +1,5 @@
+/* globals getFullName */
+
 "use strict";
 
 var g_data;
@@ -45,7 +47,7 @@ $.ajax({
 			console.log(data);
 		}
 	});
-	setTimeout(updateLiveGames, 30 * 1000);
+	//setTimeout(updateLiveGames, 30 * 1000);
 })();
 
 window.onload = function()
@@ -182,12 +184,6 @@ function render()
 		
 		toggleEmptyRows(false);
 		var tableRect = table.getBoundingClientRect();
-		
-		var body = document.getElementById("body");
-		if(body)
-		{
-			body.style.minWidth = tableRect.width;
-		}
 		
 		var helper = document.getElementById("helper");
 		if(helper)
@@ -758,22 +754,28 @@ function onClick(i, j)
 			
 			infoBox.style.left = 0;
 			infoBox.style.right = "";
+			infoBox.style.width = "";
 			infoBox.style.top = 0;
-			
+
+			var INFOBOX_OUTER_PIXELS = 5; //determined by infobox padding + border in common.css
 			var cellRect = cell.getBoundingClientRect();
 			var infoBoxRect = infoBox.getBoundingClientRect();
 			var windowRight = window.pageXOffset + document.documentElement.clientWidth;
 			var boxLeft;
 			var boxRight;
-			if(window.pageXOffset + cellRect.x - (infoBoxRect.width + cellRect.width) / 2 + infoBoxRect.width > windowRight)
+			//if the box would extend past the right side of the screen, place it on the right side of the screen
+			if(window.pageXOffset + cellRect.x - (infoBoxRect.width + cellRect.width) / 2 + infoBoxRect.width + 2 * INFOBOX_OUTER_PIXELS > windowRight)
 			{
 				boxRight = document.body.offsetWidth - document.documentElement.clientWidth - window.pageXOffset;
 				boxLeft = Math.floor(windowRight - infoBoxRect.width);
 			}
+			//otherwise center it horizontally on the clicked cell
 			else
 			{
 				boxLeft =	window.pageXOffset + cellRect.x - (infoBoxRect.width + cellRect.width) / 2;
+				infoBox.style.width = infoBoxRect.width;
 			}
+			//if the box would extend past the left side of the screen, place it on the left side of the screen
 			if(boxLeft < window.pageXOffset)
 			{
 				 boxLeft = window.pageXOffset;
@@ -781,13 +783,14 @@ function onClick(i, j)
 			infoBox.style.left = boxLeft;
 			infoBox.style.right = boxRight;
 			infoBoxRect = infoBox.getBoundingClientRect();
-			if(cellRect.y - 2 * infoBoxRect.height - 10 < 0)
+			//place it above the cell, unless it would extend past the top of the screen
+			if(cellRect.y - infoBoxRect.height - 2 * INFOBOX_OUTER_PIXELS < 0)
 			{
-				infoBox.style.top = window.pageYOffset + cellRect.y + cellRect.height - 10; // - 10 is because browsers were adding 10 for some reason
+				infoBox.style.top = window.pageYOffset + cellRect.y + cellRect.height - 2 * INFOBOX_OUTER_PIXELS;
 			}
 			else
 			{
-				infoBox.style.top = window.pageYOffset + cellRect.y - infoBoxRect.height - 10; // - 10 is because browsers were adding 10 for some reason
+				infoBox.style.top = window.pageYOffset + cellRect.y - infoBoxRect.height - 2 * INFOBOX_OUTER_PIXELS;
 			}
 		}
 	}
@@ -812,7 +815,6 @@ function hideHelper()
 	}
 }
 
-/* imported getFullName */
 function renderLiveGames()
 {
 	var htmlString = "";
@@ -822,13 +824,18 @@ function renderLiveGames()
 		var game = g_liveGames[key];
 		console.log(game);
 
-		htmlString += "<div class='liveGame'>";
-		htmlString += getFullName(game.away.abbr) + ": " + game.away.score.T + "<br />";
-		htmlString += getFullName(game.home.abbr) + ": " + game.home.score.T + "<br />";
+		htmlString += "<div class='liveGameContainer'><div class='liveGame'>";
+		htmlString += "<div class='teams'>";
+		htmlString += "<div class='teamInfo'><img src='../images/teams/" + game.away.abbr + ".gif'' alt='" + getFullName(game.away.abbr) + "'>";
+		htmlString += getFullName(game.away.abbr) + ": <span class='teamScore'>" + game.away.score.T + "</span></div>";
+		htmlString += "<div class='teamInfo'><img src='../images/teams/" + game.home.abbr + ".gif'' alt='" + getFullName(game.home.abbr) + "'>";
+		htmlString += getFullName(game.home.abbr) + ": <span class='teamScore'>" + game.home.score.T + "</span></div>";
 		htmlString += "</div>";
+		htmlString += "<div class='gameInfoWrapper'><div class='gameInfo'>4th <br /> 10:55</div></div>";
+		htmlString += "</div></div>";
 	}
 
-	//document.getElementById("liveGames").innerHTML = htmlString;
+	document.getElementById("liveGames").innerHTML = htmlString;
 }
 
 //delegate functions to make it possible to create event listeners in a loop
