@@ -27,12 +27,16 @@ body{
 	display:none;
 }
 
-.hover:hover{
+.hover.over{
 	background-color: rgba(187, 187, 187, 0.60);
 }
 
 .hover.adjhover, .hover.adjhover{
 	background-color: rgba(187, 187, 187, 0.30) /*#AAAAAA*/; 
+}
+
+.hover.selected{
+    box-shadow:0px 0px 0px 3px magenta inset;
 }
 
 th.adjhover{

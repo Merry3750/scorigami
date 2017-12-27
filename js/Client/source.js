@@ -4,8 +4,9 @@
 
 var g_data;
 var g_liveGames;
+var g_prevLiveGames;
+var g_mode;
 var MAX_HUE = 240.0;
-var mode;
 
 var MODE_COUNT = "count";
 var MODE_FIRST_GAME = "firstGame";
@@ -47,7 +48,7 @@ $.ajax({
 			console.log(data);
 		}
 	});
-	//setTimeout(updateLiveGames, 30 * 1000);
+	setTimeout(updateLiveGames, 30 * 1000);
 })();
 
 window.onload = function()
@@ -264,7 +265,7 @@ function setupEvents()
 	var modeSelector = document.getElementById("modeSelector");
 	if(modeSelector)
 	{
-		mode = modeSelector.options[modeSelector.selectedIndex].value;
+		g_mode = modeSelector.options[modeSelector.selectedIndex].value;
 		modeSelector.addEventListener("change", function(e){changeMode();});
 	}
 	
@@ -303,7 +304,7 @@ function changeMode()
 	var modeSelector = document.getElementById("modeSelector");
 	if(modeSelector)
 	{
-		mode = modeSelector.options[modeSelector.selectedIndex].value;
+		g_mode = modeSelector.options[modeSelector.selectedIndex].value;
 	}
 	
 	for(var i = 0; i <= g_data.maxpts; i++)
@@ -313,7 +314,7 @@ function changeMode()
 			var div = document.getElementById("count_" + i + "-" + j);
 			if(div)
 			{
-				switch(mode)
+				switch(g_mode)
 				{
 					case MODE_FIRST_GAME:
 						div.innerHTML = g_data.matrix[i][j].first_date.substr(0,4);
@@ -337,7 +338,7 @@ function changeMode()
 	var countSwitchText = document.getElementById("countSwitchText");
 	if(countSwitchText)
 	{
-		switch(mode)
+		switch(g_mode)
 		{
 			case MODE_FIRST_GAME:
 				/* falls through */
@@ -352,7 +353,7 @@ function changeMode()
 		}
 	}
 	
-	switch(mode)
+	switch(g_mode)
 	{
 		case MODE_FIRST_GAME:
 			showSlider();
@@ -370,7 +371,7 @@ function changeMode()
 	var spectrumLinear = document.getElementById("hueSpectrumLinear");
 	if(spectrumLogarithmic && spectrumLinear)
 	{
-		switch(mode)
+		switch(g_mode)
 		{
 			case MODE_FIRST_GAME:
 				/* falls through */
@@ -479,7 +480,7 @@ function toggleGradient(on)
 	var max;
 	var min;
 	
-	switch(mode)
+	switch(g_mode)
 	{
 		case MODE_FIRST_GAME:
 			/* falls through */
@@ -510,7 +511,7 @@ function toggleGradient(on)
 						// var alpha = 0.9 * matrix[i][j].count / g_data.maxcount + 0.1;
 						// cell.style.backgroundColor = "rgba(0,128,0," + alpha + ")";
 						var hue;
-						switch(mode)
+						switch(g_mode)
 						{
 							case MODE_FIRST_GAME:
 								var year = parseInt(matrix[i][j].first_date.substr(0,4));
@@ -541,7 +542,7 @@ function toggleGradient(on)
 		}
 	}
 	var spectrumLogarithmic = document.getElementById("hueSpectrumLogarithmic");
-	if(spectrumLogarithmic && mode === MODE_COUNT)
+	if(spectrumLogarithmic && g_mode === MODE_COUNT)
 	{
 		if(on )
 		{
@@ -553,7 +554,7 @@ function toggleGradient(on)
 		}
 	}
 	var spectrumLinear = document.getElementById("hueSpectrumLinear");
-	if(spectrumLinear && (mode === MODE_FIRST_GAME || mode === MODE_LAST_GAME))
+	if(spectrumLinear && (g_mode === MODE_FIRST_GAME || g_mode === MODE_LAST_GAME))
 	{
 		if(on)
 		{
@@ -618,6 +619,10 @@ function mouseOver(i, j)
 		{
 			cell.classList.add("adjhover");
 		}
+		else if(k === j)
+		{
+			cell.classList.add("over");
+		}
 		cell = document.getElementById("hover_" + k + "-" + j);
 		if(cell && k !== i)
 		{
@@ -651,6 +656,10 @@ function mouseOff(i, j)
 		if(cell && k !== j)
 		{
 			cell.classList.remove("adjhover");
+		}
+		else if(k === j)
+		{
+			cell.classList.remove("over");
 		}
 		cell = document.getElementById("hover_" + k + "-" + j);
 		if(cell && k !== i)
@@ -822,20 +831,188 @@ function renderLiveGames()
 	for(let key in g_liveGames)
 	{
 		var game = g_liveGames[key];
+		var newUpdate = false;
+		if(g_prevLiveGames && (game.away.score.T !== g_prevLiveGames[key].away.score.T || game.home.score.T !== g_prevLiveGames[key].home.score.T))
+		{
+			newUpdate = true;
+		}
 		console.log(game);
+		htmlString += "<div class='liveGameContainer'>";
 
-		htmlString += "<div class='liveGameContainer'><div class='liveGame'>";
+		htmlString += "<div id='liveGame_" + key + "' class='liveGame";
+
+		var liveGame = document.getElementById("liveGame_" + key);
+		if(liveGame && liveGame.classList.contains("selected"))
+		{
+			htmlString += " selected";
+			moveSelectedCell(key);
+		}
+
+		if(newUpdate || (liveGame && liveGame.classList.contains("newUpdate")))
+		{
+			htmlString += " newUpdate";
+			(function(key)
+				{
+					var hasFocus = function()
+					{
+						setTimeout(function()
+						{
+							var liveGame = document.getElementById("liveGame_" + key);
+							if(liveGame)
+							{
+								liveGame.classList.remove("newUpdate");
+							}
+						}, 3 * 1000);
+					};
+					if(document.hasFocus())
+					{
+						hasFocus();
+					}
+					else
+					{
+						window.addEventListener("focus", hasFocus);
+					}
+				})(key);
+		}
+
+		htmlString += "' onclick='liveGameClick(" + key + ");'>";
 		htmlString += "<div class='teams'>";
 		htmlString += "<div class='teamInfo'><img src='../images/teams/" + game.away.abbr + ".gif'' alt='" + getFullName(game.away.abbr) + "'>";
 		htmlString += getFullName(game.away.abbr) + ": <span class='teamScore'>" + game.away.score.T + "</span></div>";
 		htmlString += "<div class='teamInfo'><img src='../images/teams/" + game.home.abbr + ".gif'' alt='" + getFullName(game.home.abbr) + "'>";
 		htmlString += getFullName(game.home.abbr) + ": <span class='teamScore'>" + game.home.score.T + "</span></div>";
 		htmlString += "</div>";
-		htmlString += "<div class='gameInfoWrapper'><div class='gameInfo'>4th <br /> 10:55</div></div>";
+		htmlString += "<div class='gameInfoWrapper'><div class='gameInfo'>";
+		if(game.qtr === 1)
+		{
+			htmlString += "1st<br />" + game.clock;
+		}
+		else if(game.qtr === 2)
+		{
+			htmlString += "2nd<br />" + game.clock;
+		}
+		else if(game.qtr === 3)
+		{
+			htmlString += "3rd<br />" + game.clock;
+		}
+		else if(game.qtr === 4)
+		{
+			htmlString += "4th<br />" + game.clock;
+		}
+		else if(game.qtr === 5)
+		{
+			htmlString += "Overtime<br />" + game.clock;
+		}
+		else if(game.qtr === "Final")
+		{
+			htmlString += "Final";
+		}
+
+		htmlString += "</div></div>";
 		htmlString += "</div></div>";
 	}
 
 	document.getElementById("liveGames").innerHTML = htmlString;
+	g_prevLiveGames = g_liveGames;
+}
+
+/* exported liveGameClick */
+function liveGameClick(key)
+{
+	var liveGame = document.getElementById("liveGame_" + key);
+	if(liveGame)
+	{
+		if(liveGame.classList.contains("selected"))
+		{
+			liveGameSelect(key);
+			liveGame.classList.remove("selected");
+		}
+		else
+		{
+			liveGameDeselect(key);
+			liveGame.classList.add("selected");
+		}
+	}
+	selectTableCells();
+}
+
+function liveGameSelect(key)
+{
+	var liveGame = document.getElementById("liveGame_" + key);
+	if(liveGame)
+	{
+		liveGame.classList.add("selected");
+	}
+}
+
+function liveGameDeselect(key)
+{
+	var liveGame = document.getElementById("liveGame_" + key);
+	if(liveGame)
+	{
+		liveGame.classList.remove("selected");
+	}
+}
+
+function selectTableCells()
+{
+	var selectedCellIds = [];
+	for(let key in g_liveGames)
+	{
+		var game = g_liveGames[key];
+		//console.log(game);
+		var highScore = (game.away.score.T > game.home.score.T ? game.away.score.T : game.home.score.T);
+		var lowScore = (game.away.score.T > game.home.score.T ? game.home.score.T : game.away.score.T);
+		var id = "hover_" + lowScore + "-" + highScore;
+
+		var liveGame = document.getElementById("liveGame_" + key);
+		if(liveGame && liveGame.classList.contains("selected"))
+		{
+			selectedCellIds.push(id);
+		}
+
+		var cell = document.getElementById(id);
+		if(cell)
+		{
+			cell.classList.remove("selected");
+		}
+	}
+	for(var i = 0; i < selectedCellIds.length; i++)
+	{
+		var id = selectedCellIds[i];
+		var cell = document.getElementById(id);
+		if(cell)
+		{
+			cell.classList.add("selected");
+		}
+	}
+}
+
+function moveSelectedCell(key)
+{
+	var oldGame = g_prevLiveGames[key];
+	//console.log(game);
+	var oldHighScore = (oldGame.away.score.T > oldGame.home.score.T ? oldGame.away.score.T : oldGame.home.score.T);
+	var oldLowScore = (oldGame.away.score.T > oldGame.home.score.T ? oldGame.home.score.T : oldGame.away.score.T);
+	var oldId = "hover_" + oldLowScore + "-" + oldHighScore;
+	var oldCell = document.getElementById(oldId);
+	if(oldCell && oldCell.classList.contains("selected"))
+	{
+		oldCell.classList.remove("selected");
+		console.log("removed");
+
+
+		var newGame = g_liveGames[key];
+		//console.log(game);
+		var newHighScore = (newGame.away.score.T > newGame.home.score.T ? newGame.away.score.T : newGame.home.score.T);
+		var newLowScore = (newGame.away.score.T > newGame.home.score.T ? newGame.home.score.T : newGame.away.score.T);
+		var newId = "hover_" + newLowScore + "-" + newHighScore;
+		var newCell = document.getElementById(newId);
+		if(newCell)
+		{
+			newCell.classList.add("selected");
+		}
+	}
 }
 
 //delegate functions to make it possible to create event listeners in a loop
