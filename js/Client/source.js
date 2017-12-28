@@ -27,7 +27,7 @@ $.ajax({
 	url: "/data",						
 	success: function(data) {
 		////console.log('success');
-		console.log(data);
+		//console.log(data);
 		g_data = data;
 		checkReady();
 		checkLiveGamesReady();
