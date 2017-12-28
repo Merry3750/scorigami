@@ -73,6 +73,79 @@ function getFullName(string)
 	}
 
 }
+/* exported getMascot */
+function getMascot(string)
+{
+	switch(string)
+	{
+		case "ARI":
+			return "Cardinals";
+		case "ATL":
+			return "Falcons";
+		case "BAL":
+			return "Ravens";
+		case "BUF":
+			return "Bills";
+		case "CAR":
+			return "Panthers";
+		case "CHI":
+			return "Bears";
+		case "CIN":
+			return "Bengals";
+		case "CLE":
+			return "Browns";
+		case "DAL":
+			return "Cowboys";
+		case "DEN":
+			return "Broncos";
+		case "DET":
+			return "Lions";
+		case "GB":
+			return "Packers";
+		case "HOU":
+			return "Texans";
+		case "IND":
+			return "Colts";
+		case "JAC":
+		case "JAX":
+			return "Jaguars";
+		case "KC":
+			return "Chiefs";
+		case "LA":
+			return "Rams";
+		case "LAC":
+			return "Chargers";
+		case "MIA":
+			return "Dolphins";
+		case "MIN":
+			return "Vikings";
+		case "NE":
+			return "Patriots";
+		case "NO":
+			return "Saints";
+		case "NYG":
+			return "Giants";
+		case "NYJ":
+			return "Jets";
+		case "OAK":
+			return "Raiders";
+		case "PHI":
+			return "Eagles";
+		case "PIT":
+			return "Steelers";
+		case "SEA":
+			return "Seahawks";
+		case "SF":
+			return "49ers";
+		case "TB":
+			return "Buccaneers";
+		case "TEN":
+			return "Titans";
+		case "WAS":
+			return "Redskins";
+	}
+
+}
 
 /* exported getShorthandName */
 function getShorthandName(string)

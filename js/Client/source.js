@@ -1,4 +1,4 @@
-/* globals getFullName */
+/* globals getMascot */
 
 "use strict";
 
@@ -12,6 +12,10 @@ var MODE_COUNT = "count";
 var MODE_FIRST_GAME = "firstGame";
 var MODE_LAST_GAME = "lastGame";
 
+var GROUP_ALL = "all";
+var GROUP_ONGOING = "ongoing";
+var GROUP_FINISHED = "finished";
+
 var debug = window.location.href.startsWith("http://localhost");
 
 if(debug)
@@ -23,10 +27,10 @@ $.ajax({
 	url: "/data",						
 	success: function(data) {
 		//console.log('success');
-		//console.log(data);
+		console.log(data);
 		g_data = data;
-		//console.log(data);
 		checkReady();
+		checkLiveGamesReady();
 	},
 	error: function(data) {
 		console.log("error");
@@ -68,9 +72,11 @@ function checkReady()
 
 function checkLiveGamesReady()
 {
-	if(g_liveGames && document.readyState === "complete") 
+	if(g_liveGames && g_data && document.readyState === "complete") 
 	{ 
 		renderLiveGames(); 
+		onResize();
+		window.addEventListener("resize", onResize);
 	}
 }
 
@@ -826,93 +832,137 @@ function hideHelper()
 
 function renderLiveGames()
 {
-	var htmlString = "";
 
-	for(let key in g_liveGames)
+
+	var liveGames = document.getElementById("liveGames");
+	if(liveGames)
 	{
-		var game = g_liveGames[key];
-		var newUpdate = false;
-		if(g_prevLiveGames && (game.away.score.T !== g_prevLiveGames[key].away.score.T || game.home.score.T !== g_prevLiveGames[key].home.score.T))
-		{
-			newUpdate = true;
-		}
-		console.log(game);
-		htmlString += "<div class='liveGameContainer'>";
+		var htmlString = "";
 
-		htmlString += "<div id='liveGame_" + key + "' class='liveGame";
-
-		var liveGame = document.getElementById("liveGame_" + key);
-		if(liveGame && liveGame.classList.contains("selected"))
+		for(var i = 0; i < g_data.thisWeek.games.length; i++)
 		{
-			htmlString += " selected";
-			moveSelectedCell(key);
-		}
+			var key = g_data.thisWeek.games[i].id;
+			var game = g_liveGames[key];
 
-		if(newUpdate || (liveGame && liveGame.classList.contains("newUpdate")))
-		{
-			htmlString += " newUpdate";
-			(function(key)
-				{
-					var hasFocus = function()
+			// if(debug)
+			// {
+			// 	var random = Math.random();
+			// 	if(random < 0.25)
+			// 	{
+			// 		game.away.score.T = Math.floor(Math.random() * 50);
+			// 		game.home.score.T = Math.floor(Math.random() * 50);
+			// 		game.qtr = Math.ceil(Math.random() * 5);
+			// 		game.clock = "15:00";
+			// 	}
+			// 	else if(random < 0.75)
+			// 	{
+			// 		game.away.score.T = Math.floor(Math.random() * 50);
+			// 		game.home.score.T = Math.floor(Math.random() * 50);
+			// 		game.qtr = "Final";
+			// 		game.clock = "15:00";
+			// 	}
+			// }
+
+			var newUpdate = false;
+			if(g_prevLiveGames && (game.away.score.T !== g_prevLiveGames[key].away.score.T || game.home.score.T !== g_prevLiveGames[key].home.score.T))
+			{
+				newUpdate = true;
+			}
+			//console.log(game);
+			htmlString += "<div class='liveGameContainer'>";
+
+			htmlString += "<div id='liveGame_" + key + "' class='liveGame";
+
+			var liveGame = document.getElementById("liveGame_" + key);
+			if(liveGame && liveGame.classList.contains("selected"))
+			{
+				htmlString += " selected";
+				moveSelectedCell(key);
+			}
+
+			if(newUpdate || (liveGame && liveGame.classList.contains("newUpdate")))
+			{
+				htmlString += " newUpdate";
+				(function(key)
 					{
-						setTimeout(function()
+						var hasFocus = function()
 						{
-							var liveGame = document.getElementById("liveGame_" + key);
-							if(liveGame)
+							setTimeout(function()
 							{
-								liveGame.classList.remove("newUpdate");
-							}
-						}, 3 * 1000);
-					};
-					if(document.hasFocus())
-					{
-						hasFocus();
-					}
-					else
-					{
-						window.addEventListener("focus", hasFocus);
-					}
-				})(key);
+								var liveGame = document.getElementById("liveGame_" + key);
+								if(liveGame)
+								{
+									liveGame.classList.remove("newUpdate");
+								}
+							}, 3 * 1000);
+						};
+						if(document.hasFocus())
+						{
+							hasFocus();
+						}
+						else
+						{
+							window.addEventListener("focus", hasFocus);
+						}
+					})(key);
+			}
+
+			htmlString += "' onclick='liveGameClick(" + key + ");'>";
+			htmlString += "<div class='teams'>";
+			htmlString += "<div class='teamInfo'><img src='../images/teams/" + game.away.abbr + ".gif'' alt='" + getMascot(game.away.abbr) + "'>";
+			htmlString += getMascot(game.away.abbr);
+			if(game.away.score.T !== null)
+			{
+				htmlString += ": <span class='teamScore'>" + game.away.score.T + "</span>";
+			}
+			htmlString += "</div>";
+			htmlString += "<div class='teamInfo'><img src='../images/teams/" + game.home.abbr + ".gif'' alt='" + getMascot(game.home.abbr) + "'>";
+			htmlString += getMascot(game.home.abbr);
+			if(game.home.score.T !== null)
+			{
+				htmlString += ": <span class='teamScore'>" + game.home.score.T + "</span>";
+			}
+			htmlString += "</div>";
+			htmlString += "</div>";
+			htmlString += "<div class='gameInfoWrapper'><div class='gameInfo'>";
+			switch(game.qtr)
+			{
+				case 1:
+					htmlString += "1st<br />" + game.clock;
+					break;
+				case 2:
+					htmlString += "2nd<br />" + game.clock;
+					break;
+				case 3:
+					htmlString += "3rd<br />" + game.clock;
+					break;
+				case 4:
+					htmlString += "4th<br />" + game.clock;
+					break;
+				case 5:
+					htmlString += "OT<br />" + game.clock;
+					break;
+				case "Final":
+					htmlString += "Final";
+					break;
+				default:
+					htmlString += g_data.thisWeek.games[i].day + "<br />" + g_data.thisWeek.games[i].time;
+					break;
+			}
+
+			htmlString += "</div></div>";
+			htmlString += "</div></div>";
 		}
 
-		htmlString += "' onclick='liveGameClick(" + key + ");'>";
-		htmlString += "<div class='teams'>";
-		htmlString += "<div class='teamInfo'><img src='../images/teams/" + game.away.abbr + ".gif'' alt='" + getFullName(game.away.abbr) + "'>";
-		htmlString += getFullName(game.away.abbr) + ": <span class='teamScore'>" + game.away.score.T + "</span></div>";
-		htmlString += "<div class='teamInfo'><img src='../images/teams/" + game.home.abbr + ".gif'' alt='" + getFullName(game.home.abbr) + "'>";
-		htmlString += getFullName(game.home.abbr) + ": <span class='teamScore'>" + game.home.score.T + "</span></div>";
-		htmlString += "</div>";
-		htmlString += "<div class='gameInfoWrapper'><div class='gameInfo'>";
-		if(game.qtr === 1)
-		{
-			htmlString += "1st<br />" + game.clock;
-		}
-		else if(game.qtr === 2)
-		{
-			htmlString += "2nd<br />" + game.clock;
-		}
-		else if(game.qtr === 3)
-		{
-			htmlString += "3rd<br />" + game.clock;
-		}
-		else if(game.qtr === 4)
-		{
-			htmlString += "4th<br />" + game.clock;
-		}
-		else if(game.qtr === 5)
-		{
-			htmlString += "Overtime<br />" + game.clock;
-		}
-		else if(game.qtr === "Final")
-		{
-			htmlString += "Final";
-		}
+		liveGames.innerHTML = htmlString;
 
-		htmlString += "</div></div>";
-		htmlString += "</div></div>";
+		var liveGamesWrapper = document.getElementById("liveGamesWrapper");
+		if(g_data.thisWeek.games.length >= 1 && liveGamesWrapper)
+		{
+			liveGamesWrapper.classList.remove("hidden");
+		}
 	}
 
-	document.getElementById("liveGames").innerHTML = htmlString;
 	g_prevLiveGames = g_liveGames;
 }
 
@@ -953,6 +1003,52 @@ function liveGameDeselect(key)
 		liveGame.classList.remove("selected");
 	}
 }
+
+/* exported liveGameSelectGroup */
+function liveGameSelectGroup(group)
+{
+	liveGameDeselectAll();
+	var selectedGameIds = [];
+	for(let key in g_liveGames)
+	{
+		var game = g_liveGames[key];
+		if(group === GROUP_ALL)
+		{
+			selectedGameIds.push(key);
+		}
+		else if(group === GROUP_ONGOING)
+		{
+			if(game.qtr === 1 || game.qtr === 2 || game.qtr === 3 || game.qtr === 4 || game.qtr === 5)
+			{
+				selectedGameIds.push(key);
+			}
+		}
+		else if(group === GROUP_FINISHED)
+		{
+			if(game.qtr === "Final")
+			{
+				selectedGameIds.push(key);
+			}
+		}
+	}
+	for(var i = 0; i < selectedGameIds.length; i++)
+	{
+		liveGameSelect(selectedGameIds[i]);
+	}
+	selectTableCells();
+}
+
+/* exported liveGameDeselectAll */
+function liveGameDeselectAll()
+{
+	for(let key in g_liveGames)
+	{
+		liveGameDeselect(key);
+	}
+	selectTableCells();
+}
+
+
 
 function selectTableCells()
 {
@@ -999,8 +1095,6 @@ function moveSelectedCell(key)
 	if(oldCell && oldCell.classList.contains("selected"))
 	{
 		oldCell.classList.remove("selected");
-		console.log("removed");
-
 
 		var newGame = g_liveGames[key];
 		//console.log(game);
@@ -1011,6 +1105,36 @@ function moveSelectedCell(key)
 		if(newCell)
 		{
 			newCell.classList.add("selected");
+		}
+	}
+}
+
+function onResize()
+{
+	var liveGames = document.getElementById("liveGames");
+	if(liveGames)
+	{
+		liveGames.classList.remove("p100");
+		liveGames.classList.remove("p50");
+		liveGames.classList.remove("p33");
+		var liveGamesWidth = liveGames.offsetWidth;
+		var liveGame = document.getElementsByClassName("liveGame")[0];
+		if(liveGame)
+		{
+			var liveGameWidth = liveGame.offsetWidth;
+			var ratio = liveGamesWidth / liveGameWidth;
+			if(ratio >= 3.0 && ratio < 4.0)
+			{
+				liveGames.classList.add("p33");
+			}
+			else if(ratio >= 2.0 && ratio < 3.0)
+			{
+				liveGames.classList.add("p50");
+			}
+			else if(ratio < 2.0)
+			{
+				liveGames.classList.add("p100");
+			}
 		}
 	}
 }

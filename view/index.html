@@ -72,9 +72,18 @@
 				</div>
 			</div>
 		</div>
-		<div class="clearfix">
-			<div class='outer-wrapper'>
-				<div id='liveGames' class='inner-wrapper'>
+		<div id="liveGamesWrapper" class="hidden">
+			<div id="liveGamesHeader">
+				<h2>This Week's Games:</h2>
+				<button type='button' onclick='liveGameDeselectAll()'>Deselect All</button>
+				<button type='button' onclick='liveGameSelectGroup("all")'>Select All</button>
+				<button type='button' onclick='liveGameSelectGroup("ongoing")'>Select Ongoing</button>
+				<button type='button' onclick='liveGameSelectGroup("finished")'>Select Finished</button>
+			</div>
+			<div class="clearfix">
+				<div class='outer-wrapper'>
+					<div id='liveGames' class='inner-wrapper'>
+					</div>
 				</div>
 			</div>
 		</div>	

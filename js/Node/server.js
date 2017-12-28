@@ -45,6 +45,7 @@ var maxcount = 0;
 var maxcount = 0;
 var lastUpdated;
 var tables = {scores:[], metadata:[]};
+var thisWeek = {};
 
 function updateData()
 {
@@ -235,6 +236,19 @@ function updateData()
 				//console.log("no games tracked because it is not a regular or post season week");
 				getData();
 			}
+
+			var newWeek = {};
+			newWeek.type = data.t;
+			newWeek.games = [];
+			for (let game of data.gms)
+			{
+				var newGame = {};
+				newGame.day = game.d;
+				newGame.time = game.t;
+				newGame.id = game.eid;
+				newWeek.games.push(newGame);
+			}
+			thisWeek = newWeek;
 		}
 		else
 		{
@@ -329,7 +343,8 @@ app.get("/data", function(req, res)
 		maxpts: maxpts,
 		maxlosepts: maxlosepts,
 		maxcount: maxcount,
-		lastUpdated: lastUpdated
+		lastUpdated: lastUpdated,
+		thisWeek: thisWeek
 	};
 	//console.log(data);
 	res.json(data);
