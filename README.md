@@ -55,4 +55,5 @@ See also the list of [contributors](https://github.com/ACMerriman/scorigami/grap
 
 ## Acknowledgments
 
-* Data retrieved from [Pro Football Reference](https://www.pro-football-reference.com/)
+* Hostirical data from [Pro Football Reference](https://www.pro-football-reference.com/)
+* Logos from [SportsLogos.Net](http://www.sportslogos.net/)
