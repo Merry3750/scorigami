@@ -26,7 +26,7 @@ if(debug)
 $.ajax({
 	url: "/data",						
 	success: function(data) {
-		//console.log('success');
+		////console.log('success');
 		console.log(data);
 		g_data = data;
 		checkReady();
@@ -43,7 +43,7 @@ $.ajax({
 	$.ajax({
 		url: "http://www.nfl.com/liveupdate/scores/scores.json",						
 		success: function(data) {
-			console.log(data);
+			//console.log(data);
 			g_liveGames = data;
 			checkLiveGamesReady();
 		},
