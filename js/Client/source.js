@@ -6,6 +6,7 @@ var g_data;
 var g_liveGames;
 var g_prevLiveGames;
 var g_mode;
+var g_updateTimeout;
 var MAX_HUE = 240.0;
 
 var MODE_COUNT = "count";
@@ -883,28 +884,10 @@ function renderLiveGames()
 			if(newUpdate || (liveGame && liveGame.classList.contains("newUpdate")))
 			{
 				htmlString += " newUpdate";
-				(function(key)
-					{
-						var hasFocus = function()
-						{
-							setTimeout(function()
-							{
-								var liveGame = document.getElementById("liveGame_" + key);
-								if(liveGame)
-								{
-									liveGame.classList.remove("newUpdate");
-								}
-							}, 3 * 1000);
-						};
-						if(document.hasFocus())
-						{
-							hasFocus();
-						}
-						else
-						{
-							window.addEventListener("focus", hasFocus);
-						}
-					})(key);
+				if(document.hasFocus())
+				{
+					clearUpdate();
+				}
 			}
 
 			htmlString += "' onclick='liveGameClick(" + key + ");'>";
@@ -961,6 +944,12 @@ function renderLiveGames()
 		{
 			liveGamesWrapper.classList.remove("hidden");
 		}
+	}
+
+	//only runs once
+	if(!g_prevLiveGames)
+	{
+		window.addEventListener("focus", clearUpdate);
 	}
 
 	g_prevLiveGames = g_liveGames;
@@ -1095,18 +1084,37 @@ function moveSelectedCell(key)
 	if(oldCell && oldCell.classList.contains("selected"))
 	{
 		oldCell.classList.remove("selected");
-
-		var newGame = g_liveGames[key];
-		//console.log(game);
-		var newHighScore = (newGame.away.score.T > newGame.home.score.T ? newGame.away.score.T : newGame.home.score.T);
-		var newLowScore = (newGame.away.score.T > newGame.home.score.T ? newGame.home.score.T : newGame.away.score.T);
-		var newId = "hover_" + newLowScore + "-" + newHighScore;
-		var newCell = document.getElementById(newId);
-		if(newCell)
-		{
-			newCell.classList.add("selected");
-		}
 	}
+
+	var newGame = g_liveGames[key];
+	//console.log(game);
+	var newHighScore = (newGame.away.score.T > newGame.home.score.T ? newGame.away.score.T : newGame.home.score.T);
+	var newLowScore = (newGame.away.score.T > newGame.home.score.T ? newGame.home.score.T : newGame.away.score.T);
+	var newId = "hover_" + newLowScore + "-" + newHighScore;
+	var newCell = document.getElementById(newId);
+	if(newCell)
+	{
+		newCell.classList.add("selected");
+	}
+}
+
+function clearUpdate()
+{
+	clearTimeout(g_updateTimeout);
+	g_updateTimeout = setTimeout(function()
+	{
+		if(g_liveGames)
+		{
+			for(let key in g_liveGames)
+			{
+				var liveGame = document.getElementById("liveGame_" + key);
+				if(liveGame && liveGame.classList.contains("newUpdate"))
+				{
+					liveGame.classList.remove("newUpdate");
+				}
+			}
+		}
+	}, 3 * 1000);
 }
 
 function onResize()
