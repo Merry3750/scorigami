@@ -45,7 +45,7 @@ var maxcount = 0;
 var maxcount = 0;
 var lastUpdated;
 var tables = {scores:[], metadata:[]};
-var thisWeek = {};
+var thisWeek = {scorigami:[]};
 
 function updateData()
 {
@@ -67,12 +67,16 @@ function updateData()
 						//if the current week does not match the current tracked week, change the current week and delete the tracked games (we won't be needing them any more)
 						if(current_week !== data.w)
 						{
-							client.query("UPDATE " + metadataTable + " SET data_int=" + data.w + " WHERE description='current_week';DELETE FROM " + metadataTable + " WHERE description='tracked_game';", (err2, res2) => {updateData();});
+							client.query("UPDATE " + metadataTable + " SET data_int=" + data.w + " WHERE description='current_week';DELETE FROM " + metadataTable + " WHERE description='tracked_game';", (err2, res2) => 
+							{
+								thisWeek.scorigami = [];
+								updateData();
+							});
 						}
 						else
 						{
 							//get the list of tracked games
-							client.query("SELECT data_int FROM " + metadataTable + " WHERE description='tracked_game';", (err2, res2) =>
+							client.query("SELECT data_int, data_text FROM " + metadataTable + " WHERE description='tracked_game';", (err2, res2) =>
 							{	
 								if(!err2)
 								{
@@ -92,6 +96,10 @@ function updateData()
 												{
 													tracked = true;
 													//console.log("game " + game.eid + " not tracked because it has already been tracked");
+													if(row.data_text === "true" && !thisWeek.scorigami.includes(game.eid))
+													{
+														thisWeek.scorigami.push(game.eid);
+													}
 													break;
 												}
 											}
@@ -111,6 +119,7 @@ function updateData()
 											secondHalf = true;
 										}
 									}
+
 									//if there is a game in the second half, run tick every minute instead of every hour
 									if(secondHalf)
 									{
@@ -160,7 +169,8 @@ function updateData()
 														queryString += "', last_team_away='" + awayTeam;
 														queryString += "', last_link='" + gamelink;
 														queryString += "' WHERE (pts_win=" + pts_win + " AND pts_lose=" + pts_lose + ");\n";
-														
+
+														queryString += "INSERT INTO " + metadataTable + " (description, data_int, data_text) VALUES ('tracked_game', " + game.eid + ", 'false');\n";
 														
 														//queryString += "UPDATE " + scoresTable + " SET count=count+1 WHERE (pts_win=" + pts_win + " AND pts_lose=" + pts_lose + ");\n";
 													}
@@ -184,8 +194,10 @@ function updateData()
 														queryString += "', '" + awayTeam;
 														queryString += "', '" + gamelink;
 														queryString += "');\n";
+														queryString += "INSERT INTO " + metadataTable + " (description, data_int, data_text) VALUES ('tracked_game', " + game.eid + ", 'true');\n";
+
+														thisWeek.scorigami.push(game.eid);
 													}
-													queryString += "INSERT INTO " + metadataTable + " (description, data_int) VALUES ('tracked_game', " + game.eid + ");\n";
 													finishedQueries++;
 													if(finishedQueries >= newgames.length)
 													{
@@ -248,7 +260,8 @@ function updateData()
 				newGame.id = game.eid;
 				newWeek.games.push(newGame);
 			}
-			thisWeek = newWeek;
+			thisWeek.type = newWeek.type;
+			thisWeek.games = newWeek.games;
 		}
 		else
 		{

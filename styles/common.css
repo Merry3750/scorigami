@@ -102,7 +102,6 @@ footer{
 	margin: 5px auto;
 	padding: 2px;
 	font-size: 15px;
-	height: 73px;
 
 	-webkit-touch-callout: none; /* iOS Safari */		
 	-webkit-user-select: none; /* Safari */		
@@ -110,6 +109,10 @@ footer{
 	-moz-user-select: none; /* Firefox */		
 	-ms-user-select: none; /* Internet Explorer/Edge */		
 	user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
+}
+
+.liveGameContent{
+	height: 73px;
 }
 
 .liveGame.selected{
@@ -154,6 +157,16 @@ footer{
 	position: relative;
 	top: 50%;
 	transform: translateY(-50%);
+}
+
+.liveGameFooter{
+	margin: 3px;
+	text-align: center;
+}
+
+.newScorigami{
+	font-weight: bold;
+	color: red;
 }
 
 #helper{

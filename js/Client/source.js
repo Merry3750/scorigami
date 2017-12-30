@@ -1,4 +1,4 @@
-/* globals getMascot */
+/* globals getMascot, chances */
 
 "use strict";
 
@@ -848,14 +848,16 @@ function renderLiveGames()
 			// if(debug)
 			// {
 			// 	var random = Math.random();
-			// 	if(random < 0.25)
+			// 	if(random < 0.33)
 			// 	{
 			// 		game.away.score.T = Math.floor(Math.random() * 50);
 			// 		game.home.score.T = Math.floor(Math.random() * 50);
 			// 		game.qtr = Math.ceil(Math.random() * 5);
-			// 		game.clock = "15:00";
+			// 		var mins = Math.floor(Math.random() * 15);
+			// 		var seconds = Math.floor(Math.random() * 60);
+			// 		game.clock = mins + ":" + seconds;
 			// 	}
-			// 	else if(random < 0.75)
+			// 	else if(random < 0.66)
 			// 	{
 			// 		game.away.score.T = Math.floor(Math.random() * 50);
 			// 		game.home.score.T = Math.floor(Math.random() * 50);
@@ -891,6 +893,7 @@ function renderLiveGames()
 			}
 
 			htmlString += "' onclick='liveGameClick(" + key + ");'>";
+			htmlString += "<div class='liveGameContent'>";
 			htmlString += "<div class='teams'>";
 			htmlString += "<div class='teamInfo'><img src='../images/teams/" + game.away.abbr + ".gif'' alt='" + getMascot(game.away.abbr) + "'>";
 			htmlString += getMascot(game.away.abbr);
@@ -932,9 +935,36 @@ function renderLiveGames()
 					htmlString += g_data.thisWeek.games[i].day + "<br />" + g_data.thisWeek.games[i].time;
 					break;
 			}
+			htmlString += "</div></div></div>";
+			htmlString += "<div class='liveGameFooter'>";
 
-			htmlString += "</div></div>";
-			htmlString += "</div></div>";
+			//if game is over
+			if (game.qtr === "Final")
+			{
+				var highScore = (game.away.score.T > game.home.score.T ? game.away.score.T : game.home.score.T);
+				var lowScore = (game.away.score.T > game.home.score.T ? game.home.score.T : game.away.score.T);
+				var matrix = g_data.matrix;
+				if(g_data.thisWeek.scorigami.includes(key) || !matrix[lowScore] || !matrix[lowScore][highScore] || matrix[lowScore][highScore].count === 0)
+				{
+					htmlString += "<span class='newScorigami'>NEW SCORIGAMI!</span>";
+				}
+				else
+				{
+					htmlString += "No Scorigami";
+				}
+			}
+			//if game is ongoing
+			else if(game.home.score.T !== null)
+			{
+				var probability = getScorigamiProbability(game);
+				htmlString += "Chance of Scorigami: " + probability + "%";
+			}
+			//if game is upcoming
+			else
+			{
+				htmlString += "Watch on " + game.media.tv;
+			}
+			htmlString += "</div></div></div>";
 		}
 
 		liveGames.innerHTML = htmlString;
@@ -1036,8 +1066,6 @@ function liveGameDeselectAll()
 	}
 	selectTableCells();
 }
-
-
 
 function selectTableCells()
 {
@@ -1145,6 +1173,75 @@ function onResize()
 			}
 		}
 	}
+}
+
+function getScorigamiProbability(game)
+{
+	var awayPts = game.away.score.T;
+	var homePts = game.home.score.T;
+	var minutes = parseFloat(game.clock.split(":")[0]);
+	var seconds = parseFloat(game.clock.split(":")[1]);
+	var quarter = game.qtr;
+	var overtime = false;
+	if(quarter === 5)
+	{
+		overtime = true;
+		quarter = 4;
+	}
+
+
+	var probability = 0.0;
+	var matrix = g_data.matrix;
+
+	for(var i = 0; i < chances.length; i++)
+	{
+		var chance1 = chances[i];
+		var prob1 = getProb(quarter, minutes, seconds, chance1);
+		var score1 = awayPts + chance1.pts;
+
+		for(var j = 0; j < chances.length; j++)
+		{
+			var chance2 = chances[j];
+			var prob2 = getProb(quarter, minutes, seconds, chance2);
+			var score2 = homePts + chance2.pts;
+
+			var winScore = (score1 > score2 ? score1 : score2);
+			var loseScore = (score1 > score2 ? score2 : score1);
+
+			if(!matrix[loseScore] || !matrix[loseScore][winScore] || matrix[loseScore][winScore].count === 0)
+			{
+				if(loseScore === winScore)
+				{
+					probability += prob1 * prob2 / 75.0;
+				}
+				else
+				{
+					probability += prob1 * prob2;
+				}
+			}
+
+		}
+	}
+
+	probability *= 100.0;
+
+	return probability.toFixed(2);
+}
+
+function factorial(n)
+{
+	if(n <= 1)
+	{
+		return 1;
+	}
+	return n * factorial(n-1);
+}
+
+function getProb(quarter, minutes, seconds, chance)
+{
+	var prob = Math.exp(-1 * (((4 - quarter) * 15 + (minutes + seconds / 60.0)) / 60.0 * 4.22)) * Math.pow((((4 - quarter) * 15 + (minutes + seconds / 60)) / 60 * 4.22), (chance.td_1pt + chance.fg + chance.td + chance.td_2pt + chance.safety)) / factorial(chance.td_1pt + chance.fg + chance.td + chance.td_2pt + chance.safety) * chance.bin_chance;
+
+	return prob;
 }
 
 //delegate functions to make it possible to create event listeners in a loop
