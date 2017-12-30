@@ -1,4 +1,4 @@
-/* globals getMascot, chances */
+/* globals getMascot, getShorthandName, chances */
 
 "use strict";
 
@@ -962,7 +962,8 @@ function renderLiveGames()
 			//if game is upcoming
 			else
 			{
-				htmlString += "Watch on " + game.media.tv;
+				//var gamelink = "https://www.pro-football-reference.com/boxscores/" + key.substr(0, key.length - 2) + "0" + getShorthandName(game.abbr) + ".htm";
+				htmlString += "<a href='https://www.pro-football-reference.com/boxscores/" + Math.floor(key / 100) + "0" + getShorthandName(game.home.abbr) + ".htm'>Game Preview</a>";
 			}
 			htmlString += "</div></div></div>";
 		}

@@ -57,3 +57,4 @@ See also the list of [contributors](https://github.com/ACMerriman/scorigami/grap
 
 * Hostirical data from [Pro Football Reference](https://www.pro-football-reference.com/)
 * Logos from [SportsLogos.Net](http://www.sportslogos.net/)
+* Prediction Data and algorithms by Dave Mattingly [@dpmattingly](https://twitter.com/dpmattingly)
