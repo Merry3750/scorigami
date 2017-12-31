@@ -897,14 +897,14 @@ function renderLiveGames()
 			htmlString += "<div class='teams'>";
 			htmlString += "<div class='teamInfo'><img src='../images/teams/" + game.away.abbr + ".gif'' alt='" + getMascot(game.away.abbr) + "'>";
 			htmlString += getMascot(game.away.abbr);
-			if(game.qtr === "1" || game.qtr === "2" || game.qtr === "3" || game.qtr === "4" || game.qtr === "5" || game.qtr === "Halftime")
+			if(game.qtr === "1" || game.qtr === "2" || game.qtr === "3" || game.qtr === "4" || game.qtr === "5" || game.qtr === "Halftime" || game.qtr === "Final")
 			{
 				htmlString += ": <span class='teamScore'>" + game.away.score.T + "</span>";
 			}
 			htmlString += "</div>";
 			htmlString += "<div class='teamInfo'><img src='../images/teams/" + game.home.abbr + ".gif'' alt='" + getMascot(game.home.abbr) + "'>";
 			htmlString += getMascot(game.home.abbr);
-			if(game.qtr === "1" || game.qtr === "2" || game.qtr === "3" || game.qtr === "4" || game.qtr === "5" || game.qtr === "Halftime")
+			if(game.qtr === "1" || game.qtr === "2" || game.qtr === "3" || game.qtr === "4" || game.qtr === "5" || game.qtr === "Halftime" || game.qtr === "Final")
 			{
 				htmlString += ": <span class='teamScore'>" + game.home.score.T + "</span>";
 			}
