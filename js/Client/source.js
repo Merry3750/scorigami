@@ -897,14 +897,14 @@ function renderLiveGames()
 			htmlString += "<div class='teams'>";
 			htmlString += "<div class='teamInfo'><img src='../images/teams/" + game.away.abbr + ".gif'' alt='" + getMascot(game.away.abbr) + "'>";
 			htmlString += getMascot(game.away.abbr);
-			if(game.qtr === "1" || game.qtr === "2" || game.qtr === "3" || game.qtr === "4" || game.qtr === "5")
+			if(game.qtr === "1" || game.qtr === "2" || game.qtr === "3" || game.qtr === "4" || game.qtr === "5" || game.qtr === "Halftime")
 			{
 				htmlString += ": <span class='teamScore'>" + game.away.score.T + "</span>";
 			}
 			htmlString += "</div>";
 			htmlString += "<div class='teamInfo'><img src='../images/teams/" + game.home.abbr + ".gif'' alt='" + getMascot(game.home.abbr) + "'>";
 			htmlString += getMascot(game.home.abbr);
-			if(game.qtr === "1" || game.qtr === "2" || game.qtr === "3" || game.qtr === "4" || game.qtr === "5")
+			if(game.qtr === "1" || game.qtr === "2" || game.qtr === "3" || game.qtr === "4" || game.qtr === "5" || game.qtr === "Halftime")
 			{
 				htmlString += ": <span class='teamScore'>" + game.home.score.T + "</span>";
 			}
@@ -927,6 +927,9 @@ function renderLiveGames()
 					break;
 				case "5":
 					htmlString += "OT<br />" + game.clock;
+					break;
+				case "Halftime":
+					htmlString += "Halftime";
 					break;
 				case "Final":
 					htmlString += "Final";
@@ -954,7 +957,7 @@ function renderLiveGames()
 				}
 			}
 			//if game is ongoing
-			else if(game.qtr === "1" || game.qtr === "2" || game.qtr === "3" || game.qtr === "4" || game.qtr === "5")
+			else if(game.qtr === "1" || game.qtr === "2" || game.qtr === "3" || game.qtr === "4" || game.qtr === "5" || game.qtr === "Halftime")
 			{
 				var probability = getScorigamiProbability(game);
 				htmlString += "Chance of Scorigami: " + probability + "%";
@@ -1038,7 +1041,7 @@ function liveGameSelectGroup(group)
 		}
 		else if(group === GROUP_ONGOING)
 		{
-			if(game.qtr === "1" || game.qtr === "2" || game.qtr === "3" || game.qtr === "4" || game.qtr === "5")
+			if(game.qtr === "1" || game.qtr === "2" || game.qtr === "3" || game.qtr === "4" || game.qtr === "5" || game.qtr === "Halftime")
 			{
 				selectedGameIds.push(key);
 			}
@@ -1182,12 +1185,38 @@ function getScorigamiProbability(game)
 	var homePts = game.home.score.T;
 	var minutes = parseFloat(game.clock.split(":")[0]);
 	var seconds = parseFloat(game.clock.split(":")[1]);
-	var quarter = parseInt(game.qtr);
+	var quarter;
 	var overtime = false;
-	if(quarter === 5)
+	switch(game.qtr)
 	{
-		overtime = true;
-		quarter = 4;
+		case "1":
+			quarter = 1;
+			break;
+		case "2":
+			quarter = 2;
+			break;
+		case "3":
+			quarter = 3;
+			break;
+		case "4":
+			quarter = 4;
+			break;
+		case "5":
+			quarter = 4;
+			overtime = true;
+			break;
+		case "Halftime":
+			quarter = 2;
+			minutes = 0;
+			seconds = 0;
+			break;
+		case "Final":
+			/* falls through */
+		default:
+			quarter = 4;
+			minutes = 0;
+			seconds = 0;
+			break;
 	}
 
 
@@ -1211,7 +1240,7 @@ function getScorigamiProbability(game)
 
 			if(!matrix[loseScore] || !matrix[loseScore][winScore] || matrix[loseScore][winScore].count === 0)
 			{
-				if(loseScore === winScore)
+				if(loseScore === winScore && !overtime)
 				{
 					probability += prob1 * prob2 / 75.0;
 				}
