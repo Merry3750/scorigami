@@ -1083,7 +1083,7 @@ function selectTableCells()
 		var id = "hover_" + lowScore + "-" + highScore;
 
 		var liveGame = document.getElementById("liveGame_" + key);
-		if(liveGame && liveGame.classList.contains("selected"))
+		if(liveGame && liveGame.classList.contains("selected") && game.qtr !== "Pregame")
 		{
 			selectedCellIds.push(id);
 		}
