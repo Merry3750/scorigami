@@ -1124,7 +1124,7 @@ function moveSelectedCell(key)
 	var newLowScore = (newGame.away.score.T > newGame.home.score.T ? newGame.home.score.T : newGame.away.score.T);
 	var newId = "hover_" + newLowScore + "-" + newHighScore;
 	var newCell = document.getElementById(newId);
-	if(newCell)
+	if(newCell && newGame.qtr !== "Pregame")
 	{
 		newCell.classList.add("selected");
 	}
