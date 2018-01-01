@@ -833,10 +833,8 @@ function hideHelper()
 
 function renderLiveGames()
 {
-
-
 	var liveGames = document.getElementById("liveGames");
-	if(liveGames)
+	if(liveGames && g_data.thisWeek.games)
 	{
 		var htmlString = "";
 

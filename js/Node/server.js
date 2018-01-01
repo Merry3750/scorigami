@@ -54,7 +54,15 @@ function updateData()
 	{
 		if(!err0)
 		{
-			data = JSON.parse(data);
+			try
+			{
+				data = JSON.parse(data);
+			}
+			catch(e)
+			{
+				getData();
+				return;
+			}
 			//if the game is regular or post season, continue, otherwise (preseason) ignore it
 			if (data.t === "REG" || data.t === "POST")
 			{
