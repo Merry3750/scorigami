@@ -1,4 +1,4 @@
-/* globals getMascot, getShorthandName, chances */
+/* globals getShorthandName, chances */
 
 "use strict";
 
@@ -25,11 +25,11 @@ if(debug)
 }
 
 $.ajax({
-	url: "/data",						
+	url: "/data",
 	success: function(data) {
 		////console.log('success');
-		//console.log(data);
 		g_data = data;
+		//console.log(g_data);
 		checkReady();
 		checkLiveGamesReady();
 	},
@@ -42,10 +42,11 @@ $.ajax({
 (function updateLiveGames()
 {
 	$.ajax({
-		url: "http://www.nfl.com/liveupdate/scores/scores.json",						
+		url: "https://feeds.nfl.com/feeds-rs/scores.json",
+		cache:false,				
 		success: function(data) {
-			//console.log(data);
-			g_liveGames = data;
+			g_liveGames = data.gameScores;
+			//console.log(g_liveGames);
 			checkLiveGamesReady();
 		},
 		error: function(data) {
@@ -696,6 +697,7 @@ function onClick(i, j)
 {
 	hideHelper();
 	var data = g_data.matrix[i][j];
+	//console.log(data);
 	var infoBox = document.getElementById("infoBox");
 	var cell = document.getElementById("cell_" + i + "-" + j);
 	if(infoBox)
@@ -834,14 +836,12 @@ function hideHelper()
 function renderLiveGames()
 {
 	var liveGames = document.getElementById("liveGames");
-	if(liveGames && g_data.thisWeek.games)
+	if(liveGames)
 	{
 		var htmlString = "";
-
-		for(var i = 0; i < g_data.thisWeek.games.length; i++)
+		for(var i = 0; i < g_liveGames.length; i++)
 		{
-			var key = g_data.thisWeek.games[i].id;
-			var game = g_liveGames[key];
+			var game = g_liveGames[i];
 
 			// if(debug)
 			// {
@@ -863,22 +863,25 @@ function renderLiveGames()
 			// 		game.clock = "15:00";
 			// 	}
 			// }
+			var homeScore = (game.score ? game.score.homeTeamScore.pointTotal : null);
+			var awayScore = (game.score ? game.score.visitorTeamScore.pointTotal : null);
+			var phase = (game.score ? game.score.phase : null);
 
 			var newUpdate = false;
-			if(g_prevLiveGames && (game.away.score.T !== g_prevLiveGames[key].away.score.T || game.home.score.T !== g_prevLiveGames[key].home.score.T))
+			if(g_prevLiveGames && g_prevLiveGames[i].score && (g_prevLiveGames[i].score.visitorTeamScore.pointTotal !== awayScore || g_prevLiveGames[i].score.homeTeamScore.pointTotal !== homeScore))
 			{
 				newUpdate = true;
 			}
 			//console.log(game);
 			htmlString += "<div class='liveGameContainer'>";
 
-			htmlString += "<div id='liveGame_" + key + "' class='liveGame";
+			htmlString += "<div id='liveGame_" + i + "' class='liveGame";
 
-			var liveGame = document.getElementById("liveGame_" + key);
+			var liveGame = document.getElementById("liveGame_" + i);
 			if(liveGame && liveGame.classList.contains("selected"))
 			{
 				htmlString += " selected";
-				moveSelectedCell(key);
+				moveSelectedCell(i);
 			}
 
 			if(newUpdate || (liveGame && liveGame.classList.contains("newUpdate")))
@@ -890,62 +893,73 @@ function renderLiveGames()
 				}
 			}
 
-			htmlString += "' onclick='liveGameClick(" + key + ");'>";
+			htmlString += "' onclick='liveGameClick(" + i + ");'>";
 			htmlString += "<div class='liveGameContent'>";
 			htmlString += "<div class='teams'>";
-			htmlString += "<div class='teamInfo'><img src='../images/teams/" + game.away.abbr + ".gif'' alt='" + getMascot(game.away.abbr) + "'>";
-			htmlString += getMascot(game.away.abbr);
-			if(game.qtr === "1" || game.qtr === "2" || game.qtr === "3" || game.qtr === "4" || game.qtr === "5" || game.qtr === "Halftime" || game.qtr === "Final")
+			htmlString += "<div class='teamInfo'><img src='../images/teams/" + game.gameSchedule.visitorTeamAbbr + ".gif'' alt='" + game.gameSchedule.visitorTeamAbbr + "'>";
+			htmlString += game.gameSchedule.visitorNickname;
+			if(phase === "Q1" || phase === "Q2" || phase === "Q3" || phase === "Q4" || phase === "OVERTIME" || phase === "HALFTIME" || phase === "FINAL")
 			{
-				htmlString += ": <span class='teamScore'>" + game.away.score.T + "</span>";
+				if(game.score.possessionTeamAbbr === game.gameSchedule.visitorTeamAbbr && phase !== "HALFTIME" && phase !== "FINAL")
+				{
+					htmlString += " &bull;";
+				}
+				htmlString += "<span class='teamScore'>" + game.score.visitorTeamScore.pointTotal + "</span>";
 			}
 			htmlString += "</div>";
-			htmlString += "<div class='teamInfo'><img src='../images/teams/" + game.home.abbr + ".gif'' alt='" + getMascot(game.home.abbr) + "'>";
-			htmlString += getMascot(game.home.abbr);
-			if(game.qtr === "1" || game.qtr === "2" || game.qtr === "3" || game.qtr === "4" || game.qtr === "5" || game.qtr === "Halftime" || game.qtr === "Final")
+			htmlString += "<div class='teamInfo'><img src='../images/teams/" + game.gameSchedule.homeTeamAbbr + ".gif'' alt='" + game.gameSchedule.homeTeamAbbr + "'>";
+			htmlString += game.gameSchedule.homeNickname;
+			if(phase === "Q1" || phase === "Q2" || phase === "Q3" || phase === "Q4" || phase === "OVERTIME" || phase === "HALFTIME" || phase === "FINAL")
 			{
-				htmlString += ": <span class='teamScore'>" + game.home.score.T + "</span>";
+				if(game.score.possessionTeamAbbr === game.gameSchedule.homeTeamAbbr && phase !== "HALFTIME" && phase !== "FINAL")
+				{
+					htmlString += " &bull;";
+				}
+				htmlString += "<span class='teamScore'>" + game.score.homeTeamScore.pointTotal + "</span>";
 			}
 			htmlString += "</div>";
 			htmlString += "</div>";
 			htmlString += "<div class='gameInfoWrapper'><div class='gameInfo'>";
-			switch(game.qtr)
+			switch(phase)
 			{
-				case "1":
-					htmlString += "1st<br />" + game.clock;
+				case "Q1":
+					htmlString += "1st<br />" + game.score.time;
 					break;
-				case "2":
-					htmlString += "2nd<br />" + game.clock;
+				case "Q2":
+					htmlString += "2nd<br />" + game.score.time;
 					break;
-				case "3":
-					htmlString += "3rd<br />" + game.clock;
+				case "Q3":
+					htmlString += "3rd<br />" + game.score.time;
 					break;
-				case "4":
-					htmlString += "4th<br />" + game.clock;
+				case "Q4":
+					htmlString += "4th<br />" + game.score.time;
 					break;
-				case "5":
-					htmlString += "OT<br />" + game.clock;
+				case "OVERTIME":
+					htmlString += "Overtime<br />" + game.score.time;
 					break;
-				case "Halftime":
+				case "HALFTIME":
 					htmlString += "Halftime";
 					break;
-				case "Final":
+				case "FINAL":
 					htmlString += "Final";
 					break;
 				default:
-					htmlString += g_data.thisWeek.games[i].day + "<br />" + g_data.thisWeek.games[i].time;
+					var date = new Date(game.gameSchedule.gameDate + " " + game.gameSchedule.gameTimeEastern);
+					var day = (date.toLocaleDateString("en-US", {weekday:"short"}));
+					var time = (date.toLocaleTimeString("en-US", {hour:"numeric", minute:"numeric"}));
+					htmlString += day + "<br />" + time;
 					break;
 			}
 			htmlString += "</div></div></div>";
 			htmlString += "<div class='liveGameFooter'>";
 
 			//if game is over
-			if (game.qtr === "Final")
+			if (phase === "FINAL")
 			{
-				var highScore = (game.away.score.T > game.home.score.T ? game.away.score.T : game.home.score.T);
-				var lowScore = (game.away.score.T > game.home.score.T ? game.home.score.T : game.away.score.T);
+				var highScore = (awayScore > homeScore ? awayScore : homeScore);
+				var lowScore = (awayScore > homeScore ? homeScore : awayScore);
 				var matrix = g_data.matrix;
-				if(g_data.thisWeek.scorigami.includes(key) || !matrix[lowScore] || !matrix[lowScore][highScore] || matrix[lowScore][highScore].count === 0)
+				if(g_data.newScorigami.includes(game.gameSchedule.gameId) || ! matrix[lowScore] || !matrix[lowScore][highScore] || matrix[lowScore][highScore].count === 0)
 				{
 					htmlString += "<span class='newScorigami'>NEW SCORIGAMI!</span>";
 				}
@@ -955,7 +969,7 @@ function renderLiveGames()
 				}
 			}
 			//if game is ongoing
-			else if(game.qtr === "1" || game.qtr === "2" || game.qtr === "3" || game.qtr === "4" || game.qtr === "5" || game.qtr === "Halftime")
+			else if(phase === "Q1" || phase === "Q2" || phase === "Q3" || phase === "Q4" || phase === "OVERTIME" || phase === "HALFTIME")
 			{
 				var probability = getScorigamiProbability(game);
 				htmlString += "Chance of Scorigami: " + probability + "%";
@@ -964,7 +978,7 @@ function renderLiveGames()
 			else
 			{
 				//var gamelink = "https://www.pro-football-reference.com/boxscores/" + key.substr(0, key.length - 2) + "0" + getShorthandName(game.abbr) + ".htm";
-				htmlString += "<a href='https://www.pro-football-reference.com/boxscores/" + Math.floor(key / 100) + "0" + getShorthandName(game.home.abbr) + ".htm'>Game Preview</a>";
+				htmlString += "<a href='https://www.pro-football-reference.com/boxscores/" + Math.floor(game.gameSchedule.gameId / 100) + "0" + getShorthandName(game.gameSchedule.homeTeamAbbr) + ".htm'>Game Preview</a>";
 			}
 			htmlString += "</div></div></div>";
 		}
@@ -972,7 +986,7 @@ function renderLiveGames()
 		liveGames.innerHTML = htmlString;
 
 		var liveGamesWrapper = document.getElementById("liveGamesWrapper");
-		if(g_data.thisWeek.games.length >= 1 && liveGamesWrapper)
+		if(g_liveGames.length >= 1 && liveGamesWrapper)
 		{
 			liveGamesWrapper.classList.remove("hidden");
 		}
@@ -988,37 +1002,37 @@ function renderLiveGames()
 }
 
 /* exported liveGameClick */
-function liveGameClick(key)
+function liveGameClick(index)
 {
-	var liveGame = document.getElementById("liveGame_" + key);
+	var liveGame = document.getElementById("liveGame_" + index);
 	if(liveGame)
 	{
 		if(liveGame.classList.contains("selected"))
 		{
-			liveGameSelect(key);
+			liveGameSelect(index);
 			liveGame.classList.remove("selected");
 		}
 		else
 		{
-			liveGameDeselect(key);
+			liveGameDeselect(index);
 			liveGame.classList.add("selected");
 		}
 	}
 	selectTableCells();
 }
 
-function liveGameSelect(key)
+function liveGameSelect(index)
 {
-	var liveGame = document.getElementById("liveGame_" + key);
+	var liveGame = document.getElementById("liveGame_" + index);
 	if(liveGame)
 	{
 		liveGame.classList.add("selected");
 	}
 }
 
-function liveGameDeselect(key)
+function liveGameDeselect(index)
 {
-	var liveGame = document.getElementById("liveGame_" + key);
+	var liveGame = document.getElementById("liveGame_" + index);
 	if(liveGame)
 	{
 		liveGame.classList.remove("selected");
@@ -1029,32 +1043,33 @@ function liveGameDeselect(key)
 function liveGameSelectGroup(group)
 {
 	liveGameDeselectAll();
-	var selectedGameIds = [];
-	for(let key in g_liveGames)
+	var selectedGameIndexes = [];
+	for(var i = 0; i < g_liveGames.length; i++)
 	{
-		var game = g_liveGames[key];
+		var game = g_liveGames[i];
+		var phase = (game.score ? game.score.phase : null);
 		if(group === GROUP_ALL)
 		{
-			selectedGameIds.push(key);
+			selectedGameIndexes.push(i);
 		}
 		else if(group === GROUP_ONGOING)
 		{
-			if(game.qtr === "1" || game.qtr === "2" || game.qtr === "3" || game.qtr === "4" || game.qtr === "5" || game.qtr === "Halftime")
+			if(phase === "Q1" || phase === "Q2" || phase === "Q3" || phase === "Q4" || phase === "OVERTIME" || phase === "HALFTIME")
 			{
-				selectedGameIds.push(key);
+				selectedGameIndexes.push(i);
 			}
 		}
 		else if(group === GROUP_FINISHED)
 		{
-			if(game.qtr === "Final")
+			if(phase === "FINAL")
 			{
-				selectedGameIds.push(key);
+				selectedGameIndexes.push(i);
 			}
 		}
 	}
-	for(var i = 0; i < selectedGameIds.length; i++)
+	for(var i = 0; i < selectedGameIndexes.length; i++)
 	{
-		liveGameSelect(selectedGameIds[i]);
+		liveGameSelect(selectedGameIndexes[i]);
 	}
 	selectTableCells();
 }
@@ -1062,9 +1077,9 @@ function liveGameSelectGroup(group)
 /* exported liveGameDeselectAll */
 function liveGameDeselectAll()
 {
-	for(let key in g_liveGames)
+	for(var i = 0; i < g_liveGames.length; i++)
 	{
-		liveGameDeselect(key);
+		liveGameDeselect(i);
 	}
 	selectTableCells();
 }
@@ -1072,24 +1087,31 @@ function liveGameDeselectAll()
 function selectTableCells()
 {
 	var selectedCellIds = [];
-	for(let key in g_liveGames)
+	for(var i = 0; i < g_liveGames.length; i++)
 	{
-		var game = g_liveGames[key];
+		var game = g_liveGames[i];
 		//console.log(game);
-		var highScore = (game.away.score.T > game.home.score.T ? game.away.score.T : game.home.score.T);
-		var lowScore = (game.away.score.T > game.home.score.T ? game.home.score.T : game.away.score.T);
-		var id = "hover_" + lowScore + "-" + highScore;
-
-		var liveGame = document.getElementById("liveGame_" + key);
-		if(liveGame && liveGame.classList.contains("selected") && game.qtr !== "Pregame")
+		if(game.score)
 		{
-			selectedCellIds.push(id);
-		}
+			var homeScore = game.score.homeTeamScore.pointTotal;
+			var awayScore = game.score.visitorTeamScore.pointTotal;
+			var phase = game.score.phase;
 
-		var cell = document.getElementById(id);
-		if(cell)
-		{
-			cell.classList.remove("selected");
+			var highScore = (awayScore > homeScore ? awayScore : homeScore);
+			var lowScore = (awayScore > homeScore ? homeScore : awayScore);
+			var id = "hover_" + lowScore + "-" + highScore;
+
+			var liveGame = document.getElementById("liveGame_" + i);
+			if(liveGame && liveGame.classList.contains("selected") && phase !== "PREGAME")
+			{
+				selectedCellIds.push(id);
+			}
+
+			var cell = document.getElementById(id);
+			if(cell)
+			{
+				cell.classList.remove("selected");
+			}
 		}
 	}
 	for(var i = 0; i < selectedCellIds.length; i++)
@@ -1103,12 +1125,16 @@ function selectTableCells()
 	}
 }
 
-function moveSelectedCell(key)
+function moveSelectedCell(index)
 {
-	var oldGame = g_prevLiveGames[key];
+
+	var oldGame = g_prevLiveGames[index];
 	//console.log(game);
-	var oldHighScore = (oldGame.away.score.T > oldGame.home.score.T ? oldGame.away.score.T : oldGame.home.score.T);
-	var oldLowScore = (oldGame.away.score.T > oldGame.home.score.T ? oldGame.home.score.T : oldGame.away.score.T);
+	var oldHomeScore = (oldGame.score ? oldGame.score.homeTeamScore.pointTotal : null);
+	var oldAwayScore = (oldGame.score ? oldGame.score.visitorTeamScore.pointTotal : null);
+
+	var oldHighScore = (oldAwayScore > oldHomeScore ? oldAwayScore : oldHomeScore);
+	var oldLowScore = (oldAwayScore > oldHomeScore ? oldHomeScore : oldAwayScore);
 	var oldId = "hover_" + oldLowScore + "-" + oldHighScore;
 	var oldCell = document.getElementById(oldId);
 	if(oldCell && oldCell.classList.contains("selected"))
@@ -1116,10 +1142,13 @@ function moveSelectedCell(key)
 		oldCell.classList.remove("selected");
 	}
 
-	var newGame = g_liveGames[key];
+	var newGame = g_liveGames[index];
 	//console.log(game);
-	var newHighScore = (newGame.away.score.T > newGame.home.score.T ? newGame.away.score.T : newGame.home.score.T);
-	var newLowScore = (newGame.away.score.T > newGame.home.score.T ? newGame.home.score.T : newGame.away.score.T);
+	var newHomeScore = (newGame.score ? newGame.score.homeTeamScore.pointTotal : null);
+	var newAwayScore = (newGame.score ? newGame.score.visitorTeamScore.pointTotal : null);
+
+	var newHighScore = (newAwayScore > newHomeScore ? newAwayScore : newHomeScore);
+	var newLowScore = (newAwayScore > newHomeScore ? newHomeScore : newAwayScore);
 	var newId = "hover_" + newLowScore + "-" + newHighScore;
 	var newCell = document.getElementById(newId);
 	if(newCell && newGame.qtr !== "Pregame")
@@ -1152,6 +1181,11 @@ function onResize()
 	var liveGames = document.getElementById("liveGames");
 	if(liveGames)
 	{
+		var liveGamesWrapper = document.getElementById("liveGamesWrapper");
+		if(liveGamesWrapper)
+		{
+			liveGames.style.width = liveGamesWrapper.offsetWidth;
+		}
 		liveGames.classList.remove("p100");
 		liveGames.classList.remove("p50");
 		liveGames.classList.remove("p33");
@@ -1179,40 +1213,46 @@ function onResize()
 
 function getScorigamiProbability(game)
 {
-	var awayPts = game.away.score.T;
-	var homePts = game.home.score.T;
-	var minutes = parseFloat(game.clock.split(":")[0]);
-	var seconds = parseFloat(game.clock.split(":")[1]);
+
+	var homeScore = (game.score ? game.score.homeTeamScore.pointTotal : null);
+	var awayScore = (game.score ? game.score.visitorTeamScore.pointTotal : null);
+	var phase = (game.score ? game.score.phase : null);
+
+	var minutes = (game.score ? parseFloat(game.score.time.split(":")[0]) : 15);
+	var seconds = (game.score ? parseFloat(game.score.time.split(":")[1]) : 0);
 	var quarter;
 	var overtime = false;
-	switch(game.qtr)
+	switch(phase)
 	{
-		case "1":
+		case "Q1":
 			quarter = 1;
 			break;
-		case "2":
+		case "Q2":
 			quarter = 2;
 			break;
-		case "3":
+		case "Q3":
 			quarter = 3;
 			break;
-		case "4":
+		case "Q4":
 			quarter = 4;
 			break;
-		case "5":
+		case "OVERTIME":
 			quarter = 4;
 			overtime = true;
 			break;
-		case "Halftime":
+		case "HALFTIME":
 			quarter = 2;
 			minutes = 0;
 			seconds = 0;
 			break;
-		case "Final":
-			/* falls through */
-		default:
+		case "FINAL":
 			quarter = 4;
 			minutes = 0;
+			seconds = 0;
+			break;
+		default:
+			quarter = 1;
+			minutes = 15;
 			seconds = 0;
 			break;
 	}
@@ -1225,13 +1265,13 @@ function getScorigamiProbability(game)
 	{
 		var chance1 = chances[i];
 		var prob1 = getProb(quarter, minutes, seconds, chance1);
-		var score1 = awayPts + chance1.pts;
+		var score1 = awayScore + chance1.pts;
 
 		for(var j = 0; j < chances.length; j++)
 		{
 			var chance2 = chances[j];
 			var prob2 = getProb(quarter, minutes, seconds, chance2);
-			var score2 = homePts + chance2.pts;
+			var score2 = homeScore + chance2.pts;
 
 			var winScore = (score1 > score2 ? score1 : score2);
 			var loseScore = (score1 > score2 ? score2 : score1);

@@ -9,7 +9,7 @@ var request = require("request");
 var teamParser = require("./teamParser.js");
 var dbVars = require("./dbVars");
 
-var url = "http://www.nfl.com/liveupdate/scorestrip/ss.json";
+var url = "https://feeds.nfl.com/feeds-rs/scores.json";
 
 var scoresTable = "scores";
 var metadataTable = "metadata";
@@ -45,7 +45,7 @@ var maxcount = 0;
 var maxcount = 0;
 var lastUpdated;
 var tables = {scores:[], metadata:[]};
-var thisWeek = {scorigami:[]};
+var newScorigami = [];
 
 function updateData()
 {
@@ -64,7 +64,7 @@ function updateData()
 				return;
 			}
 			//if the game is regular or post season, continue, otherwise (preseason) ignore it
-			if (data.t === "REG" || data.t === "POST")
+			if (data.seasonType === "REG" || data.seasonType === "POST")
 			{
 				//check the current week
 				client.query("SELECT data_int FROM " + metadataTable + " WHERE description='current_week';", (err1, res1) =>
@@ -73,11 +73,11 @@ function updateData()
 					{
 						var current_week = res1.rows[0].data_int;
 						//if the current week does not match the current tracked week, change the current week and delete the tracked games (we won't be needing them any more)
-						if(current_week !== data.w)
+						if(current_week !== data.week)
 						{
-							client.query("UPDATE " + metadataTable + " SET data_int=" + data.w + " WHERE description='current_week';DELETE FROM " + metadataTable + " WHERE description='tracked_game';", (err2, res2) => 
+							client.query("UPDATE " + metadataTable + " SET data_int=" + data.week + " WHERE description='current_week';DELETE FROM " + metadataTable + " WHERE description='tracked_game';", (err2, res2) => 
 							{
-								thisWeek.scorigami = [];
+								newScorigami = [];
 								updateData();
 							});
 						}
@@ -91,22 +91,22 @@ function updateData()
 									var newgames = [];
 									var secondHalf = false;
 									//iterate through this week's games
-									for (let game of data.gms)
+									for (let game of data.gameScores)
 									{
 										//if the game is not over, ignore it
-										if(game.q === "F")
+										if(game.score && game.score.phase === "FINAL")
 										{	
 											var tracked = false;
 											//if the game has already been tracked, ignore it
 											for (let row of res2.rows) 
 											{
-												if(game.eid === row.data_int)
+												if(game.gameSchedule.gameId === row.data_int)
 												{
 													tracked = true;
 													//console.log("game " + game.eid + " not tracked because it has already been tracked");
-													if(row.data_text === "true" && !thisWeek.scorigami.includes(game.eid))
+													if(row.data_text === "true" && !newScorigami.includes(game.gameSchedule.gameId))
 													{
-														thisWeek.scorigami.push(game.eid);
+														newScorigami.push(game.gameSchedule.gameId);
 													}
 													break;
 												}
@@ -122,7 +122,7 @@ function updateData()
 											//console.log("game " + game.eid + " not tracked because it has not ended");
 										}
 										//if there is a game in the second half, set secondHalf to true
-										if(game.q === 3 || game.q === 4 || game.q === 5)
+										if(game.score && (game.score.phase === "Q3" || game.score.phase === "Q4" || game.score.phase === "OVERTIME"))
 										{
 											secondHalf = true;
 										}
@@ -137,33 +137,39 @@ function updateData()
 									var finishedQueries = 0;
 									var queryString = "";
 									//iterate through the list of untracked games
-									for (let game of newgames)
+									for (var i = 0; i < newgames.length; i++)
 									{
-										(function(game)
+										(function(game, index)
 										{
+											var homeScore = game.score.homeTeamScore.pointTotal;
+											var awayScore = game.score.visitorTeamScore.pointTotal;
+
 											//get the score row from the database
-											var pts_win = game.hs > game.vs ? game.hs : game.vs;
-											var pts_lose = game.hs > game.vs ? game.vs : game.hs;
-											var homeWin = game.hs > game.vs;
+											var pts_win = homeScore > awayScore ? homeScore : awayScore;
+											var pts_lose = homeScore > awayScore ? awayScore : homeScore;
+											var homeWin = homeScore > awayScore;
 											client.query("SELECT count FROM " + scoresTable + " WHERE (pts_win=" + pts_win + " AND pts_lose=" + pts_lose + ");", (err3, res3) =>
 											{
 												if(!err3)
 												{
 													//aCompleteFuckingMiracleHasHapppened is true when 2 games achieve scorigami with same score at the same time
 													var aCompleteFuckingMiracleHasHapppened = false;
-													for (let game2 of newgames)
+													for (var j = 0; j < index; j++)
 													{
-														if(game.hs === game2.hs && game.vs === game2.vs && game.eid > game2.eid)
+														var game2 = newgames[j];
+														var homeScore2 = game2.score.homeTeamScore.pointTotal;
+														var awayScore2 = game2.score.visitorTeamScore.pointTotal;
+														if(homeScore === homeScore2 && awayScore === awayScore2)
 														{
 															aCompleteFuckingMiracleHasHapppened = true;
 														}
 													}
-													var winTeam = teamParser.getFullName(homeWin ? game.h : game.v);
-													var loseTeam = teamParser.getFullName(homeWin ? game.v : game.h);
-													var homeTeam = teamParser.getFullName(game.h);
-													var awayTeam = teamParser.getFullName(game.v);
-													var date = Math.floor(game.eid / 100).toString();
-													var gamelink = "https://www.pro-football-reference.com/boxscores/" + date + "0" + teamParser.getShorthandName(game.h) + ".htm";
+													var homeTeam = game.gameSchedule.homeDisplayName;
+													var awayTeam = game.gameSchedule.visitorDisplayName;
+													var winTeam = (homeWin ? homeTeam : awayTeam);
+													var loseTeam = (homeWin ? awayTeam : homeTeam);
+													var date = Math.floor(game.gameSchedule.gameId / 100).toString();
+													var gamelink = "https://www.pro-football-reference.com/boxscores/" + date + "0" + teamParser.getShorthandName(game.gameSchedule.homeTeam.abbr) + ".htm";
 													date = date.substr(0, 4) + "-" + date.substr(4, 2) + "-" + date.substr(6, 2);
 													//if the game score has been achieved before (in database), increment the count and add it to the list of tracked games
 													if(res3.rows[0] || aCompleteFuckingMiracleHasHapppened)
@@ -178,7 +184,7 @@ function updateData()
 														queryString += "', last_link='" + gamelink;
 														queryString += "' WHERE (pts_win=" + pts_win + " AND pts_lose=" + pts_lose + ");\n";
 
-														queryString += "INSERT INTO " + metadataTable + " (description, data_int, data_text) VALUES ('tracked_game', " + game.eid + ", 'false');\n";
+														queryString += "INSERT INTO " + metadataTable + " (description, data_int, data_text) VALUES ('tracked_game', " + game.gameSchedule.gameId + ", 'false');\n";
 														
 														//queryString += "UPDATE " + scoresTable + " SET count=count+1 WHERE (pts_win=" + pts_win + " AND pts_lose=" + pts_lose + ");\n";
 													}
@@ -202,9 +208,9 @@ function updateData()
 														queryString += "', '" + awayTeam;
 														queryString += "', '" + gamelink;
 														queryString += "');\n";
-														queryString += "INSERT INTO " + metadataTable + " (description, data_int, data_text) VALUES ('tracked_game', " + game.eid + ", 'true');\n";
+														queryString += "INSERT INTO " + metadataTable + " (description, data_int, data_text) VALUES ('tracked_game', " + game.gameSchedule.gameId + ", 'true');\n";
 
-														thisWeek.scorigami.push(game.eid);
+														newScorigami.push(game.gameSchedule.gameId);
 													}
 													finishedQueries++;
 													if(finishedQueries >= newgames.length)
@@ -229,7 +235,7 @@ function updateData()
 													getData();
 												}
 											});
-										})(game);
+										})(newgames[i], i);
 									}
 									if(newgames.length === 0)
 									{
@@ -256,20 +262,6 @@ function updateData()
 				//console.log("no games tracked because it is not a regular or post season week");
 				getData();
 			}
-
-			var newWeek = {};
-			newWeek.type = data.t;
-			newWeek.games = [];
-			for (let game of data.gms)
-			{
-				var newGame = {};
-				newGame.day = game.d;
-				newGame.time = game.t;
-				newGame.id = game.eid;
-				newWeek.games.push(newGame);
-			}
-			thisWeek.type = newWeek.type;
-			thisWeek.games = newWeek.games;
 		}
 		else
 		{
@@ -365,7 +357,7 @@ app.get("/data", function(req, res)
 		maxlosepts: maxlosepts,
 		maxcount: maxcount,
 		lastUpdated: lastUpdated,
-		thisWeek: thisWeek
+		newScorigami: newScorigami
 	};
 	//console.log(data);
 	res.json(data);

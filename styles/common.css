@@ -78,7 +78,6 @@ footer{
 .liveGameContainer{
 	width: 25%;
 	float: left;
-	min-width: 250px;
 }
 
 .p33 .liveGameContainer{
@@ -98,7 +97,7 @@ footer{
 	font-size: 10px;
 	border-radius: 3px;
 	border: 1px solid black;
-	max-width: 250px;
+	width: 250px;
 	margin: 5px auto;
 	padding: 2px;
 	font-size: 15px;
@@ -132,7 +131,7 @@ footer{
 }
 
 .teams{
-	width: 75%;
+	width: 70%;
 	float: left;
 }
 
@@ -147,7 +146,7 @@ footer{
 
 .gameInfoWrapper{
 	float: right;
-	width: 25%;
+	width: 30%;
 	height: 65px;
 }
 
