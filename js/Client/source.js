@@ -7,6 +7,7 @@ var g_liveGames;
 var g_prevLiveGames;
 var g_mode;
 var g_updateTimeout;
+
 var MAX_HUE = 240.0;
 
 var MODE_COUNT = "count";
@@ -26,14 +27,16 @@ if(debug)
 
 $.ajax({
 	url: "/data",
-	success: function(data) {
+	success: function(data) 
+	{
 		////console.log('success');
 		g_data = data;
 		//console.log(g_data);
 		checkReady();
 		checkLiveGamesReady();
 	},
-	error: function(data) {
+	error: function(data) 
+	{
 		console.log("error");
 		console.log(data);
 	}
@@ -44,12 +47,14 @@ $.ajax({
 	$.ajax({
 		url: "https://feeds.nfl.com/feeds-rs/scores.json",
 		cache:false,				
-		success: function(data) {
+		success: function(data) 
+		{
 			g_liveGames = data.gameScores;
 			//console.log(g_liveGames);
 			checkLiveGamesReady();
 		},
-		error: function(data) {
+		error: function(data) 
+		{
 			console.log("error");
 			console.log(data);
 		}

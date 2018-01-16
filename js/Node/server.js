@@ -152,8 +152,8 @@ function updateData()
 											{
 												if(!err3)
 												{
-													//aCompleteFuckingMiracleHasHapppened is true when 2 games achieve scorigami with same score at the same time
-													var aCompleteFuckingMiracleHasHapppened = false;
+													//aCompleteFuckingMiracleHasHappened is true when 2 games achieve scorigami with same score at the same time
+													var aCompleteFuckingMiracleHasHappened = false;
 													for (var j = 0; j < index; j++)
 													{
 														var game2 = newgames[j];
@@ -161,7 +161,7 @@ function updateData()
 														var awayScore2 = game2.score.visitorTeamScore.pointTotal;
 														if(homeScore === homeScore2 && awayScore === awayScore2)
 														{
-															aCompleteFuckingMiracleHasHapppened = true;
+															aCompleteFuckingMiracleHasHappened = true;
 														}
 													}
 													var homeTeam = game.gameSchedule.homeDisplayName;
@@ -172,7 +172,7 @@ function updateData()
 													var gamelink = "https://www.pro-football-reference.com/boxscores/" + date + "0" + teamParser.getShorthandName(game.gameSchedule.homeTeam.abbr) + ".htm";
 													date = date.substr(0, 4) + "-" + date.substr(4, 2) + "-" + date.substr(6, 2);
 													//if the game score has been achieved before (in database), increment the count and add it to the list of tracked games
-													if(res3.rows[0] || aCompleteFuckingMiracleHasHapppened)
+													if(res3.rows[0] || aCompleteFuckingMiracleHasHappened)
 													{
 														queryString += "UPDATE " + scoresTable;
 														queryString += " SET count=count+1";
