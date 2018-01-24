@@ -130,13 +130,23 @@ footer{
 	margin-right: 3px; 
 }
 
+.liveGame .img{
+	width: 45px;
+	height: var(--team-image-height);
+	border: 1px solid black;
+	vertical-align: middle;
+	margin-right: 3px; 
+	float:left;
+	background-size:contain; 
+}
+
 .teams{
 	width: 70%;
 	float: left;
 }
 
 .teamInfo{
-	line-height: var(--team-image-height);
+	line-height: 32px;
 	margin: 3px;
 }
 

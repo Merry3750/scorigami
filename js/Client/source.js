@@ -901,7 +901,7 @@ function renderLiveGames()
 			htmlString += "' onclick='liveGameClick(" + i + ");'>";
 			htmlString += "<div class='liveGameContent'>";
 			htmlString += "<div class='teams'>";
-			htmlString += "<div class='teamInfo'><img src='../images/teams/" + game.gameSchedule.visitorTeamAbbr + ".gif'' alt='" + game.gameSchedule.visitorTeamAbbr + "'>";
+			htmlString += "<div class='teamInfo'><div class='img' style='background-image:url(\"../images/teams/" + game.gameSchedule.visitorTeamAbbr + ".gif\")'></div>";
 			htmlString += game.gameSchedule.visitorNickname;
 			if(phase === "Q1" || phase === "Q2" || phase === "Q3" || phase === "Q4" || phase === "OVERTIME" || phase === "HALFTIME" || phase === "FINAL")
 			{
@@ -912,7 +912,7 @@ function renderLiveGames()
 				htmlString += "<span class='teamScore'>" + game.score.visitorTeamScore.pointTotal + "</span>";
 			}
 			htmlString += "</div>";
-			htmlString += "<div class='teamInfo'><img src='../images/teams/" + game.gameSchedule.homeTeamAbbr + ".gif'' alt='" + game.gameSchedule.homeTeamAbbr + "'>";
+			htmlString += "<div class='teamInfo'><div class='img' style='background-image:url(\"../images/teams/" + game.gameSchedule.homeTeamAbbr + ".gif\")'></div>";
 			htmlString += game.gameSchedule.homeNickname;
 			if(phase === "Q1" || phase === "Q2" || phase === "Q3" || phase === "Q4" || phase === "OVERTIME" || phase === "HALFTIME" || phase === "FINAL")
 			{
@@ -958,8 +958,13 @@ function renderLiveGames()
 			htmlString += "</div></div></div>";
 			htmlString += "<div class='liveGameFooter'>";
 
+			//if game is preseason or probowl
+			if(game.gameSchedule.seasonType !== "REG" && game.gameSchedule.seasonType !== "POST")
+			{
+					htmlString += "Untracked Exhibition Game";
+			}
 			//if game is over
-			if (phase === "FINAL")
+			else if (phase === "FINAL")
 			{
 				var highScore = (awayScore > homeScore ? awayScore : homeScore);
 				var lowScore = (awayScore > homeScore ? homeScore : awayScore);
