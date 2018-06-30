@@ -950,7 +950,17 @@ function renderLiveGames()
 					break;
 				default:
 					var date = new Date(game.gameSchedule.gameDate + " " + game.gameSchedule.gameTimeEastern);
-					var day = (date.toLocaleDateString("en-US", {weekday:"short"}));
+					var day;
+					//check if the game is within the next week, if yes display weekday, if no display date and change title to "Upcoming Games"
+					if(Date.now() + 604800000 >= date.getTime())
+					{
+						day = (date.toLocaleDateString("en-US", {weekday:"short"}));
+					}
+					else
+					{
+						day = (date.toLocaleDateString("en-US", {month:"short", day:"numeric"}));
+						document.getElementById("liveGamesTitle").innerHTML = "Upcoming Games";
+					}
 					var time = (date.toLocaleTimeString("en-US", {hour:"numeric", minute:"numeric"}));
 					htmlString += day + "<br />" + time;
 					break;
