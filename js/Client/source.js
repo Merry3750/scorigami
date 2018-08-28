@@ -1337,20 +1337,20 @@ function onClickDelegate(i, j)
 {
 	return function()
 	{
-			onClick(i, j);
+		onClick(i, j);
 	};
 }
 function mouseOverDelegate(i, j) 
 {
 	return function()
 	{
-			mouseOver(i, j);
+		mouseOver(i, j);
 	};
 }
 function mouseOffDelegate(i, j) 
 {
 	return function()
 	{
-			mouseOff(i, j);
+		mouseOff(i, j);
 	};
 }

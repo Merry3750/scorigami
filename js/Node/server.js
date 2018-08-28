@@ -8,6 +8,9 @@ require("dotenv").load();
 var request = require("request");
 var teamParser = require("./teamParser.js");
 var dbVars = require("./dbVars");
+var sslRedirect = require('heroku-ssl-redirect');
+
+app.use(sslRedirect())
 
 var url = "https://feeds.nfl.com/feeds-rs/scores.json";
 
