@@ -871,6 +871,10 @@ function renderLiveGames()
 			var homeScore = (game.score ? game.score.homeTeamScore.pointTotal : null);
 			var awayScore = (game.score ? game.score.visitorTeamScore.pointTotal : null);
 			var phase = (game.score ? game.score.phase : null);
+			if(phase && phase.startsWith("OT"))
+			{
+				phase = "OT1"
+			}
 
 			var newUpdate = false;
 			if(g_prevLiveGames && g_prevLiveGames[i].score && (g_prevLiveGames[i].score.visitorTeamScore.pointTotal !== awayScore || g_prevLiveGames[i].score.homeTeamScore.pointTotal !== homeScore))
@@ -903,7 +907,7 @@ function renderLiveGames()
 			htmlString += "<div class='teams'>";
 			htmlString += "<div class='teamInfo'><div class='img' style='background-image:url(\"../images/teams/" + game.gameSchedule.visitorTeamAbbr + ".gif\")'></div>";
 			htmlString += game.gameSchedule.visitorNickname;
-			if(phase === "Q1" || phase === "Q2" || phase === "Q3" || phase === "Q4" || phase === "OVERTIME" || phase === "HALFTIME" || phase === "FINAL" || phase === "SUSPENDED")
+			if(phase === "Q1" || phase === "Q2" || phase === "Q3" || phase === "Q4" || phase === "OT1" || phase === "HALFTIME" || phase === "FINAL" || phase === "SUSPENDED")
 			{
 				if(game.score.possessionTeamAbbr === game.gameSchedule.visitorTeamAbbr && phase !== "HALFTIME" && phase !== "FINAL")
 				{
@@ -914,7 +918,7 @@ function renderLiveGames()
 			htmlString += "</div>";
 			htmlString += "<div class='teamInfo'><div class='img' style='background-image:url(\"../images/teams/" + game.gameSchedule.homeTeamAbbr + ".gif\")'></div>";
 			htmlString += game.gameSchedule.homeNickname;
-			if(phase === "Q1" || phase === "Q2" || phase === "Q3" || phase === "Q4" || phase === "OVERTIME" || phase === "HALFTIME" || phase === "FINAL" || phase === "SUSPENDED")
+			if(phase === "Q1" || phase === "Q2" || phase === "Q3" || phase === "Q4" || phase === "OT1" || phase === "HALFTIME" || phase === "FINAL" || phase === "SUSPENDED")
 			{
 				if(game.score.possessionTeamAbbr === game.gameSchedule.homeTeamAbbr && phase !== "HALFTIME" && phase !== "FINAL")
 				{
@@ -939,7 +943,7 @@ function renderLiveGames()
 				case "Q4":
 					htmlString += "4th<br />" + game.score.time;
 					break;
-				case "OVERTIME":
+				case "OT1":
 					htmlString += "Overtime<br />" + game.score.time;
 					break;
 				case "HALFTIME":
@@ -992,7 +996,7 @@ function renderLiveGames()
 				}
 			}
 			//if game is ongoing
-			else if(phase === "Q1" || phase === "Q2" || phase === "Q3" || phase === "Q4" || phase === "OVERTIME" || phase === "HALFTIME")
+			else if(phase === "Q1" || phase === "Q2" || phase === "Q3" || phase === "Q4" || phase === "OT1" || phase === "HALFTIME")
 			{
 				var probability = getScorigamiProbability(game);
 				htmlString += "Chance of Scorigami: " + probability + "%";
@@ -1077,7 +1081,7 @@ function liveGameSelectGroup(group)
 		}
 		else if(group === GROUP_ONGOING)
 		{
-			if(phase === "Q1" || phase === "Q2" || phase === "Q3" || phase === "Q4" || phase === "OVERTIME" || phase === "HALFTIME")
+			if(phase === "Q1" || phase === "Q2" || phase === "Q3" || phase === "Q4" || phase === "OT1" || phase === "HALFTIME")
 			{
 				selectedGameIndexes.push(i);
 			}
@@ -1259,7 +1263,7 @@ function getScorigamiProbability(game)
 		case "Q4":
 			quarter = 4;
 			break;
-		case "OVERTIME":
+		case "OT1":
 			quarter = 4;
 			overtime = true;
 			break;
