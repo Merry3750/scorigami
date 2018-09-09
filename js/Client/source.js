@@ -907,9 +907,9 @@ function renderLiveGames()
 			htmlString += "<div class='teams'>";
 			htmlString += "<div class='teamInfo'><div class='img' style='background-image:url(\"../images/teams/" + game.gameSchedule.visitorTeamAbbr + ".gif\")'></div>";
 			htmlString += game.gameSchedule.visitorNickname;
-			if(phase === "Q1" || phase === "Q2" || phase === "Q3" || phase === "Q4" || phase === "OT1" || phase === "HALFTIME" || phase === "FINAL" || phase === "SUSPENDED")
+			if(phase === "Q1" || phase === "Q2" || phase === "Q3" || phase === "Q4" || phase === "OT1" || phase === "HALFTIME" || phase === "FINAL" || phase === "FINAL_OVERTIME" || phase === "SUSPENDED")
 			{
-				if(game.score.possessionTeamAbbr === game.gameSchedule.visitorTeamAbbr && phase !== "HALFTIME" && phase !== "FINAL")
+				if(game.score.possessionTeamAbbr === game.gameSchedule.visitorTeamAbbr && phase !== "HALFTIME" && phase !== "FINAL" && phase !== "FINAL_OVERTIME")
 				{
 					htmlString += " &bull;";
 				}
@@ -918,9 +918,9 @@ function renderLiveGames()
 			htmlString += "</div>";
 			htmlString += "<div class='teamInfo'><div class='img' style='background-image:url(\"../images/teams/" + game.gameSchedule.homeTeamAbbr + ".gif\")'></div>";
 			htmlString += game.gameSchedule.homeNickname;
-			if(phase === "Q1" || phase === "Q2" || phase === "Q3" || phase === "Q4" || phase === "OT1" || phase === "HALFTIME" || phase === "FINAL" || phase === "SUSPENDED")
+			if(phase === "Q1" || phase === "Q2" || phase === "Q3" || phase === "Q4" || phase === "OT1" || phase === "HALFTIME" || phase === "FINAL" || phase === "FINAL_OVERTIME" || phase === "SUSPENDED")
 			{
-				if(game.score.possessionTeamAbbr === game.gameSchedule.homeTeamAbbr && phase !== "HALFTIME" && phase !== "FINAL")
+				if(game.score.possessionTeamAbbr === game.gameSchedule.homeTeamAbbr && phase !== "HALFTIME" && phase !== "FINAL" && phase !== "FINAL_OVERTIME")
 				{
 					htmlString += " &bull;";
 				}
@@ -955,6 +955,9 @@ function renderLiveGames()
 				case "FINAL":
 					htmlString += "Final";
 					break;
+				case "FINAL_OVERTIME":
+					htmlString += "Final/OT";
+					break;
 				default:
 					var date = new Date(game.gameSchedule.gameDate + " " + game.gameSchedule.gameTimeEastern);
 					var day;
@@ -981,7 +984,7 @@ function renderLiveGames()
 					htmlString += "Untracked Exhibition Game";
 			}
 			//if game is over
-			else if (phase === "FINAL")
+			else if (phase === "FINAL" || phase == "FINAL_OVERTIME")
 			{
 				var highScore = (awayScore > homeScore ? awayScore : homeScore);
 				var lowScore = (awayScore > homeScore ? homeScore : awayScore);
@@ -1088,7 +1091,7 @@ function liveGameSelectGroup(group)
 		}
 		else if(group === GROUP_FINISHED)
 		{
-			if(phase === "FINAL")
+			if(phase === "FINAL" || phase === "FINAL_OVERTIME")
 			{
 				selectedGameIndexes.push(i);
 			}
@@ -1273,6 +1276,7 @@ function getScorigamiProbability(game)
 			seconds = 0;
 			break;
 		case "FINAL":
+		case "FINAL_OVERTIME":
 			quarter = 4;
 			minutes = 0;
 			seconds = 0;

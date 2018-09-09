@@ -97,7 +97,7 @@ function updateData()
 									for (let game of data.gameScores)
 									{
 										//if the game is not over, ignore it
-										if(game.score && game.score.phase === "FINAL")
+										if(game.score && (game.score.phase === "FINAL" || game.score.phase === "FINAL_OVERTIME"))
 										{	
 											var tracked = false;
 											//if the game has already been tracked, ignore it
