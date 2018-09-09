@@ -903,7 +903,7 @@ function renderLiveGames()
 			htmlString += "<div class='teams'>";
 			htmlString += "<div class='teamInfo'><div class='img' style='background-image:url(\"../images/teams/" + game.gameSchedule.visitorTeamAbbr + ".gif\")'></div>";
 			htmlString += game.gameSchedule.visitorNickname;
-			if(phase === "Q1" || phase === "Q2" || phase === "Q3" || phase === "Q4" || phase === "OVERTIME" || phase === "HALFTIME" || phase === "FINAL")
+			if(phase === "Q1" || phase === "Q2" || phase === "Q3" || phase === "Q4" || phase === "OVERTIME" || phase === "HALFTIME" || phase === "FINAL" || phase === "SUSPENDED")
 			{
 				if(game.score.possessionTeamAbbr === game.gameSchedule.visitorTeamAbbr && phase !== "HALFTIME" && phase !== "FINAL")
 				{
@@ -914,7 +914,7 @@ function renderLiveGames()
 			htmlString += "</div>";
 			htmlString += "<div class='teamInfo'><div class='img' style='background-image:url(\"../images/teams/" + game.gameSchedule.homeTeamAbbr + ".gif\")'></div>";
 			htmlString += game.gameSchedule.homeNickname;
-			if(phase === "Q1" || phase === "Q2" || phase === "Q3" || phase === "Q4" || phase === "OVERTIME" || phase === "HALFTIME" || phase === "FINAL")
+			if(phase === "Q1" || phase === "Q2" || phase === "Q3" || phase === "Q4" || phase === "OVERTIME" || phase === "HALFTIME" || phase === "FINAL" || phase === "SUSPENDED")
 			{
 				if(game.score.possessionTeamAbbr === game.gameSchedule.homeTeamAbbr && phase !== "HALFTIME" && phase !== "FINAL")
 				{
@@ -944,6 +944,9 @@ function renderLiveGames()
 					break;
 				case "HALFTIME":
 					htmlString += "Halftime";
+					break;
+				case "SUSPENDED":
+					htmlString += "<span style='font-size: 12px'>Suspended</span>";
 					break;
 				case "FINAL":
 					htmlString += "Final";
