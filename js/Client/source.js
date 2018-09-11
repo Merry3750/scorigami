@@ -721,7 +721,7 @@ function onClick(i, j)
 			
 			htmlString += "<span id='infoBoxClose' onclick='closeInfoBox()'>(<u>close</u>)</span>";
 			
-			var dateOptions = { year: "numeric", month: "long", day: "numeric" };
+			var dateOptions = { year: "numeric", month: "long", day: "numeric", timeZone: "America/New_York"};
 			var firstDate = new Date(data.first_date).toLocaleDateString("en-US", dateOptions);
 			
 			htmlString += "<br/>First Game: ";
