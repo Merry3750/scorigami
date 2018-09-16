@@ -49,7 +49,10 @@ $.ajax({
 		cache:false,				
 		success: function(data) 
 		{
-			g_liveGames = data.gameScores;
+			g_liveGames = data.gameScores.sort(function(a,b)
+			{
+				return a.gameSchedule.gameId - b.gameSchedule.gameId
+			});
 			//console.log(g_liveGames);
 			checkLiveGamesReady();
 		},
