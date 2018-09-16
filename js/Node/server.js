@@ -125,7 +125,7 @@ function updateData()
 											//console.log("game " + game.eid + " not tracked because it has not ended");
 										}
 										//if there is a game in the second half, set secondHalf to true
-										if(game.score && (game.score.phase === "Q3" || game.score.phase === "Q4" || game.score.phase === "OVERTIME"))
+										if(game.score && (game.score.phase === "Q3" || game.score.phase === "Q4" || game.score.phase.startsWith("OT")))
 										{
 											secondHalf = true;
 										}

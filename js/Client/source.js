@@ -994,7 +994,7 @@ function renderLiveGames()
 				var matrix = g_data.matrix;
 				if(g_data.newScorigami.includes(game.gameSchedule.gameId) || ! matrix[lowScore] || !matrix[lowScore][highScore] || matrix[lowScore][highScore].count === 0)
 				{
-					htmlString += "<span class='newScorigami'>NEW SCORIGAMI!</span>";
+					htmlString += "<span class='newScorigami'>SCORIGAMI!</span>";
 				}
 				else
 				{
@@ -1081,6 +1081,10 @@ function liveGameSelectGroup(group)
 	{
 		var game = g_liveGames[i];
 		var phase = (game.score ? game.score.phase : null);
+		if(phase && phase.startsWith("OT"))
+		{
+			phase = "OT1"
+		}
 		if(group === GROUP_ALL)
 		{
 			selectedGameIndexes.push(i);
