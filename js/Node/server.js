@@ -10,6 +10,15 @@ var teamParser = require("./teamParser.js");
 var dbVars = require("./dbVars");
 var sslRedirect = require('heroku-ssl-redirect');
 
+app.use(function forceLiveDomain(req, res, next) {
+  // Don't allow user to hit Heroku now that we have a domain
+  var host = req.get('Host');
+  if (host === 'scorigami.herokuapp.com') {
+    return res.redirect(301, 'https://nflscorigami.com' + req.originalUrl);
+  }
+  return next();
+});
+
 app.use(sslRedirect())
 
 var url = "https://feeds.nfl.com/feeds-rs/scores.json";
