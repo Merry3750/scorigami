@@ -8,7 +8,7 @@ h1{
 	font-size: 3em;
 }
 
-h2 {
+h3 {
 	margin: 0;
 }
 
@@ -21,7 +21,7 @@ h2 {
 	margin: auto;
 }
 
-.text{
+.faq{
 	max-width: 1125px;
 	width: 100%;
 	margin: auto;
