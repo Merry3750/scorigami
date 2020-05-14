@@ -54,6 +54,7 @@ function getFullName(string)
 		case "NYJ":
 			return "New York Jets";
 		case "OAK":
+		case "LV":
 			return "Oakland Raiders";
 		case "PHI":
 			return "Philadelphia Eagles";
@@ -128,6 +129,7 @@ function getShorthandName(string)
 		case "NYJ":
 			return "nyj";
 		case "OAK":
+		case "LV":
 			return "rai";
 		case "PHI":
 			return "phi";
