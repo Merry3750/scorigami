@@ -1,7 +1,7 @@
 {
 	"name": "scorigami",
 	"version": "1.0.0",
-	"description": "All NFL scores ever",
+	"description": "All WNBA scores ever",
 	"main": "js/server.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
