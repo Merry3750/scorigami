@@ -38,6 +38,7 @@ function getFullName(string)
 		case "KC":
 			return "Kansas City Chiefs";
 		case "LA":
+		case "LAR":
 			return "Los Angeles Rams";
 		case "LAC":
 			return "Los Angeles Chargers";
@@ -55,7 +56,7 @@ function getFullName(string)
 			return "New York Jets";
 		case "OAK":
 		case "LV":
-			return "Oakland Raiders";
+			return "Las Vegas Raiders";
 		case "PHI":
 			return "Philadelphia Eagles";
 		case "PIT":
@@ -69,7 +70,8 @@ function getFullName(string)
 		case "TEN":
 			return "Tennessee Titans";
 		case "WAS":
-			return "Washington Redskins";
+		case "WSH":
+			return "Washington Football Team";
 	}
 
 }
@@ -113,6 +115,7 @@ function getShorthandName(string)
 		case "KC":
 			return "kan";
 		case "LA":
+		case "LAR":
 			return "ram";
 		case "LAC":
 			return "sdg";
@@ -144,6 +147,7 @@ function getShorthandName(string)
 		case "TEN":
 			return "oti";
 		case "WAS":
+		case "WSH":
 			return "was";
 		default:
 			return string;

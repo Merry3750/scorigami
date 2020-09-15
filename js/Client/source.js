@@ -45,13 +45,13 @@ $.ajax({
 (function updateLiveGames()
 {
 	$.ajax({
-		url: "https://feeds.nfl.com/feeds-rs/scores.json",
+		url: "http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
 		cache:false,				
 		success: function(data) 
 		{
-			g_liveGames = data.gameScores.sort(function(a,b)
+			g_liveGames = data.events.sort(function(a,b)
 			{
-				return a.gameSchedule.gameId - b.gameSchedule.gameId
+				return a.id - b.id
 			});
 			//console.log(g_liveGames);
 			checkLiveGamesReady();
@@ -844,9 +844,11 @@ function hideHelper()
 function renderLiveGames()
 {
 	var liveGames = document.getElementById("liveGames");
+	var relevantInfo = [];
 	if(liveGames)
 	{
 		var htmlString = "";
+
 		for(var i = 0; i < g_liveGames.length; i++)
 		{
 			var game = g_liveGames[i];
@@ -871,16 +873,35 @@ function renderLiveGames()
 			// 		game.clock = "15:00";
 			// 	}
 			// }
-			var homeScore = (game.score ? game.score.homeTeamScore.pointTotal : null);
-			var awayScore = (game.score ? game.score.visitorTeamScore.pointTotal : null);
-			var phase = (game.score ? game.score.phase : null);
-			if(phase && phase.startsWith("OT"))
+			var phase = game.status.type.name;
+			var homeScore = null;
+			var awayScore = null;
+			var homeNick = "";
+			var awayNick = "";
+			var homeAbbr = "";
+			var awayAbbr = "";
+
+			for (let competitorIndex in game.competitions[0].competitors)
 			{
-				phase = "OT1"
+				var competitor = game.competitions[0].competitors[competitorIndex];
+				if(competitor.homeAway === "home")
+				{
+					homeScore = parseInt(competitor.score);
+					homeNick = competitor.team.shortDisplayName;
+					homeAbbr = competitor.team.abbreviation;
+				}
+				else
+				{
+					awayScore = parseInt(competitor.score);
+					awayNick = competitor.team.shortDisplayName;
+					awayAbbr = competitor.team.abbreviation;
+				}
 			}
 
+			relevantInfo.push({homeScore: homeScore, awayScore: awayScore});
+
 			var newUpdate = false;
-			if(g_prevLiveGames && g_prevLiveGames[i].score && (g_prevLiveGames[i].score.visitorTeamScore.pointTotal !== awayScore || g_prevLiveGames[i].score.homeTeamScore.pointTotal !== homeScore))
+			if(g_prevLiveGames && (g_prevLiveGames[i].awayScore !== awayScore || g_prevLiveGames[i].homeScore !== homeScore))
 			{
 				newUpdate = true;
 			}
@@ -908,61 +929,49 @@ function renderLiveGames()
 			htmlString += "' onclick='liveGameClick(" + i + ");'>";
 			htmlString += "<div class='liveGameContent'>";
 			htmlString += "<div class='teams'>";
-			htmlString += "<div class='teamInfo'><div class='img' style='background-image:url(\"../images/teams/" + game.gameSchedule.visitorTeamAbbr + ".gif\")'></div>";
-			htmlString += game.gameSchedule.visitorNickname;
-			if(phase === "Q1" || phase === "Q2" || phase === "Q3" || phase === "Q4" || phase === "OT1" || phase === "HALFTIME" || phase === "FINAL" || phase === "FINAL_OVERTIME" || phase === "SUSPENDED")
+			htmlString += "<div class='teamInfo'><div class='img' style='background-image:url(\"../images/teams/" + awayAbbr + ".gif\")'></div>";
+			htmlString += awayNick;
+			if(phase === "STATUS_IN_PROGRESS" || phase === "STATUS_HALFTIME" || phase === "STATUS_SUSPENDED" || phase === "STATUS_FINAL" || phase === "STATUS_FINAL_OVERTIME")
 			{
-				if(game.score.possessionTeamAbbr === game.gameSchedule.visitorTeamAbbr && phase !== "HALFTIME" && phase !== "FINAL" && phase !== "FINAL_OVERTIME")
-				{
-					htmlString += " &bull;";
-				}
-				htmlString += "<span class='teamScore'>" + game.score.visitorTeamScore.pointTotal + "</span>";
+				// if(game.score.possessionTeamAbbr === game.gameSchedule.visitorTeamAbbr && phase !== "HALFTIME" && phase !== "FINAL" && phase !== "FINAL_OVERTIME")
+				// {
+				// 	htmlString += " &bull;";
+				// }
+				htmlString += "<span class='teamScore'>" + awayScore + "</span>";
 			}
 			htmlString += "</div>";
-			htmlString += "<div class='teamInfo'><div class='img' style='background-image:url(\"../images/teams/" + game.gameSchedule.homeTeamAbbr + ".gif\")'></div>";
-			htmlString += game.gameSchedule.homeNickname;
-			if(phase === "Q1" || phase === "Q2" || phase === "Q3" || phase === "Q4" || phase === "OT1" || phase === "HALFTIME" || phase === "FINAL" || phase === "FINAL_OVERTIME" || phase === "SUSPENDED")
+			htmlString += "<div class='teamInfo'><div class='img' style='background-image:url(\"../images/teams/" + homeAbbr + ".gif\")'></div>";
+			htmlString += homeNick;
+			if(phase === "STATUS_IN_PROGRESS" || phase === "STATUS_HALFTIME" || phase === "STATUS_SUSPENDED" || phase === "STATUS_FINAL" || phase === "STATUS_FINAL_OVERTIME")
 			{
-				if(game.score.possessionTeamAbbr === game.gameSchedule.homeTeamAbbr && phase !== "HALFTIME" && phase !== "FINAL" && phase !== "FINAL_OVERTIME")
-				{
-					htmlString += " &bull;";
-				}
-				htmlString += "<span class='teamScore'>" + game.score.homeTeamScore.pointTotal + "</span>";
+				// if(game.score.possessionTeamAbbr === game.gameSchedule.homeTeamAbbr && phase !== "HALFTIME" && phase !== "FINAL" && phase !== "FINAL_OVERTIME")
+				// {
+				// 	htmlString += " &bull;";
+				// }
+				htmlString += "<span class='teamScore'>" + homeScore + "</span>";
 			}
 			htmlString += "</div>";
 			htmlString += "</div>";
 			htmlString += "<div class='gameInfoWrapper'><div class='gameInfo'>";
 			switch(phase)
 			{
-				case "Q1":
-					htmlString += "1st<br />" + game.score.time;
+				case "STATUS_IN_PROGRESS":
+					htmlString += game.status.type.detail.replace(" - ", "<br/>").replace(" Quarter", "");
 					break;
-				case "Q2":
-					htmlString += "2nd<br />" + game.score.time;
-					break;
-				case "Q3":
-					htmlString += "3rd<br />" + game.score.time;
-					break;
-				case "Q4":
-					htmlString += "4th<br />" + game.score.time;
-					break;
-				case "OT1":
-					htmlString += "Overtime<br />" + game.score.time;
-					break;
-				case "HALFTIME":
+				case "STATUS_HALFTIME":
 					htmlString += "Halftime";
 					break;
-				case "SUSPENDED":
+				case "STATUS_SUSPENDED":
 					htmlString += "<span style='font-size: 12px'>Suspended</span>";
 					break;
-				case "FINAL":
+				case "STATUS_FINAL":
 					htmlString += "Final";
 					break;
-				case "FINAL_OVERTIME":
+				case "STATUS_FINAL_OVERTIME":
 					htmlString += "Final/OT";
 					break;
 				default:
-					var date = new Date(game.gameSchedule.gameDate + " " + game.gameSchedule.gameTimeEastern);
+					var date = new Date(game.date);
 					var day;
 					//check if the game is within the next week, if yes display weekday, if no display date and change title to "Upcoming Games"
 					if(Date.now() + 604800000 >= date.getTime())
@@ -982,17 +991,18 @@ function renderLiveGames()
 			htmlString += "<div class='liveGameFooter'>";
 
 			//if game is preseason or probowl
-			if(game.gameSchedule.seasonType !== "REG" && game.gameSchedule.seasonType !== "POST")
+			//TODO: double check that type 3 is postseason and other types are exhibition games
+			if(game.season.type !== 2 && game.season.type !== 3)
 			{
 					htmlString += "Untracked Exhibition Game";
 			}
 			//if game is over
-			else if (phase === "FINAL" || phase == "FINAL_OVERTIME")
+			else if (phase === "STATUS_FINAL" || phase == "STATUS_FINAL_OVERTIME")
 			{
 				var highScore = (awayScore > homeScore ? awayScore : homeScore);
 				var lowScore = (awayScore > homeScore ? homeScore : awayScore);
 				var matrix = g_data.matrix;
-				if(g_data.newScorigami.includes(game.gameSchedule.gameId) || ! matrix[lowScore] || !matrix[lowScore][highScore] || matrix[lowScore][highScore].count === 0)
+				if(g_data.newScorigami.includes(game.id) || !matrix[lowScore] || !matrix[lowScore][highScore] || matrix[lowScore][highScore].count === 0)
 				{
 					htmlString += "<span class='newScorigami'>SCORIGAMI!</span>";
 				}
@@ -1002,7 +1012,7 @@ function renderLiveGames()
 				}
 			}
 			//if game is ongoing
-			else if(phase === "Q1" || phase === "Q2" || phase === "Q3" || phase === "Q4" || phase === "OT1" || phase === "HALFTIME")
+			else if(phase === "STATUS_IN_PROGRESS" || phase === "STATUS_HALFTIME")
 			{
 				var probability = getScorigamiProbability(game);
 				htmlString += "Chance of Scorigami: " + probability + "%";
@@ -1010,8 +1020,10 @@ function renderLiveGames()
 			//if game is upcoming
 			else
 			{
-				//var gamelink = "https://www.pro-football-reference.com/boxscores/" + key.substr(0, key.length - 2) + "0" + getShorthandName(game.abbr) + ".htm";
-				htmlString += "<a href='https://www.pro-football-reference.com/boxscores/" + Math.floor(game.gameSchedule.gameId / 100) + "0" + getShorthandName(game.gameSchedule.homeTeamAbbr) + ".htm'>Game Preview</a>";
+				var date = new Date(game.date).toLocaleDateString('en-US', {timeZone: "America/New_York", year: 'numeric', month: '2-digit', day: '2-digit'});
+				date = date.substr(6, 4) + date.substr(0, 2) + date.substr(3, 2);
+
+				htmlString += "<a href='https://www.pro-football-reference.com/boxscores/" + date + "0" + getShorthandName(homeAbbr) + ".htm'>Game Preview</a>";
 			}
 			htmlString += "</div></div></div>";
 		}
@@ -1031,7 +1043,7 @@ function renderLiveGames()
 		window.addEventListener("focus", clearUpdate);
 	}
 
-	g_prevLiveGames = g_liveGames;
+	g_prevLiveGames = relevantInfo;
 }
 
 /* exported liveGameClick */
@@ -1080,7 +1092,7 @@ function liveGameSelectGroup(group)
 	for(var i = 0; i < g_liveGames.length; i++)
 	{
 		var game = g_liveGames[i];
-		var phase = (game.score ? game.score.phase : null);
+		var phase = game.status.type.name;
 		if(phase && phase.startsWith("OT"))
 		{
 			phase = "OT1"
@@ -1091,14 +1103,14 @@ function liveGameSelectGroup(group)
 		}
 		else if(group === GROUP_ONGOING)
 		{
-			if(phase === "Q1" || phase === "Q2" || phase === "Q3" || phase === "Q4" || phase === "OT1" || phase === "HALFTIME")
+			if(phase === "STATUS_IN_PROGRESS" || phase === "HALFTIME")
 			{
 				selectedGameIndexes.push(i);
 			}
 		}
 		else if(group === GROUP_FINISHED)
 		{
-			if(phase === "FINAL" || phase === "FINAL_OVERTIME")
+			if(phase === "STATUS_FINAL" || phase === "STATUS_FINAL_OVERTIME")
 			{
 				selectedGameIndexes.push(i);
 			}
@@ -1128,27 +1140,37 @@ function selectTableCells()
 	{
 		var game = g_liveGames[i];
 		//console.log(game);
-		if(game.score)
+		var homeScore = null
+		var awayScore = null
+		var phase = game.status.type.name;
+
+		for (let competitorIndex in game.competitions[0].competitors)
 		{
-			var homeScore = game.score.homeTeamScore.pointTotal;
-			var awayScore = game.score.visitorTeamScore.pointTotal;
-			var phase = game.score.phase;
-
-			var highScore = (awayScore > homeScore ? awayScore : homeScore);
-			var lowScore = (awayScore > homeScore ? homeScore : awayScore);
-			var id = "hover_" + lowScore + "-" + highScore;
-
-			var liveGame = document.getElementById("liveGame_" + i);
-			if(liveGame && liveGame.classList.contains("selected") && phase !== "PREGAME")
+			var competitor = game.competitions[0].competitors[competitorIndex];
+			if(competitor.homeAway === "home")
 			{
-				selectedCellIds.push(id);
+				homeScore = parseInt(competitor.score);
 			}
-
-			var cell = document.getElementById(id);
-			if(cell)
+			else
 			{
-				cell.classList.remove("selected");
+				awayScore = parseInt(competitor.score);
 			}
+		}
+
+		var highScore = (awayScore > homeScore ? awayScore : homeScore);
+		var lowScore = (awayScore > homeScore ? homeScore : awayScore);
+		var id = "hover_" + lowScore + "-" + highScore;
+
+		var liveGame = document.getElementById("liveGame_" + i);
+		if(liveGame && liveGame.classList.contains("selected") && phase !== "STATUS_SCHEDULED")
+		{
+			selectedCellIds.push(id);
+		}
+
+		var cell = document.getElementById(id);
+		if(cell)
+		{
+			cell.classList.remove("selected");
 		}
 	}
 	for(var i = 0; i < selectedCellIds.length; i++)
@@ -1167,8 +1189,8 @@ function moveSelectedCell(index)
 
 	var oldGame = g_prevLiveGames[index];
 	//console.log(game);
-	var oldHomeScore = (oldGame.score ? oldGame.score.homeTeamScore.pointTotal : null);
-	var oldAwayScore = (oldGame.score ? oldGame.score.visitorTeamScore.pointTotal : null);
+	var oldHomeScore = (oldGame.homeScore ? oldGame.homeScore : null);
+	var oldAwayScore = (oldGame.awayScore ? oldGame.awayScore : null);
 
 	var oldHighScore = (oldAwayScore > oldHomeScore ? oldAwayScore : oldHomeScore);
 	var oldLowScore = (oldAwayScore > oldHomeScore ? oldHomeScore : oldAwayScore);
@@ -1180,15 +1202,28 @@ function moveSelectedCell(index)
 	}
 
 	var newGame = g_liveGames[index];
-	//console.log(game);
-	var newHomeScore = (newGame.score ? newGame.score.homeTeamScore.pointTotal : null);
-	var newAwayScore = (newGame.score ? newGame.score.visitorTeamScore.pointTotal : null);
+
+	var newHomeScore = null;
+	var newAwayScore = null;
+
+	for (let competitorIndex in newGame.competitions[0].competitors)
+	{
+		var competitor = newGame.competitions[0].competitors[competitorIndex];
+		if(competitor.homeAway === "home")
+		{
+			newHomeScore = parseInt(competitor.score);
+		}
+		else
+		{
+			newAwayScore = parseInt(competitor.score);
+		}
+	}
 
 	var newHighScore = (newAwayScore > newHomeScore ? newAwayScore : newHomeScore);
 	var newLowScore = (newAwayScore > newHomeScore ? newHomeScore : newAwayScore);
 	var newId = "hover_" + newLowScore + "-" + newHighScore;
 	var newCell = document.getElementById(newId);
-	if(newCell && newGame.qtr !== "Pregame")
+	if(newCell)
 	{
 		newCell.classList.add("selected");
 	}
@@ -1251,47 +1286,42 @@ function onResize()
 function getScorigamiProbability(game)
 {
 
-	var homeScore = (game.score ? game.score.homeTeamScore.pointTotal : null);
-	var awayScore = (game.score ? game.score.visitorTeamScore.pointTotal : null);
-	var phase = (game.score ? game.score.phase : null);
+	var homeScore = null
+	var awayScore = null
+	var phase = game.status.type.name;
 
-	var minutes = (game.score ? parseFloat(game.score.time.split(":")[0]) : 15);
-	var seconds = (game.score ? parseFloat(game.score.time.split(":")[1]) : 0);
+	for (let competitorIndex in game.competitions[0].competitors)
+	{
+		var competitor = game.competitions[0].competitors[competitorIndex];
+		if(competitor.homeAway === "home")
+		{
+			homeScore = parseInt(competitor.score);
+		}
+		else
+		{
+			awayScore = parseInt(competitor.score);
+		}
+	}
+
+	var clock = game.status.clock;
 	var quarter;
 	var overtime = false;
 	switch(phase)
 	{
-		case "Q1":
-			quarter = 1;
-			break;
-		case "Q2":
+		case "STATUS_IN_PROGRESS":
+			quarter = game.status.phase;
+		case "STATUS_HALFTIME":
 			quarter = 2;
+			clock = 0;
 			break;
-		case "Q3":
-			quarter = 3;
-			break;
-		case "Q4":
+		case "STATUS_FINAL":
+		case "STATUS_FINAL_OVERTIME":
 			quarter = 4;
-			break;
-		case "OT1":
-			quarter = 4;
-			overtime = true;
-			break;
-		case "HALFTIME":
-			quarter = 2;
-			minutes = 0;
-			seconds = 0;
-			break;
-		case "FINAL":
-		case "FINAL_OVERTIME":
-			quarter = 4;
-			minutes = 0;
-			seconds = 0;
+			clock = 0;
 			break;
 		default:
 			quarter = 1;
-			minutes = 15;
-			seconds = 0;
+			clock = 900;
 			break;
 	}
 
@@ -1302,13 +1332,13 @@ function getScorigamiProbability(game)
 	for(var i = 0; i < chances.length; i++)
 	{
 		var chance1 = chances[i];
-		var prob1 = getProb(quarter, minutes, seconds, chance1);
+		var prob1 = getProb(quarter, clock, chance1);
 		var score1 = awayScore + chance1.pts;
 
 		for(var j = 0; j < chances.length; j++)
 		{
 			var chance2 = chances[j];
-			var prob2 = getProb(quarter, minutes, seconds, chance2);
+			var prob2 = getProb(quarter, clock, chance2);
 			var score2 = homeScore + chance2.pts;
 
 			var winScore = (score1 > score2 ? score1 : score2);
@@ -1343,9 +1373,9 @@ function factorial(n)
 	return n * factorial(n-1);
 }
 
-function getProb(quarter, minutes, seconds, chance)
+function getProb(quarter, clock, chance)
 {
-	var prob = Math.exp(-1 * (((4 - quarter) * 15 + (minutes + seconds / 60.0)) / 60.0 * 4.22)) * Math.pow((((4 - quarter) * 15 + (minutes + seconds / 60)) / 60 * 4.22), (chance.td_1pt + chance.fg + chance.td + chance.td_2pt + chance.safety)) / factorial(chance.td_1pt + chance.fg + chance.td + chance.td_2pt + chance.safety) * chance.bin_chance;
+	var prob = Math.exp(-1 * (((4 - quarter) * 15 + (clock / 60.0)) / 60.0 * 4.22)) * Math.pow((((4 - quarter) * 15 + (clock / 60.0)) / 60 * 4.22), (chance.td_1pt + chance.fg + chance.td + chance.td_2pt + chance.safety)) / factorial(chance.td_1pt + chance.fg + chance.td + chance.td_2pt + chance.safety) * chance.bin_chance;
 
 	return prob;
 }
