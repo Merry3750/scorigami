@@ -111,9 +111,10 @@ function updateData()
 										{	
 											var tracked = false;
 											//if the game has already been tracked, ignore it
+											console.log(res2.rows);
 											for (let row of res2.rows) 
 											{
-												if(game.id === row.data_int)
+												if(parseInt(game.id) === row.data_int)
 												{
 													tracked = true;
 													//console.log("game " + game.eid + " not tracked because it has already been tracked");
