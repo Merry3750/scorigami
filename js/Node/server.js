@@ -21,7 +21,7 @@ app.use(function forceLiveDomain(req, res, next) {
 
 app.use(sslRedirect())
 
-var url = "http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard";
+var url = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard";
 
 var scoresTable = "scores";
 var metadataTable = "metadata";

@@ -45,7 +45,7 @@ $.ajax({
 (function updateLiveGames()
 {
 	$.ajax({
-		url: "http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
+		url: "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
 		cache:false,				
 		success: function(data) 
 		{
