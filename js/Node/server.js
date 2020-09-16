@@ -87,7 +87,8 @@ function updateData()
 						//if the current week does not match the current tracked week, change the current week and delete the tracked games (we won't be needing them any more)
 						if(data.week && current_week !== data.week.number)
 						{
-							client.query("UPDATE " + metadataTable + " SET data_int=" + data.week + " WHERE description='current_week';DELETE FROM " + metadataTable + " WHERE description='tracked_game';", (err2, res2) => 
+							console.log(data);
+							client.query("UPDATE " + metadataTable + " SET data_int=" + data.week.number + " WHERE description='current_week';DELETE FROM " + metadataTable + " WHERE description='tracked_game';", (err2, res2) => 
 							{
 								newScorigami = [];
 								updateData();
@@ -111,7 +112,6 @@ function updateData()
 										{	
 											var tracked = false;
 											//if the game has already been tracked, ignore it
-											console.log(res2.rows);
 											for (let row of res2.rows) 
 											{
 												if(parseInt(game.id) === row.data_int)
