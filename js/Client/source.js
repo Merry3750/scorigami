@@ -1309,7 +1309,8 @@ function getScorigamiProbability(game)
 	switch(phase)
 	{
 		case "STATUS_IN_PROGRESS":
-			quarter = game.status.phase;
+			quarter = game.status.period;
+			break;
 		case "STATUS_HALFTIME":
 			quarter = 2;
 			clock = 0;
@@ -1324,7 +1325,6 @@ function getScorigamiProbability(game)
 			clock = 900;
 			break;
 	}
-
 
 	var probability = 0.0;
 	var matrix = g_data.matrix;
@@ -1376,7 +1376,7 @@ function factorial(n)
 function getProb(quarter, clock, chance)
 {
 	var prob = Math.exp(-1 * (((4 - quarter) * 15 + (clock / 60.0)) / 60.0 * 4.22)) * Math.pow((((4 - quarter) * 15 + (clock / 60.0)) / 60 * 4.22), (chance.td_1pt + chance.fg + chance.td + chance.td_2pt + chance.safety)) / factorial(chance.td_1pt + chance.fg + chance.td + chance.td_2pt + chance.safety) * chance.bin_chance;
-
+	
 	return prob;
 }
 
