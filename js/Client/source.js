@@ -978,8 +978,8 @@ function renderLiveGames()
 				case "STATUS_END_PERIOD":
 					htmlString += game.status.type.detail.replace(" of ", "<br/>").replace(" Quarter", "");
 					break;
-				case "STATUS_FINAL_OVERTIME":
-					htmlString += "Final/OT";
+				case "STATUS_FINAL":
+					htmlString += "Final";
 					break;
 				default:
 					var date = new Date(game.date);
