@@ -1306,6 +1306,8 @@ function getScorigamiProbability(game)
 	var clock = game.status.clock;
 	var quarter;
 	var overtime = false;
+	console.log(phase);
+	console.log(game);
 	switch(phase)
 	{
 		case "STATUS_IN_PROGRESS":
@@ -1325,6 +1327,8 @@ function getScorigamiProbability(game)
 			clock = 900;
 			break;
 	}
+
+	quarter = (quarter > 4 ? 4 : quarter);
 
 	var probability = 0.0;
 	var matrix = g_data.matrix;
