@@ -38,6 +38,7 @@ footer{
 	background-color: #BBBBBB;
 	margin-top: 10px;
 	width: 100%;
+	z-index: 0;
 }
 
 #infoBox{
@@ -204,6 +205,13 @@ footer{
 
 #helper.hide-opacity{
 	opacity: 0;
+}
+
+#bmac{
+	position: fixed;
+	right: 5px;
+	bottom: 5px;
+	z-index: 1;
 }
 
 body{

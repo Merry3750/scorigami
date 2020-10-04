@@ -53,7 +53,7 @@ $.ajax({
 			{
 				return (a.date + a.id) - (b.date + b.id)
 			});
-			//console.log(g_liveGames);
+			console.log(g_liveGames);
 			checkLiveGamesReady();
 		},
 		error: function(data) 
@@ -311,6 +311,17 @@ function setupEvents()
 		yearSlider.value = date;
 		yearSlider.addEventListener("input", function(e){(changeYearSlider());});
 	}
+
+	document.addEventListener("scroll", function(e){
+		if(window.scrollY >= 500)
+		{
+			var bmac = document.getElementById("bmac");
+			if(bmac)
+			{
+				bmac.classList.add("hidden");
+			}
+		}
+	});
 	
 	changeMode();
 }
@@ -931,7 +942,7 @@ function renderLiveGames()
 			htmlString += "<div class='teams'>";
 			htmlString += "<div class='teamInfo'><div class='img' style='background-image:url(\"../images/teams/" + awayAbbr + ".gif\")'></div>";
 			htmlString += awayNick;
-			if(phase === "STATUS_IN_PROGRESS" || phase === "STATUS_HALFTIME" || phase === "STATUS_SUSPENDED" || phase === "STATUS_FINAL" || phase === "STATUS_FINAL_OVERTIME")
+			if(phase === "STATUS_IN_PROGRESS" || phase === "STATUS_HALFTIME" || phase === "STATUS_SUSPENDED" || phase === "STATUS_FINAL" || phase === "STATUS_FINAL_OVERTIME" || phase === "STATUS_END_PERIOD")
 			{
 				// if(game.score.possessionTeamAbbr === game.gameSchedule.visitorTeamAbbr && phase !== "HALFTIME" && phase !== "FINAL" && phase !== "FINAL_OVERTIME")
 				// {
@@ -942,7 +953,7 @@ function renderLiveGames()
 			htmlString += "</div>";
 			htmlString += "<div class='teamInfo'><div class='img' style='background-image:url(\"../images/teams/" + homeAbbr + ".gif\")'></div>";
 			htmlString += homeNick;
-			if(phase === "STATUS_IN_PROGRESS" || phase === "STATUS_HALFTIME" || phase === "STATUS_SUSPENDED" || phase === "STATUS_FINAL" || phase === "STATUS_FINAL_OVERTIME")
+			if(phase === "STATUS_IN_PROGRESS" || phase === "STATUS_HALFTIME" || phase === "STATUS_SUSPENDED" || phase === "STATUS_FINAL" || phase === "STATUS_FINAL_OVERTIME" || phase === "STATUS_END_PERIOD")
 			{
 				// if(game.score.possessionTeamAbbr === game.gameSchedule.homeTeamAbbr && phase !== "HALFTIME" && phase !== "FINAL" && phase !== "FINAL_OVERTIME")
 				// {
@@ -964,8 +975,8 @@ function renderLiveGames()
 				case "STATUS_SUSPENDED":
 					htmlString += "<span style='font-size: 12px'>Suspended</span>";
 					break;
-				case "STATUS_FINAL":
-					htmlString += "Final";
+				case "STATUS_END_PERIOD":
+					htmlString += game.status.type.detail.replace(" of ", "<br/>").replace(" Quarter", "");
 					break;
 				case "STATUS_FINAL_OVERTIME":
 					htmlString += "Final/OT";
@@ -1012,7 +1023,7 @@ function renderLiveGames()
 				}
 			}
 			//if game is ongoing
-			else if(phase === "STATUS_IN_PROGRESS" || phase === "STATUS_HALFTIME")
+			else if(phase === "STATUS_IN_PROGRESS" || phase === "STATUS_HALFTIME" || phase === "STATUS_END_PERIOD")
 			{
 				var probability = getScorigamiProbability(game);
 				htmlString += "Chance of Scorigami: " + probability + "%";
@@ -1103,7 +1114,7 @@ function liveGameSelectGroup(group)
 		}
 		else if(group === GROUP_ONGOING)
 		{
-			if(phase === "STATUS_IN_PROGRESS" || phase === "HALFTIME")
+			if(phase === "STATUS_IN_PROGRESS" || phase === "HALFTIME" || phase === "STATUS_END_PERIOD")
 			{
 				selectedGameIndexes.push(i);
 			}
@@ -1306,11 +1317,12 @@ function getScorigamiProbability(game)
 	var clock = game.status.clock;
 	var quarter;
 	var overtime = false;
-	console.log(phase);
-	console.log(game);
+
+
 	switch(phase)
 	{
 		case "STATUS_IN_PROGRESS":
+		case "STATUS_END_PERIOD":
 			quarter = game.status.period;
 			break;
 		case "STATUS_HALFTIME":
