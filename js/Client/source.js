@@ -1404,9 +1404,9 @@ function handleBMAC()
 		var bmac = document.getElementById("bmac");
 		if(bmac && !g_bmacAnimating && bmac.classList.contains("hidden"))
 		{
-			g_bmacAnimating = true;
-			bmac.classList.remove("hidden");
-			bmacIn();
+			//g_bmacAnimating = true;
+			//bmac.classList.remove("hidden");
+			//bmacIn();
 		}
 	}
 }
