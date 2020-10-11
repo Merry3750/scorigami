@@ -209,8 +209,8 @@ footer{
 
 #bmac{
 	position: fixed;
-	right: 5px;
-	bottom: 5px;
+	right: 5;
+	bottom: 5;
 	z-index: 1;
 }
 

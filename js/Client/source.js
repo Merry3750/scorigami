@@ -7,6 +7,7 @@ var g_liveGames;
 var g_prevLiveGames;
 var g_mode;
 var g_updateTimeout;
+var g_bmacAnimating;
 
 var MAX_HUE = 240.0;
 
@@ -53,7 +54,6 @@ $.ajax({
 			{
 				return (a.date + a.id) - (b.date + b.id)
 			});
-			console.log(g_liveGames);
 			checkLiveGamesReady();
 		},
 		error: function(data) 
@@ -312,16 +312,7 @@ function setupEvents()
 		yearSlider.addEventListener("input", function(e){(changeYearSlider());});
 	}
 
-	document.addEventListener("scroll", function(e){
-		if(window.scrollY >= 500)
-		{
-			var bmac = document.getElementById("bmac");
-			if(bmac)
-			{
-				bmac.classList.add("hidden");
-			}
-		}
-	});
+	document.addEventListener("scroll", function(e){handleBMAC()});
 	
 	changeMode();
 }
@@ -1394,6 +1385,72 @@ function getProb(quarter, clock, chance)
 	var prob = Math.exp(-1 * (((4 - quarter) * 15 + (clock / 60.0)) / 60.0 * 4.22)) * Math.pow((((4 - quarter) * 15 + (clock / 60.0)) / 60 * 4.22), (chance.td_1pt + chance.fg + chance.td + chance.td_2pt + chance.safety)) / factorial(chance.td_1pt + chance.fg + chance.td + chance.td_2pt + chance.safety) * chance.bin_chance;
 	
 	return prob;
+}
+
+function handleBMAC()
+{
+	if(window.scrollY >= 500)
+	{
+		var bmac = document.getElementById("bmac");
+		if(bmac && !g_bmacAnimating && !bmac.classList.contains("hidden"))
+		{
+			g_bmacAnimating = true;
+			bmac.style.right = 5;
+			bmacOut();
+		}
+	}
+	if(window.scrollY == 0)
+	{
+		var bmac = document.getElementById("bmac");
+		if(bmac && !g_bmacAnimating && bmac.classList.contains("hidden"))
+		{
+			g_bmacAnimating = true;
+			bmac.classList.remove("hidden");
+			bmacIn();
+		}
+	}
+}
+
+
+function bmacIn()
+{
+	var bmac = document.getElementById("bmac");
+	if(bmac)
+	{
+		var right = parseInt(bmac.style.right);
+		if(right < 5)
+		{
+			right += 15;
+			bmac.style.right = right;
+			setTimeout(bmacIn, 10);
+		}
+		else
+		{
+			bmac.style.right = 5;
+			g_bmacAnimating = false;
+		}
+	}
+}
+
+function bmacOut()
+{
+	var bmac = document.getElementById("bmac");
+	if(bmac)
+	{
+		var right = parseInt(bmac.style.right);
+		if(right > -200)
+		{
+			right -= 15;
+			bmac.style.right = right;
+			setTimeout(bmacOut, 10);
+		}
+		else
+		{
+			bmac.style.right = -200;
+			g_bmacAnimating = false;
+			bmac.classList.add("hidden");
+		}
+	}
 }
 
 //delegate functions to make it possible to create event listeners in a loop
