@@ -75,12 +75,14 @@ function updateData()
 				getData();
 				return;
 			}
+			console.log(78);
 			//if the game is regular or post season, continue, otherwise (preseason) ignore it
 			//type 1 = ???
 			//Type 2 = regular season
 			//type 3 = pro bowl (and playoffs?)
 			if (data.season && (data.season.type === 2 || data.season.type === 3))
 			{
+				console.log(84);
 				//check the current week
 				client.query("SELECT data_int FROM " + metadataTable + " WHERE description='current_week';", (err1, res1) =>
 				{
