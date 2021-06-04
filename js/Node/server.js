@@ -66,6 +66,7 @@ function updateData()
 	{
 		if(!err0)
 		{
+			console.log("asd");
 			try
 			{
 				data = JSON.parse(data);
