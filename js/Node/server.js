@@ -66,7 +66,6 @@ function updateData()
 	{
 		if(!err0)
 		{
-			console.log(data);
 			try
 			{
 				data = JSON.parse(data);
@@ -85,6 +84,7 @@ function updateData()
 				//check the current week
 				client.query("SELECT data_int FROM " + metadataTable + " WHERE description='current_week';", (err1, res1) =>
 				{
+					console.log(87);
 					if(!err1)
 					{
 						var current_week = res1.rows[0].data_int;
@@ -94,6 +94,7 @@ function updateData()
 							console.log(data);
 							client.query("UPDATE " + metadataTable + " SET data_int=" + data.week.number + " WHERE description='current_week';DELETE FROM " + metadataTable + " WHERE description='tracked_game';", (err2, res2) => 
 							{
+								console.log(97);
 								newScorigami = [];
 								updateData();
 							});
@@ -103,6 +104,7 @@ function updateData()
 							//get the list of tracked games
 							client.query("SELECT data_int, data_text FROM " + metadataTable + " WHERE description='tracked_game';", (err2, res2) =>
 							{	
+								console.log(107);
 								if(!err2)
 								{
 									var newgames = [];
@@ -190,6 +192,7 @@ function updateData()
 
 											client.query("SELECT count FROM " + scoresTable + " WHERE (pts_win=" + pts_win + " AND pts_lose=" + pts_lose + ");", (err3, res3) =>
 											{
+												console.log(195);
 												if(!err3)
 												{
 													//aCompleteFuckingMiracleHasHappened is true when 2 games achieve scorigami with same score at the same time
@@ -273,6 +276,7 @@ function updateData()
 													{
 														client.query(queryString, (err4, res4) => 
 														{
+															console.log(279);
 															if(!err4)
 															{
 																getData();
