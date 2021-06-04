@@ -54,6 +54,7 @@ $.ajax({
 			{
 				return (a.date + a.id) - (b.date + b.id)
 			});
+			console.log(g_liveGames);
 			checkLiveGamesReady();
 		},
 		error: function(data) 

@@ -76,6 +76,9 @@ function updateData()
 				return;
 			}
 			//if the game is regular or post season, continue, otherwise (preseason) ignore it
+			//type 1 = ???
+			//Type 2 = regular season
+			//type 3 = pro bowl (and playoffs?)
 			if (data.season && (data.season.type === 2 || data.season.type === 3))
 			{
 				//check the current week
