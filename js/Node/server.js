@@ -34,7 +34,7 @@ if(process.env.DEBUG)
 }
 
 var DATABASE_URL = process.env.DATABASE_URL;
-var ssl = true;
+var ssl = false;
 if(!DATABASE_URL)
 {
 	DATABASE_URL = dbVars.DATABASE_URL;
@@ -45,8 +45,6 @@ const client = new Client({
 	connectionString: DATABASE_URL,
 	ssl: ssl,
 });
-
-console.log(DATABASE_URL);
 
 client.connect();
 
