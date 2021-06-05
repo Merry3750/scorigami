@@ -46,6 +46,8 @@ const client = new Client({
 	ssl: ssl,
 });
 
+console.log(DATABASE_URL);
+
 client.connect();
 
 app.use(express.static(__dirname + "/../.."));
