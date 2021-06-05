@@ -34,7 +34,7 @@ if(process.env.DEBUG)
 }
 
 var DATABASE_URL = process.env.DATABASE_URL;
-var ssl = false;
+var ssl = true;
 if(!DATABASE_URL)
 {
 	DATABASE_URL = dbVars.DATABASE_URL;
