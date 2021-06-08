@@ -80,7 +80,7 @@ function updateData()
 			//type 1 = ???
 			//Type 2 = regular season
 			//type 3 = pro bowl (and playoffs?)
-			if (data.season && (data.season.type === 2 || data.season.type === 3))
+			if (data.season && (data.season.type === 2 || data.season.type === 3) && false)
 			{
 				console.log(84);
 				//check the current week
@@ -335,8 +335,10 @@ function updateData()
 
 function getData()
 {
+	console.log(338);
 	client.query("SELECT * FROM " + scoresTable + ";", (err, res) =>
 	{
+		console.log(341);
 		if(!err)
 		{
 			var newScores = [];
