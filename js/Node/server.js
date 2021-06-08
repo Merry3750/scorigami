@@ -336,59 +336,57 @@ function updateData()
 function getData()
 {
 	console.log(338);
-	client.query("SELECT * FROM " + scoresTable + ";", (err, res) =>
-	{
-		console.log(341);
-		if(!err)
-		{
-			var newScores = [];
-			var newmatrix = [];
-			for (let row of res.rows) 
+	client.query("SELECT * FROM " + scoresTable + ";")
+				.then( res =>
+				{
+					console.log(342);
+					var newScores = [];
+					var newmatrix = [];
+					for (let row of res.rows) 
+					{
+						newScores.push(row);
+						if(row.pts_lose > maxlosepts)
+						{
+							maxlosepts = row.pts_lose;
+						}
+						if(row.pts_win > maxpts)
+						{
+							maxpts = row.pts_win;
+						}
+						if(row.count > maxcount)
+						{
+							maxcount = row.count;
+						}
+					}
+					
+					//create matrix with length and width equal to the max points, fill it with 0's
+					for (var i = 0; i <= maxpts; i++)
+					{
+						newmatrix[i] = [];
+						for(var j = 0; j <= maxpts; j++)
+						{
+							newmatrix[i][j] = {count: 0};
+						}
+					}
+					//fill matrix with useful data
+					for(var i = 0; i < newScores.length; i++)
+					{
+						newmatrix[newScores[i].pts_lose][newScores[i].pts_win] = newScores[i];
+					}
+					tables.scores = newScores;
+					matrix = newmatrix;
+					var dateOptions = { weekday: "short", year:"numeric", month:"short", day:"numeric", hour:"numeric", minute:"numeric", second:"numeric", timeZoneName:"short"};
+					//lastUpdated = new Date().toUTCString();
+					lastUpdated = new Date().toLocaleDateString("en-US", dateOptions);
+					
+					console.log("done " + lastUpdated);
+			})
+			.catch(err =>
 			{
-				newScores.push(row);
-				if(row.pts_lose > maxlosepts)
-				{
-					maxlosepts = row.pts_lose;
-				}
-				if(row.pts_win > maxpts)
-				{
-					maxpts = row.pts_win;
-				}
-				if(row.count > maxcount)
-				{
-					maxcount = row.count;
-				}
-			}
-			
-			//create matrix with length and width equal to the max points, fill it with 0's
-			for (var i = 0; i <= maxpts; i++)
-			{
-				newmatrix[i] = [];
-				for(var j = 0; j <= maxpts; j++)
-				{
-					newmatrix[i][j] = {count: 0};
-				}
-			}
-			//fill matrix with useful data
-			for(var i = 0; i < newScores.length; i++)
-			{
-				newmatrix[newScores[i].pts_lose][newScores[i].pts_win] = newScores[i];
-			}
-			tables.scores = newScores;
-			matrix = newmatrix;
-			var dateOptions = { weekday: "short", year:"numeric", month:"short", day:"numeric", hour:"numeric", minute:"numeric", second:"numeric", timeZoneName:"short"};
-			//lastUpdated = new Date().toUTCString();
-			lastUpdated = new Date().toLocaleDateString("en-US", dateOptions);
-			
-			console.log("done " + lastUpdated);
-		}
-		else
-		{
-			console.log("There was an error getting data");
-			throw err;
-		}
+				console.log("There was an error getting data");
+				throw err;
+			});
 		//renderPage();
-	});
 
 	client.query("SELECT * FROM " + metadataTable + ";", (err, res) =>
 	{
