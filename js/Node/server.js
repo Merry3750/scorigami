@@ -34,16 +34,18 @@ if(process.env.DEBUG)
 }
 
 var DATABASE_URL = process.env.DATABASE_URL;
-var ssl = true;
+var ssl = {rejectUnauthorized: false};
 if(!DATABASE_URL)
 {
 	DATABASE_URL = dbVars.DATABASE_URL;
-	ssl = false;
+	ssl = {rejectUnauthorized: false};
 }
 
 const client = new Client({
 	connectionString: DATABASE_URL,
 	ssl: ssl,
+	statement_timeout: 5000,
+	query_timeout: 5000,
 	connectionTimeoutMillis: 5000,
 	idle_in_transaction_session_timeout: 5000,
 });
