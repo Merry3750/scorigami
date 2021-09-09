@@ -18,6 +18,6 @@
 		"request": "^2.82.0"
 	},
 	"devDependencies": {
-		"jshint": "^2.9.5"
+		"jshint": "^2.13.1"
 	}
 }
