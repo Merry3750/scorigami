@@ -88,240 +88,234 @@ function updateData()
 			{
 				console.log(84);
 				//check the current week
-				client.query("SELECT data_int FROM " + metadataTable + " WHERE description='current_week';", (err1, res1) =>
-				{
-					console.log(87);
-					if(!err1)
+				client.query("SELECT data_int FROM " + metadataTable + " WHERE description='current_week';")
+					.then(res1 =>
 					{
+						console.log(87);
 						var current_week = res1.rows[0].data_int;
 						//if the current week does not match the current tracked week, change the current week and delete the tracked games (we won't be needing them any more)
 						if(data.week && current_week !== data.week.number)
 						{
 							console.log(data);
-							client.query("UPDATE " + metadataTable + " SET data_int=" + data.week.number + " WHERE description='current_week';DELETE FROM " + metadataTable + " WHERE description='tracked_game';", (err2, res2) => 
-							{
-								console.log(97);
-								newScorigami = [];
-								updateData();
-							});
+							client.query("UPDATE " + metadataTable + " SET data_int=" + data.week.number + " WHERE description='current_week';DELETE FROM " + metadataTable + " WHERE description='tracked_game';")
+								.then(res2 => 
+								{
+									console.log(97);
+									newScorigami = [];
+									updateData();
+								})
+								.catch(err2 => console.log("error"));
 						}
 						else
 						{
 							//get the list of tracked games
-							client.query("SELECT data_int, data_text FROM " + metadataTable + " WHERE description='tracked_game';", (err2, res2) =>
+							client.query("SELECT data_int, data_text FROM " + metadataTable + " WHERE description='tracked_game';")
+								.then (res2 =>
 							{	
 								console.log(107);
-								if(!err2)
+								var newgames = [];
+								var secondHalf = false;
+								//iterate through this week's games
+								for (let game of data.events)
 								{
-									var newgames = [];
-									var secondHalf = false;
-									//iterate through this week's games
-									for (let game of data.events)
-									{
-										//if the game is not over, ignore it 
-										//TODO: Make sure final OT status is correct
-										if(game.status && game.status.type && (game.status.type.name === "STATUS_FINAL" || game.status.type.name === "STATUS_FINAL_OVERTIME"))
-										{	
-											var tracked = false;
-											//if the game has already been tracked, ignore it
-											for (let row of res2.rows) 
+									//if the game is not over, ignore it 
+									//TODO: Make sure final OT status is correct
+									if(game.status && game.status.type && (game.status.type.name === "STATUS_FINAL" || game.status.type.name === "STATUS_FINAL_OVERTIME"))
+									{	
+										var tracked = false;
+										//if the game has already been tracked, ignore it
+										for (let row of res2.rows) 
+										{
+											if(parseInt(game.id) === row.data_int)
 											{
-												if(parseInt(game.id) === row.data_int)
+												tracked = true;
+												//console.log("game " + game.eid + " not tracked because it has already been tracked");
+												if(row.data_text === "true" && !newScorigami.includes(game.id))
 												{
-													tracked = true;
-													//console.log("game " + game.eid + " not tracked because it has already been tracked");
-													if(row.data_text === "true" && !newScorigami.includes(game.id))
-													{
-														newScorigami.push(game.id);
-													}
-													break;
+													newScorigami.push(game.id);
 												}
-											}
-											//if the game is over, and has not been tracked, add it to the list of untracked games
-											if(!tracked)
-											{
-												newgames.push(game);
+												break;
 											}
 										}
-										//if there is a game in the second half, set secondHalf to true
-										//TODO: Verify if OT period is >= 3
-										else if(game.status && (game.status.period >= 3))
+										//if the game is over, and has not been tracked, add it to the list of untracked games
+										if(!tracked)
 										{
-											secondHalf = true;
+											newgames.push(game);
 										}
-										else
-										{
-											//console.log("game " + game.eid + " not tracked because it has not ended");
-										}
-										//if there is a game in the second half, set secondHalf to true
 									}
-
-									//if there is a game in the second half, run tick every minute instead of every hour
-									if(secondHalf)
+									//if there is a game in the second half, set secondHalf to true
+									//TODO: Verify if OT period is >= 3
+									else if(game.status && (game.status.period >= 3))
 									{
-										console.log("secondHalf");
-										setTimeout(tick, 1000 * 60);
+										secondHalf = true;
 									}
-									var finishedQueries = 0;
-									var queryString = "";
-									//iterate through the list of untracked games
-									for (var i = 0; i < newgames.length; i++)
+									else
 									{
-										(function(game, index)
+										//console.log("game " + game.eid + " not tracked because it has not ended");
+									}
+									//if there is a game in the second half, set secondHalf to true
+								}
+
+								//if there is a game in the second half, run tick every minute instead of every hour
+								if(secondHalf)
+								{
+									console.log("secondHalf");
+									setTimeout(tick, 1000 * 60);
+								}
+								var finishedQueries = 0;
+								var queryString = "";
+								//iterate through the list of untracked games
+								for (var i = 0; i < newgames.length; i++)
+								{
+									(function(game, index)
+									{
+										var homeScore = -1;
+										var awayScore = -1;
+										var homeTeam = "";
+										var awayTeam = "";
+										var homeAbbr = "";
+
+										for (let competitorIndex in game.competitions[0].competitors)
 										{
-											var homeScore = -1;
-											var awayScore = -1;
-											var homeTeam = "";
-											var awayTeam = "";
-											var homeAbbr = "";
-
-											for (let competitorIndex in game.competitions[0].competitors)
+											var competitor = game.competitions[0].competitors[competitorIndex];
+											if(competitor.homeAway === "home")
 											{
-												var competitor = game.competitions[0].competitors[competitorIndex];
-												if(competitor.homeAway === "home")
-												{
-													homeScore = parseInt(competitor.score);
-													homeTeam = competitor.team.displayName;
-													homeAbbr = competitor.team.abbreviation;
-												}
-												else
-												{
-													awayScore = parseInt(competitor.score);
-													awayTeam = competitor.team.displayName;
-												}
+												homeScore = parseInt(competitor.score);
+												homeTeam = competitor.team.displayName;
+												homeAbbr = competitor.team.abbreviation;
 											}
+											else
+											{
+												awayScore = parseInt(competitor.score);
+												awayTeam = competitor.team.displayName;
+											}
+										}
 
-											//get the score row from the database
-											var pts_win = homeScore > awayScore ? homeScore : awayScore;
-											var pts_lose = homeScore > awayScore ? awayScore : homeScore;
-											var homeWin = homeScore > awayScore;
+										//get the score row from the database
+										var pts_win = homeScore > awayScore ? homeScore : awayScore;
+										var pts_lose = homeScore > awayScore ? awayScore : homeScore;
+										var homeWin = homeScore > awayScore;
 
-											client.query("SELECT count FROM " + scoresTable + " WHERE (pts_win=" + pts_win + " AND pts_lose=" + pts_lose + ");", (err3, res3) =>
+										client.query("SELECT count FROM " + scoresTable + " WHERE (pts_win=" + pts_win + " AND pts_lose=" + pts_lose + ");")
+											.then(res3 =>
 											{
 												console.log(195);
-												if(!err3)
+												//aCompleteFuckingMiracleHasHappened is true when 2 games achieve scorigami with same score at the same time
+												var aCompleteFuckingMiracleHasHappened = false;
+												for (var j = 0; j < index; j++)
 												{
-													//aCompleteFuckingMiracleHasHappened is true when 2 games achieve scorigami with same score at the same time
-													var aCompleteFuckingMiracleHasHappened = false;
-													for (var j = 0; j < index; j++)
+													var game2 = newgames[j];
+													var homeScore2 = -1;
+													var awayScore2 = -1;
+
+													for (let competitor2Index in game2.competitions[0].competitors)
 													{
-														var game2 = newgames[j];
-														var homeScore2 = -1;
-														var awayScore2 = -1;
-
-														for (let competitor2Index in game2.competitions[0].competitors)
+														var competitor2 = game2.competitions[0].competitors[competitor2Index];
+														if(competitor2.homeAway === "home")
 														{
-															var competitor2 = game2.competitions[0].competitors[competitor2Index];
-															if(competitor2.homeAway === "home")
-															{
-																homeScore2 = parseInt(competitor2.score);
-															}
-															else
-															{
-																awayScore2 = parseInt(competitor2.score);
-															}
+															homeScore2 = parseInt(competitor2.score);
 														}
-
-														if(homeScore === homeScore2 && awayScore === awayScore2)
+														else
 														{
-															aCompleteFuckingMiracleHasHappened = true;
+															awayScore2 = parseInt(competitor2.score);
 														}
 													}
-													var winTeam = (homeWin ? homeTeam : awayTeam);
-													var loseTeam = (homeWin ? awayTeam : homeTeam);
 
-													//a hack to get the date to display in eastern time in ISO format
-													var date = new Date(game.date).toLocaleDateString('en-US', {timeZone: "America/New_York", year: 'numeric', month: '2-digit', day: '2-digit'});
-													date = date.substr(6, 4) + date.substr(0, 2) + date.substr(3, 2);
-
-													var gamelink = "https://www.pro-football-reference.com/boxscores/" + date + "0" + teamParser.getShorthandName(homeAbbr) + ".htm";
-													date = date.substr(0, 4) + "-" + date.substr(4, 2) + "-" + date.substr(6, 2);
-													//if the game score has been achieved before (in database), increment the count and add it to the list of tracked games
-													if(res3.rows[0] || aCompleteFuckingMiracleHasHappened)
+													if(homeScore === homeScore2 && awayScore === awayScore2)
 													{
-														queryString += "UPDATE " + scoresTable;
-														queryString += " SET count=count+1";
-														queryString += ", last_date=to_date('" + date + "', 'YYYY-MM-DD')";
-														queryString += ", last_team_win='" + winTeam;
-														queryString += "', last_team_lose='" + loseTeam;
-														queryString += "', last_team_home='" + homeTeam;
-														queryString += "', last_team_away='" + awayTeam;
-														queryString += "', last_link='" + gamelink;
-														queryString += "' WHERE (pts_win=" + pts_win + " AND pts_lose=" + pts_lose + ");\n";
-
-														queryString += "INSERT INTO " + metadataTable + " (description, data_int, data_text) VALUES ('tracked_game', " + game.id + ", 'false');\n";
-														
-														//queryString += "UPDATE " + scoresTable + " SET count=count+1 WHERE (pts_win=" + pts_win + " AND pts_lose=" + pts_lose + ");\n";
-													}
-													//if the game score has not been achieved before (not in database), add it to the database and add it to the list of tracked games
-													else
-													{
-														queryString += "INSERT INTO " + scoresTable + " (pts_win, pts_lose, count, first_date, first_team_win, first_team_lose, first_team_home, first_team_away, first_link, last_date, last_team_win, last_team_lose, last_team_home, last_team_away, last_link) ";
-														queryString += "VALUES (" + pts_win;
-														queryString += ", " + pts_lose;
-														queryString += ", 1";
-														queryString += ", to_date('" + date + "', 'YYYY-MM-DD')";
-														queryString += ", '" + winTeam;
-														queryString += "', '" + loseTeam;
-														queryString += "', '" + homeTeam;
-														queryString += "', '" + awayTeam;
-														queryString += "', '" + gamelink;
-														queryString += "', to_date('" + date + "', 'YYYY-MM-DD')";
-														queryString += ", '" + winTeam;
-														queryString += "', '" + loseTeam;
-														queryString += "', '" + homeTeam;
-														queryString += "', '" + awayTeam;
-														queryString += "', '" + gamelink;
-														queryString += "');\n";
-														queryString += "INSERT INTO " + metadataTable + " (description, data_int, data_text) VALUES ('tracked_game', " + game.id + ", 'true');\n";
-
-														newScorigami.push(game.id);
-													}
-													finishedQueries++;
-													if(finishedQueries >= newgames.length)
-													{
-														client.query(queryString, (err4, res4) => 
-														{
-															console.log(279);
-															if(!err4)
-															{
-																getData();
-															}
-															else
-															{
-																console.log("There was an error updating data: 4");
-																getData();
-															}
-														});
+														aCompleteFuckingMiracleHasHappened = true;
 													}
 												}
+												var winTeam = (homeWin ? homeTeam : awayTeam);
+												var loseTeam = (homeWin ? awayTeam : homeTeam);
+
+												//a hack to get the date to display in eastern time in ISO format
+												var date = new Date(game.date).toLocaleDateString('en-US', {timeZone: "America/New_York", year: 'numeric', month: '2-digit', day: '2-digit'});
+												date = date.substr(6, 4) + date.substr(0, 2) + date.substr(3, 2);
+
+												var gamelink = "https://www.pro-football-reference.com/boxscores/" + date + "0" + teamParser.getShorthandName(homeAbbr) + ".htm";
+												date = date.substr(0, 4) + "-" + date.substr(4, 2) + "-" + date.substr(6, 2);
+												//if the game score has been achieved before (in database), increment the count and add it to the list of tracked games
+												if(res3.rows[0] || aCompleteFuckingMiracleHasHappened)
+												{
+													queryString += "UPDATE " + scoresTable;
+													queryString += " SET count=count+1";
+													queryString += ", last_date=to_date('" + date + "', 'YYYY-MM-DD')";
+													queryString += ", last_team_win='" + winTeam;
+													queryString += "', last_team_lose='" + loseTeam;
+													queryString += "', last_team_home='" + homeTeam;
+													queryString += "', last_team_away='" + awayTeam;
+													queryString += "', last_link='" + gamelink;
+													queryString += "' WHERE (pts_win=" + pts_win + " AND pts_lose=" + pts_lose + ");\n";
+
+													queryString += "INSERT INTO " + metadataTable + " (description, data_int, data_text) VALUES ('tracked_game', " + game.id + ", 'false');\n";
+													
+													//queryString += "UPDATE " + scoresTable + " SET count=count+1 WHERE (pts_win=" + pts_win + " AND pts_lose=" + pts_lose + ");\n";
+												}
+												//if the game score has not been achieved before (not in database), add it to the database and add it to the list of tracked games
 												else
 												{
-													console.log("There was an error updating data: 3");
-													getData();
+													queryString += "INSERT INTO " + scoresTable + " (pts_win, pts_lose, count, first_date, first_team_win, first_team_lose, first_team_home, first_team_away, first_link, last_date, last_team_win, last_team_lose, last_team_home, last_team_away, last_link) ";
+													queryString += "VALUES (" + pts_win;
+													queryString += ", " + pts_lose;
+													queryString += ", 1";
+													queryString += ", to_date('" + date + "', 'YYYY-MM-DD')";
+													queryString += ", '" + winTeam;
+													queryString += "', '" + loseTeam;
+													queryString += "', '" + homeTeam;
+													queryString += "', '" + awayTeam;
+													queryString += "', '" + gamelink;
+													queryString += "', to_date('" + date + "', 'YYYY-MM-DD')";
+													queryString += ", '" + winTeam;
+													queryString += "', '" + loseTeam;
+													queryString += "', '" + homeTeam;
+													queryString += "', '" + awayTeam;
+													queryString += "', '" + gamelink;
+													queryString += "');\n";
+													queryString += "INSERT INTO " + metadataTable + " (description, data_int, data_text) VALUES ('tracked_game', " + game.id + ", 'true');\n";
+
+													newScorigami.push(game.id);
 												}
+												finishedQueries++;
+												if(finishedQueries >= newgames.length)
+												{
+													client.query(queryString)
+														.then(res4 => 
+														{
+															console.log(279);
+															getData();
+														})
+														.catch(err4 =>
+														{
+															console.log("There was an error updating data: 4");
+															getData();
+														});
+												}
+											})
+											.catch(err3 =>
+											{
+												console.log("There was an error updating data: 3");
+												getData();
 											});
-										})(newgames[i], i);
-									}
-									if(newgames.length === 0)
-									{
-										getData();
-									}
+									})(newgames[i], i);
 								}
-								else
+								if(newgames.length === 0)
 								{
-									console.log("There was an error updating data: 2");
 									getData();
 								}
+							})
+							.catch(err2 =>
+							{
+									console.log("There was an error updating data: 2");
+									getData();
 							});
-						}
 					}
-					else
-					{
-						console.log("There was an error updating data: 1");
-						getData();
-					}
-				});
+				})
+				.catch(err1 =>
+			{
+				console.log("There was an error updating data: 1");
+				getData();
+			});
 			}
 			else
 			{
@@ -339,9 +333,8 @@ function updateData()
 
 function getData()
 {
-	client.query("SELECT * FROM " + scoresTable + ";", (err, res) =>
-	{
-		if(!err)
+	client.query("SELECT * FROM " + scoresTable + ";")
+		.then(res =>
 		{
 			var newScores = [];
 			var newmatrix = [];
@@ -383,18 +376,15 @@ function getData()
 			lastUpdated = new Date().toLocaleDateString("en-US", dateOptions);
 			
 			console.log("done " + lastUpdated);
-		}
-		else
+		})
+		.catch(err =>
 		{
 			console.log("There was an error getting data");
 			throw err;
-		}
-		//renderPage();
-	});
+		});
 
-	client.query("SELECT * FROM " + metadataTable + ";", (err, res) =>
-	{
-		if(!err)
+	client.query("SELECT * FROM " + metadataTable + ";")
+		.then(res => 
 		{
 			var newMetadata = [];
 			for (let row of res.rows) 
@@ -402,8 +392,8 @@ function getData()
 				newMetadata.push(row);
 			}
 			tables.metadata = newMetadata;
-		}
-	});
+		})
+		.catch(err2 => console.log(error2));
 }
 
 function tick()
