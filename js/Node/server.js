@@ -66,7 +66,7 @@ var newScorigami = [];
 function updateData()
 {
 	console.log("fetching data");
-	request(url, function(err0, res0, data)
+	request(url, async function(err0, res0, data)
 	{
 		if(!err0)
 		{
