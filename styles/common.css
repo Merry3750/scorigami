@@ -233,3 +233,15 @@ body{
 .clearfix:after { content: " "; display: table; }
 .clearfix:after { clear: both; }
 .clearfix { *zoom: 1; }
+@media (prefers-color-scheme: dark) {
+body {
+	background-color:#222;
+	color: white
+}
+footer {
+	background-color: #333;
+}
+.liveGame{ 
+background-color: #555
+}
+}
