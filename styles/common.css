@@ -136,9 +136,9 @@ footer{
 	height: var(--team-image-height);
 	border: 1px solid black;
 	vertical-align: middle;
-	margin-right: 3px; 
+	margin-right: 3px;
 	float:left;
-	background-size:contain; 
+	background-size:contain;
 }
 
 .teams{
@@ -235,13 +235,26 @@ body{
 .clearfix { *zoom: 1; }
 @media (prefers-color-scheme: dark) {
 body {
-	background-color:#222;
-	color: white
+	background-color: #222;
+	color: #EEE
 }
 footer {
 	background-color: #333;
 }
 .liveGame{ 
+background-color: #555;
+}
+button, select {
+	background-color: #333;
+	color: white
+}
+a {
+	color: #2196F3;
+}
+#infoBox{
 background-color: #555
+}
+.liveGame.selected{ 
+background-color: #666
 }
 }
