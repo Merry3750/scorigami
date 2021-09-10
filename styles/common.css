@@ -234,27 +234,27 @@ body{
 .clearfix:after { clear: both; }
 .clearfix { *zoom: 1; }
 @media (prefers-color-scheme: dark) {
-body {
-	background-color: #222;
-	color: #EEE
-}
-footer {
-	background-color: #333;
-}
-.liveGame{ 
-background-color: #555;
-}
-button, select {
-	background-color: #333;
-	color: white
-}
-a {
-	color: #2196F3;
-}
-#infoBox{
-background-color: #555
-}
-.liveGame.selected{ 
-background-color: #666
-}
+	body {
+		background-color: #222;
+		color: #EEE
+	}
+	footer {
+		background-color: #333;
+	}
+	.liveGame{ 
+		background-color: #555;
+	}
+	button, select {
+		background-color: #333;
+		color: white
+	}
+	a {
+		color: #2196F3;
+	}
+	#infoBox{
+		background-color: #555
+	}
+	.liveGame.selected{ 
+		background-color: #666
+	}
 }
