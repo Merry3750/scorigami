@@ -128,3 +128,8 @@ table{
 #tableContainer{
 	text-align:center;
 }
+@media (prefers-color-scheme: dark) {
+	.black {
+		background-color:#111
+	}
+}
