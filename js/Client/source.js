@@ -18,6 +18,7 @@ var MODE_LAST_GAME = "lastGame";
 var GROUP_ALL = "all";
 var GROUP_ONGOING = "ongoing";
 var GROUP_FINISHED = "finished";
+var GROUP_TEN = "ten";
 
 var debug = window.location.href.startsWith("http://localhost");
 
@@ -1011,7 +1012,7 @@ function renderLiveGames()
 				}
 				else
 				{
-					htmlString += "No Scorigami";
+					htmlString += "No Scorigami (" + matrix[lowScore][highScore].count + ")";
 				}
 			}
 			//if game is ongoing
@@ -1114,6 +1115,13 @@ function liveGameSelectGroup(group)
 		else if(group === GROUP_FINISHED)
 		{
 			if(phase === "STATUS_FINAL" || phase === "STATUS_FINAL_OVERTIME")
+			{
+				selectedGameIndexes.push(i);
+			}
+		}
+		else if(group === GROUP_TEN)
+		{
+			if(getScorigamiProbability(game) >= 10.0)
 			{
 				selectedGameIndexes.push(i);
 			}
