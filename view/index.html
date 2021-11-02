@@ -21,6 +21,13 @@
 				<div id='switchContainer' class='inner-wrapper'>
 					<div class="switchWrapper">
 						<label class="switch">
+							<input type="checkbox" id="colorblindSwitch">
+							<span class="switchSlider"></span>
+						</label>
+						<div class="switchText">Colorblind Mode</div>
+					</div>
+					<div class="switchWrapper">
+						<label class="switch">
 							<input type="checkbox" id="countSwitch">
 							<span class="switchSlider"></span>
 						</label>
@@ -71,6 +78,16 @@
 							<div id='hueSpectrumLinearLabelMinCount'>1920</div>
 							<div id="hueSpectrumLinearColors">{{hueSpectrumLinearColors}}</div>
 							<div id='hueSpectrumLinearLabelMaxCount'>{{hueSpectrumLinearLabelMaxCount}}</div>
+					</div>
+					<div id='hueSpectrumLogarithmicColorblind' class='inner-wrapper hueSpectrum hidden'>
+							<div id='hueSpectrumLogarithmicLabelMinCount'>1</div>
+							<div id="hueSpectrumLogarithmicColors">{{hueSpectrumLogarithmicColorblindColors}}</div>
+							<div id='hueSpectrumLogarithmicLabelMaxCount'>{{hueSpectrumLogarithmicColorblindLabelMaxCount}}</div>
+					</div>
+					<div id='hueSpectrumLinearColorblind' class='inner-wrapper hueSpectrum hidden'>
+							<div id='hueSpectrumLinearLabelMinCount'>1920</div>
+							<div id="hueSpectrumLinearColors">{{hueSpectrumLinearColorblindColors}}</div>
+							<div id='hueSpectrumLinearLabelMaxCount'>{{hueSpectrumLinearLabelColorblindMaxCount}}</div>
 					</div>
 				</div>
 			</div>
