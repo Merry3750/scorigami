@@ -59,7 +59,7 @@ $.ajax({
 		{
 			g_liveGames = data.events.sort(function(a,b)
 			{
-				return (a.date + a.id) - (b.date + b.id)
+				return (a.id) - (b.id)
 			});
 			console.log(g_liveGames);
 			checkLiveGamesReady();
