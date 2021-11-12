@@ -422,7 +422,6 @@ app.get("/*", function(req, res)
 	res.sendFile(path.join(__dirname+"/../../view/index.html"));
 	client.query("UPDATE " + metadataTable + " SET data_int=data_int+1 WHERE description='hit_counter';" , (err1, res1) =>
 	{
-		console.log("hit")
 		if(err1)
 		{
 			console.log(err1);
