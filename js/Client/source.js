@@ -1265,9 +1265,8 @@ function moveSelectedCell(index)
 {
 
 	var oldGame = g_prevLiveGames[index];
-	//console.log(game);
-	var oldHomeScore = (oldGame.homeScore ? oldGame.homeScore : null);
-	var oldAwayScore = (oldGame.awayScore ? oldGame.awayScore : null);
+	var oldHomeScore = (typeof oldGame.homeScore !== "undefined" ? oldGame.homeScore : null);
+	var oldAwayScore = (typeof oldGame.awayScore !== "undefined" ? oldGame.awayScore : null);
 
 	var oldHighScore = (oldAwayScore > oldHomeScore ? oldAwayScore : oldHomeScore);
 	var oldLowScore = (oldAwayScore > oldHomeScore ? oldHomeScore : oldAwayScore);
