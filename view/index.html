@@ -22,6 +22,13 @@
 				<div id='switchContainer' class='inner-wrapper'>
 					<div class="switchWrapper">
 						<label class="switch">
+							<input type="checkbox" id="colorblindSwitch">
+							<span class="switchSlider"></span>
+						</label>
+						<div class="switchText">Colorblind Mode</div>
+					</div>
+					<div class="switchWrapper">
+						<label class="switch">
 							<input type="checkbox" id="countSwitch">
 							<span class="switchSlider"></span>
 						</label>
@@ -73,6 +80,16 @@
 							<div id="hueSpectrumLinearColors">{{hueSpectrumLinearColors}}</div>
 							<div id='hueSpectrumLinearLabelMaxCount'>{{hueSpectrumLinearLabelMaxCount}}</div>
 					</div>
+					<div id='hueSpectrumLogarithmicColorblind' class='inner-wrapper hueSpectrum hidden'>
+							<div id='hueSpectrumLogarithmicLabelMinCount'>1</div>
+							<div id="hueSpectrumLogarithmicColors">{{hueSpectrumLogarithmicColorblindColors}}</div>
+							<div id='hueSpectrumLogarithmicLabelMaxCount'>{{hueSpectrumLogarithmicColorblindLabelMaxCount}}</div>
+					</div>
+					<div id='hueSpectrumLinearColorblind' class='inner-wrapper hueSpectrum hidden'>
+							<div id='hueSpectrumLinearLabelMinCount'>1920</div>
+							<div id="hueSpectrumLinearColors">{{hueSpectrumLinearColorblindColors}}</div>
+							<div id='hueSpectrumLinearLabelMaxCount'>{{hueSpectrumLinearLabelColorblindMaxCount}}</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -81,6 +98,7 @@
 				<h2 id="liveGamesTitle">This Week's Games:</h2>
 				<button type='button' onclick='liveGameDeselectAll()'>Deselect All</button>
 				<button type='button' onclick='liveGameSelectGroup("all")'>Select All</button>
+				<button type='button' onclick='liveGameSelectGroup("ten")'>Select 10%+ Chance</button>
 				<button type='button' onclick='liveGameSelectGroup("ongoing")'>Select Ongoing</button>
 				<button type='button' onclick='liveGameSelectGroup("finished")'>Select Finished</button>
 			</div>
@@ -108,13 +126,9 @@
 				<h3>Why isn't the 1 row all black?</h3>
 				<p style="margin-top:2px">I highly recommend you watch the video above to answer this question as having it charted out will help out a lot (also the video is amazing). The critical part to answer this question is at the 18:23 mark. If you can't watch the video, the gist is that it is possible for the defense to score 1 point on a PAT attempt by getting a safety.</p>
 			</div>
-			<div>
-				<h3>Who made this?</h3>
-				<p style="margin-top:2px"><a href="https://twitter.com/Merry3750/status/1437095255082512385">@Merry3750 made this</a></p>
-			</div>
 			<div class="hidden">
 				<h3>Why is this so awful on mobile?</h3>
-				<p style="margin-top:2px">Becaue the developer has absolutely no idea how to present this data in a mobile friendly format, so he didn't even try.</p>
+				<p style="margin-top:2px">Because the developer has absolutely no idea how to present this data in a mobile friendly format, so he didn't even try.</p>
 			</div>
 		</div>
 		<div id="helper" class="invisible" onclick="hideHelper()">New Here?<br />See the FAQ below</div>

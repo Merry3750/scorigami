@@ -79,19 +79,16 @@ function updateData()
 				getData();
 				return;
 			}
-			console.log(78);
 			//if the game is regular or post season, continue, otherwise (preseason) ignore it
 			//type 1 = ???
 			//Type 2 = regular season
 			//type 3 = pro bowl (and playoffs?)
 			if (data.season && (data.season.type === 2 || data.season.type === 3))
 			{
-				console.log(84);
 				//check the current week
 				client.query("SELECT data_int FROM " + metadataTable + " WHERE description='current_week';")
 					.then(res1 =>
 					{
-						console.log(87);
 						var current_week = res1.rows[0].data_int;
 						//if the current week does not match the current tracked week, change the current week and delete the tracked games (we won't be needing them any more)
 						if(data.week && current_week !== data.week.number)
@@ -100,7 +97,6 @@ function updateData()
 							client.query("UPDATE " + metadataTable + " SET data_int=" + data.week.number + " WHERE description='current_week';DELETE FROM " + metadataTable + " WHERE description='tracked_game';")
 								.then(res2 => 
 								{
-									console.log(97);
 									newScorigami = [];
 									updateData();
 								})
@@ -112,7 +108,6 @@ function updateData()
 							client.query("SELECT data_int, data_text FROM " + metadataTable + " WHERE description='tracked_game';")
 								.then (res2 =>
 							{	
-								console.log(107);
 								var newgames = [];
 								var secondHalf = false;
 								//iterate through this week's games
@@ -199,7 +194,6 @@ function updateData()
 										client.query("SELECT count FROM " + scoresTable + " WHERE (pts_win=" + pts_win + " AND pts_lose=" + pts_lose + ");")
 											.then(res3 =>
 											{
-												console.log(195);
 												//aCompleteFuckingMiracleHasHappened is true when 2 games achieve scorigami with same score at the same time
 												var aCompleteFuckingMiracleHasHappened = false;
 												for (var j = 0; j < index; j++)
@@ -282,7 +276,6 @@ function updateData()
 													client.query(queryString)
 														.then(res4 => 
 														{
-															console.log(279);
 															getData();
 														})
 														.catch(err4 =>
@@ -427,6 +420,13 @@ app.get("/copydb", function(req, res)
 app.get("/*", function(req, res)
 {
 	res.sendFile(path.join(__dirname+"/../../view/index.html"));
+	client.query("UPDATE " + metadataTable + " SET data_int=data_int+1 WHERE description='hit_counter';" , (err1, res1) =>
+	{
+		if(err1)
+		{
+			console.log(err1);
+		}
+	});
 });
 
 app.listen(process.env.PORT || 8081);

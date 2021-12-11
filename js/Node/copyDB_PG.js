@@ -171,6 +171,10 @@ function setupMetadataTable(data, isDebugTable)
 		queryString += data_date + ");\n";
 	}
 
+	queryString += "INSERT INTO metadata";
+	queryString += (isDebugTable ? "_DEBUG" : "");
+	queryString += " (description, data_int) VALUES ('hit_counter', " + 0 + ");"
+
 	client.query(queryString, (err, res) => {
 		if(err)
 		{

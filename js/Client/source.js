@@ -10,6 +10,12 @@ var g_updateTimeout;
 var g_bmacAnimating;
 
 var MAX_HUE = 240.0;
+var COLORBLIND_START_R = 75.0;
+var COLORBLIND_START_G = 0.0;
+var COLORBLIND_START_B = 130.0;
+var COLORBLIND_END_R = 50.0;
+var COLORBLIND_END_G = 205.0;
+var COLORBLIND_END_B = 50.0;
 
 var MODE_COUNT = "count";
 var MODE_FIRST_GAME = "firstGame";
@@ -18,6 +24,7 @@ var MODE_LAST_GAME = "lastGame";
 var GROUP_ALL = "all";
 var GROUP_ONGOING = "ongoing";
 var GROUP_FINISHED = "finished";
+var GROUP_TEN = "ten";
 
 var debug = window.location.href.startsWith("http://localhost");
 
@@ -52,7 +59,7 @@ $.ajax({
 		{
 			g_liveGames = data.events.sort(function(a,b)
 			{
-				return (a.date + a.id) - (b.date + b.id)
+				return (a.id) - (b.id)
 			});
 			console.log(g_liveGames);
 			checkLiveGamesReady();
@@ -286,6 +293,12 @@ function setupEvents()
 		modeSelector.addEventListener("change", function(e){changeMode();});
 	}
 	
+	var colorblindSwitch = document.getElementById("colorblindSwitch");
+	if(colorblindSwitch)
+	{
+		colorblindSwitch.addEventListener("change", function(e){toggleColorblind(e.target.checked);});
+	}
+	
 	var countSwitch = document.getElementById("countSwitch");
 	if(countSwitch)
 	{
@@ -411,10 +424,12 @@ function changeMode()
 		}
 	}
 
+	var colorblindSwitch = document.getElementById("colorblindSwitch");
 	var countSwitch = document.getElementById("countSwitch");
 	var gradientSwitch = document.getElementById("gradientSwitch");
 	var emptyRowsSwitch = document.getElementById("emptyRowsSwitch");
 	
+	toggleColorblind(colorblindSwitch.checked);
 	toggleNumber(countSwitch.checked);
 	toggleGradient(gradientSwitch.checked);
 	toggleEmptyRows(emptyRowsSwitch.checked);
@@ -498,6 +513,7 @@ function toggleGradient(on)
 	
 	var max;
 	var min;
+	var colorblind = document.getElementById("colorblindSwitch").checked;
 	
 	switch(g_mode)
 	{
@@ -527,26 +543,61 @@ function toggleGradient(on)
 					cell.classList.add("gradient");
 					if (cell.classList.contains("green"))
 					{
-						// var alpha = 0.9 * matrix[i][j].count / g_data.maxcount + 0.1;
-						// cell.style.backgroundColor = "rgba(0,128,0," + alpha + ")";
-						var hue;
-						switch(g_mode)
+						if(colorblind)
 						{
-							case MODE_FIRST_GAME:
-								var year = parseInt(matrix[i][j].first_date.substr(0,4));
-								hue = MAX_HUE - MAX_HUE * (year - min) / (max - min);
-								break;
-							case MODE_LAST_GAME:
-								var year = parseInt(matrix[i][j].last_date.substr(0,4));
-								hue = MAX_HUE - MAX_HUE * (year - min) / (max - min);
-								break;
-							case MODE_COUNT:
-								/* falls through */
-							default:
-								hue = MAX_HUE - MAX_HUE * Math.log(matrix[i][j].count) / max;
-								break;
+							var r;
+							var g;
+							var b;
+							var rDiff = COLORBLIND_START_R - COLORBLIND_END_R;
+							var gDiff = COLORBLIND_START_G - COLORBLIND_END_G;
+							var bDiff = COLORBLIND_START_B - COLORBLIND_END_B;
+							switch(g_mode)
+							{
+								case MODE_FIRST_GAME:
+									var year = parseInt(matrix[i][j].first_date.substr(0,4));
+									r = COLORBLIND_START_R - rDiff * (year - min) / (max - min);
+									g = COLORBLIND_START_G - gDiff * (year - min) / (max - min);
+									b = COLORBLIND_START_B - bDiff * (year - min) / (max - min);
+									break;
+								case MODE_LAST_GAME:
+									var year = parseInt(matrix[i][j].last_date.substr(0,4));
+									r = COLORBLIND_START_R - rDiff * (year - min) / (max - min);
+									g = COLORBLIND_START_G - gDiff * (year - min) / (max - min);
+									b = COLORBLIND_START_B - bDiff * (year - min) / (max - min);
+									break;
+								case MODE_COUNT:
+									/* falls through */
+								default:
+									r = COLORBLIND_START_R - rDiff * Math.log(matrix[i][j].count) / max;
+									g = COLORBLIND_START_G - gDiff * Math.log(matrix[i][j].count) / max;
+									b = COLORBLIND_START_B - bDiff * Math.log(matrix[i][j].count) / max;
+									break;
+							}
+							cell.style.backgroundColor = "rgba(" + r + "," + g + "," + b +  ",1)";
 						}
-						cell.style.backgroundColor = "hsl(" + hue + ",50%,50%)";
+						else
+						{
+							// var alpha = 0.9 * matrix[i][j].count / g_data.maxcount + 0.1;
+							// cell.style.backgroundColor = "rgba(0,128,0," + alpha + ")";
+							var hue;
+							switch(g_mode)
+							{
+								case MODE_FIRST_GAME:
+									var year = parseInt(matrix[i][j].first_date.substr(0,4));
+									hue = MAX_HUE - MAX_HUE * (year - min) / (max - min);
+									break;
+								case MODE_LAST_GAME:
+									var year = parseInt(matrix[i][j].last_date.substr(0,4));
+									hue = MAX_HUE - MAX_HUE * (year - min) / (max - min);
+									break;
+								case MODE_COUNT:
+									/* falls through */
+								default:
+									hue = MAX_HUE - MAX_HUE * Math.log(matrix[i][j].count) / max;
+									break;
+							}
+							cell.style.backgroundColor = "hsl(" + hue + ",50%,50%)";
+						}
 					}
 				}
 				else
@@ -563,7 +614,7 @@ function toggleGradient(on)
 	var spectrumLogarithmic = document.getElementById("hueSpectrumLogarithmic");
 	if(spectrumLogarithmic && g_mode === MODE_COUNT)
 	{
-		if(on )
+		if(on && !colorblind)
 		{
 			spectrumLogarithmic.classList.remove("invisible");
 		}
@@ -575,7 +626,7 @@ function toggleGradient(on)
 	var spectrumLinear = document.getElementById("hueSpectrumLinear");
 	if(spectrumLinear && (g_mode === MODE_FIRST_GAME || g_mode === MODE_LAST_GAME))
 	{
-		if(on)
+		if(on && !colorblind)
 		{
 			spectrumLinear.classList.remove("invisible");
 		}
@@ -584,6 +635,22 @@ function toggleGradient(on)
 			spectrumLinear.classList.add("invisible");
 		}
 	}
+}
+
+function toggleColorblind(on)
+{
+	var body = document.getElementById("body");
+	if(on)
+	{
+		body.classList.add("colorblind");
+	}
+	else
+	{
+		body.classList.remove("colorblind");
+	}
+
+	var gradientSwitch = document.getElementById("gradientSwitch");
+	toggleGradient(gradientSwitch.checked);
 }
 
 function toggleNumber(on)
@@ -1011,7 +1078,7 @@ function renderLiveGames()
 				}
 				else
 				{
-					htmlString += "No Scorigami";
+					htmlString += "No Scorigami (" + matrix[lowScore][highScore].count + ")";
 				}
 			}
 			//if game is ongoing
@@ -1118,6 +1185,13 @@ function liveGameSelectGroup(group)
 				selectedGameIndexes.push(i);
 			}
 		}
+		else if(group === GROUP_TEN)
+		{
+			if(getScorigamiProbability(game) >= 10.0)
+			{
+				selectedGameIndexes.push(i);
+			}
+		}
 	}
 	for(var i = 0; i < selectedGameIndexes.length; i++)
 	{
@@ -1191,9 +1265,8 @@ function moveSelectedCell(index)
 {
 
 	var oldGame = g_prevLiveGames[index];
-	//console.log(game);
-	var oldHomeScore = (oldGame.homeScore ? oldGame.homeScore : null);
-	var oldAwayScore = (oldGame.awayScore ? oldGame.awayScore : null);
+	var oldHomeScore = (typeof oldGame.homeScore !== "undefined" ? oldGame.homeScore : null);
+	var oldAwayScore = (typeof oldGame.awayScore !== "undefined" ? oldGame.awayScore : null);
 
 	var oldHighScore = (oldAwayScore > oldHomeScore ? oldAwayScore : oldHomeScore);
 	var oldLowScore = (oldAwayScore > oldHomeScore ? oldHomeScore : oldAwayScore);
