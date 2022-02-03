@@ -82,7 +82,7 @@ function updateData()
 			//if the game is regular or post season, continue, otherwise (preseason) ignore it
 			//type 1 = ???
 			//Type 2 = regular season
-			//type 3 = pro bowl (and playoffs?)
+			//type 3 = playoffs (and pro bowl)
 			if (data.season && (data.season.type === 2 || data.season.type === 3))
 			{
 				//check the current week
@@ -115,7 +115,7 @@ function updateData()
 								{
 									//if the game is not over, ignore it 
 									//TODO: Make sure final OT status is correct
-									if(game.status && game.status.type && (game.status.type.name === "STATUS_FINAL" || game.status.type.name === "STATUS_FINAL_OVERTIME"))
+									if(game.status && game.status.type && (game.status.type.name === "STATUS_FINAL" || game.status.type.name === "STATUS_FINAL_OVERTIME") && game.competitions[0].type.abbreviation !== "ALLSTAR")
 									{	
 										var tracked = false;
 										//if the game has already been tracked, ignore it

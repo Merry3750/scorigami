@@ -30,7 +30,7 @@ var debug = window.location.href.startsWith("http://localhost");
 
 if(debug)
 {
-	document.title = "Scorigami (DEBUG)";
+	document.title = "(DEBUG) " + document.title;
 }
 
 $.ajax({
@@ -1062,7 +1062,7 @@ function renderLiveGames()
 
 			//if game is preseason or probowl
 			//TODO: double check that type 3 is postseason and other types are exhibition games
-			if(game.season.type !== 2 && game.season.type !== 3)
+			if((game.season.type !== 2 && game.season.type !== 3) || game.competitions[0].type.abbreviation == "ALLSTAR")
 			{
 					htmlString += "Untracked Exhibition Game";
 			}
