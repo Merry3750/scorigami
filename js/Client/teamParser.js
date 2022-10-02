@@ -69,7 +69,7 @@ function getFullName(string)
 		case "TEN":
 			return "Tennessee Titans";
 		case "WAS":
-			return "Washington Redskins";
+			return "Washington Commanders";
 	}
 
 }
@@ -142,7 +142,7 @@ function getMascot(string)
 		case "TEN":
 			return "Titans";
 		case "WAS":
-			return "Redskins";
+			return "Commanders";
 	}
 
 }
