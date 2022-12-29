@@ -61,6 +61,10 @@ $.ajax({
 			{
 				return (a.id) - (b.id)
 			});
+			g_liveGames.sort(function(a,b)
+			{
+				return (a.date != b.date ? (a.date > b.date) - 0.5 : 0)
+			});
 			console.log(g_liveGames);
 			checkLiveGamesReady();
 		},
