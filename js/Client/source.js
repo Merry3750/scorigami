@@ -59,7 +59,9 @@ $.ajax({
 		{
 			g_liveGames = data.events.sort(function(a,b)
 			{
-				return a.date == b.date ? (a.id) - (b.id) : a.date - b.date;
+				var adate = new Date(a.date).getTime();
+				var bdate = new Date(b.date).getTime();
+				return adate == bdate ? (a.id) - (b.id) : adate - bdate;
 			});
 			console.log(g_liveGames);
 			checkLiveGamesReady();
