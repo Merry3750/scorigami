@@ -1,3 +1,5 @@
 /node_modules
 .env
-js/dbVars.js
+js/Node/dbVars.js
+fuckwithstuff.js
+/hitCounter
