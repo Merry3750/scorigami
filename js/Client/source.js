@@ -1102,10 +1102,10 @@ function renderLiveGames()
 
 		liveGames.innerHTML = htmlString;
 
-		var liveGamesWrapper = document.getElementById("liveGamesWrapper");
-		if(g_liveGames.length >= 1 && liveGamesWrapper)
+		var liveGamesContainer = document.getElementById("liveGamesContainer");
+		if(g_liveGames.length >= 1 && liveGamesContainer)
 		{
-			liveGamesWrapper.classList.remove("hidden");
+			liveGamesContainer.classList.remove("hidden");
 		}
 	}
 
@@ -1331,10 +1331,10 @@ function onResize()
 	var liveGames = document.getElementById("liveGames");
 	if(liveGames)
 	{
-		var liveGamesWrapper = document.getElementById("liveGamesWrapper");
-		if(liveGamesWrapper)
+		var liveGamesContainer = document.getElementById("liveGamesContainer");
+		if(liveGamesContainer)
 		{
-			liveGames.style.width = liveGamesWrapper.offsetWidth;
+			liveGames.style.width = liveGamesContainer.offsetWidth;
 		}
 		liveGames.classList.remove("p100");
 		liveGames.classList.remove("p50");
