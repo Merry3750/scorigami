@@ -9,6 +9,9 @@
 	<script src="../js/Client/teamParser.js"></script>
 	<script src="../js/Client/source.js"></script>
 	<script src="../js/Client/scorigami_chances.js"></script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Arvo:wght@700&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="../styles/common.css">
 	</link>
 	<link rel="stylesheet" href="../styles/table.css">
@@ -20,8 +23,8 @@
 </head>
 
 <body id="body">
+	<h1>NFL SCORIGAMI</h1>
 	<div id="content">
-		<h1>NFL Scorigami</h1>
 		<div id="switchContainer">
 			<div class="switchWrapper">
 				<label class="switch">
@@ -69,30 +72,26 @@
 			<img id="loadingTable" src="../images/loading.gif" alt="Loading" />
 			<table id="scoreTable">
 			</table>
-			<div class="clearfix">
-				<div class="outer-wrapper">
-					<div id="hueSpectrumLogarithmic" class="inner-wrapper hueSpectrum invisible">
-						<div id="hueSpectrumLogarithmicLabelMinCount">1</div>
-						<div id="hueSpectrumLogarithmicColors">{{hueSpectrumLogarithmicColors}}</div>
-						<div id="hueSpectrumLogarithmicLabelMaxCount">{{hueSpectrumLogarithmicLabelMaxCount}}</div>
-					</div>
-					<div id="hueSpectrumLinear" class="inner-wrapper hueSpectrum hidden">
-						<div id="hueSpectrumLinearLabelMinCount">1920</div>
-						<div id="hueSpectrumLinearColors">{{hueSpectrumLinearColors}}</div>
-						<div id="hueSpectrumLinearLabelMaxCount">{{hueSpectrumLinearLabelMaxCount}}</div>
-					</div>
-					<div id="hueSpectrumLogarithmicColorblind" class="inner-wrapper hueSpectrum hidden">
-						<div id="hueSpectrumLogarithmicLabelMinCount">1</div>
-						<div id="hueSpectrumLogarithmicColors">{{hueSpectrumLogarithmicColorblindColors}}</div>
-						<div id="hueSpectrumLogarithmicLabelMaxCount">{{hueSpectrumLogarithmicColorblindLabelMaxCount}}
-						</div>
-					</div>
-					<div id="hueSpectrumLinearColorblind" class="inner-wrapper hueSpectrum hidden">
-						<div id="hueSpectrumLinearLabelMinCount">1920</div>
-						<div id="hueSpectrumLinearColors">{{hueSpectrumLinearColorblindColors}}</div>
-						<div id="hueSpectrumLinearLabelMaxCount">{{hueSpectrumLinearLabelColorblindMaxCount}}</div>
-					</div>
+			<div id="hueSpectrumLogarithmic" class="hueSpectrum invisible">
+				<div id="hueSpectrumLogarithmicLabelMinCount">1</div>
+				<div id="hueSpectrumLogarithmicColors">{{hueSpectrumLogarithmicColors}}</div>
+				<div id="hueSpectrumLogarithmicLabelMaxCount">{{hueSpectrumLogarithmicLabelMaxCount}}</div>
+			</div>
+			<div id="hueSpectrumLinear" class="hueSpectrum hidden">
+				<div id="hueSpectrumLinearLabelMinCount">1920</div>
+				<div id="hueSpectrumLinearColors">{{hueSpectrumLinearColors}}</div>
+				<div id="hueSpectrumLinearLabelMaxCount">{{hueSpectrumLinearLabelMaxCount}}</div>
+			</div>
+			<div id="hueSpectrumLogarithmicColorblind" class="hueSpectrum hidden">
+				<div id="hueSpectrumLogarithmicLabelMinCount">1</div>
+				<div id="hueSpectrumLogarithmicColors">{{hueSpectrumLogarithmicColorblindColors}}</div>
+				<div id="hueSpectrumLogarithmicLabelMaxCount">{{hueSpectrumLogarithmicColorblindLabelMaxCount}}
 				</div>
+			</div>
+			<div id="hueSpectrumLinearColorblind" class="hueSpectrum hidden">
+				<div id="hueSpectrumLinearLabelMinCount">1920</div>
+				<div id="hueSpectrumLinearColors">{{hueSpectrumLinearColorblindColors}}</div>
+				<div id="hueSpectrumLinearLabelMaxCount">{{hueSpectrumLinearLabelColorblindMaxCount}}</div>
 			</div>
 		</div>
 		<div id="liveGamesContainer" class="hidden">
@@ -110,27 +109,9 @@
 		<div id="faqContainer">
 			<h2>Frequently Asked Questions</h2>
 			<div id="faqs" class="sectionContent">
-				<div>
-					<h3>How do I read this chart?</h3>
-					<p style="margin-top:2px">The winning team's score is along the top (horizontal axis) and the losing
-						team's score is along the right (vertical axis). Scores marked in green have happened, scores in
-						white have not yet happened, scores in black are impossible. The bottom half is all black
-						because the losing team can not score more points than the winning team. You can find out more
-						information by clicking on a cell. You can also use the switches and dropdown on the top of the
-						page to see more visualizations of the data.</p>
-				</div>
-				<br />
-				<div>
-					<h3>Why isn't the 1 row all black?</h3>
-					<p style="margin-top:2px">I highly recommend you watch the video above to answer this question as
-						having it charted out will help out a lot (also the video is amazing). The critical part to
-						answer this question is at the 18:23 mark. If you can't watch the video, the gist is that it is
-						possible for the defense to score 1 point on a PAT attempt by getting a safety.</p>
-				</div>
-				<br />
-				<div>
+				<div class="qna">
 					<h3>What is Scorigami?</h3>
-					<p style="margin-top:2px">Scorigami is a concept thought up by Jon Bois. It is the art of building
+					<p>Scorigami is a concept thought up by Jon Bois. It is the art of building
 						final scores that have never happened before in NFL history. Due to the unique nature of how
 						points are scored in (American) Football, where it is impossible to score 1 point on its own, as
 						well as the rarity of the 2 point safety and 8 point touchdown and 2 point conversion, there are
@@ -140,10 +121,25 @@
 						<iframe id="video" width="560" height="315" src="" frameborder="0" allowfullscreen></iframe>
 					</div>
 				</div>
-				<br />
+				<div class="qna">
+					<h3>How do I read this chart?</h3>
+					<p>The winning team's score is along the top (horizontal axis) and the losing
+						team's score is along the right (vertical axis). Scores marked in green have happened, scores in
+						white have not yet happened, scores in black are impossible. The bottom half is all black
+						because the losing team can not score more points than the winning team. You can find out more
+						information by clicking on a cell. You can also use the switches and dropdown on the top of the
+						page to see more visualizations of the data.</p>
+				</div>
+				<div class="qna">
+					<h3>Why isn't the 1 row all black?</h3>
+					<p>I highly recommend you watch the video above to answer this question as
+						having it charted out will help out a lot (also the video is amazing). The critical part to
+						answer this question is at the 18:23 mark. If you can't watch the video, the gist is that it is
+						possible for the defense to score 1 point on a PAT attempt by getting a safety.</p>
+				</div>
 				<div class="hidden">
 					<h3>Why is this so awful on mobile?</h3>
-					<p style="margin-top:2px">Because the developer has absolutely no idea how to present this data in a
+					<p>Because the developer has absolutely no idea how to present this data in a
 						mobile friendly format, so he didn"t even try.</p>
 				</div>
 			</div>

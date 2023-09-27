@@ -1,6 +1,6 @@
 :root {
-	--team-image-height: 30px;
-	--team-image-width: 45px;
+	--team-image-height: 24px;
+	--team-image-width: 36px;
 	--border-radius: 3px;
 	--color-light: #eeeeee;
 	--color-green: #008000;
@@ -20,12 +20,12 @@ body {
 
 h1 {
 	display: block;
-	color: var(--color-green-dark);
-	height: 60px;
+	height: 40px;
+	font-family: 'Arvo', serif;
 	text-align: center;
-	margin: 10px;
+	margin: 0px 0px 30px 0px;
 	font-size: 2em;
-	padding-top: 15px;
+	padding: 30px 0 10px 0;
 	width: 100%;
 }
 
@@ -35,7 +35,7 @@ h3 {
 
 #content {
 	min-height: 100%;
-	max-width: 1125px;
+	max-width: 1140px;
 	margin: 0 auto;
 	display: flex;
 	flex-wrap: wrap;
@@ -50,18 +50,13 @@ h3 {
 
 #switchContainer {
 	width: 100%;
-	margin: 0 auto;
+	margin: auto;
 	display: flex;
-	flex-wrap: wrap;
 	justify-content: center;
 }
 
 .select {
 	text-align: center;
-	margin: auto;
-}
-
-iframe {
 	margin: auto;
 }
 
@@ -120,12 +115,13 @@ iframe {
 
 .liveGameContainer {
 	width: 25%;
-	margin: 5px auto;
+	margin: auto;
 	float: left;
+	border-bottom: 1px dashed #bbbbbb;
 }
 
 #liveGames {
-	padding: 15px 0px;
+	padding: 0px;
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-evenly;
@@ -134,24 +130,19 @@ iframe {
 .liveGame {
 	font-size: 10px;
 	border-radius: var(--border-radius);
-	width: 230px;
-	margin: 5px auto;
-	padding: 8px;
+	width: 250px;
+	margin: 20px auto;
+	padding: 10px;
 	font-size: 15px;
 	border: 1px solid white;
+	cursor: pointer;
 
 	-webkit-touch-callout: none;
-	/* iOS Safari */
 	-webkit-user-select: none;
-	/* Safari */
 	-khtml-user-select: none;
-	/* Konqueror HTML */
 	-moz-user-select: none;
-	/* Firefox */
 	-ms-user-select: none;
-	/* Internet Explorer/Edge */
 	user-select: none;
-	/* Non-prefixed version, currently supported by Chrome and Opera */
 }
 
 .liveGameContent {
@@ -159,8 +150,12 @@ iframe {
 }
 
 .liveGame.selected {
-	box-shadow: 0 2px 10px 0 rgba(0, 0, 0, .16);
-	border: 1px solid var(--color-green);
+	color: var(--color-green-dark);
+	background-color: var(--color-light);
+}
+
+.liveGame.selected .img {
+	filter: brightness(94%);
 }
 
 .liveGame.newUpdate {
@@ -171,7 +166,7 @@ iframe {
 	width: var(--team-image-width);
 	height: var(--team-image-height);
 	vertical-align: middle;
-	margin-right: 3px;
+	margin: 5px 5px 0 0;
 	float: left;
 	background-size: contain;
 }
@@ -211,9 +206,7 @@ iframe {
 
 .newScorigami {
 	font-weight: bold;
-	display: inline-block;
 	color: red;
-	animation: tilt-shaking 0.5s infinite;
 }
 
 .p33 .liveGameContainer {
@@ -226,6 +219,39 @@ iframe {
 
 .p100 .liveGameContainer {
 	width: 100%;
+}
+
+#faqContainer {
+	width: 100%;
+	margin: 20px auto;
+}
+
+#faqs {
+	padding: 20px 20px 20px 20px;
+}
+
+.qna {
+	margin-bottom: 30px;
+}
+
+p {
+	margin-top: 2px;
+}
+
+footer {
+	text-align: center;
+	font-size: 12px;
+	padding: 20px 0;
+	color: var(--color-light);
+	background-color: #333333;
+	box-shadow: 0 2px 10px 0 rgba(0, 0, 0, .16);
+	margin-top: 60px;
+	width: 100%;
+	z-index: 0;
+}
+
+footer a {
+	color: white;
 }
 
 #helper {
@@ -245,39 +271,11 @@ iframe {
 	opacity: 0.9;
 
 	-webkit-touch-callout: none;
-	/* iOS Safari */
 	-webkit-user-select: none;
-	/* Safari */
 	-khtml-user-select: none;
-	/* Konqueror HTML */
 	-moz-user-select: none;
-	/* Firefox */
 	-ms-user-select: none;
-	/* Internet Explorer/Edge */
 	user-select: none;
-	/* Non-prefixed version, currently supported by Chrome and Opera */
-}
-
-#faqContainer {
-	width: 100%;
-	margin: 20px auto;
-
-}
-
-#faqs {
-	padding: 20px;
-}
-
-footer {
-	text-align: center;
-	font-size: 12px;
-	padding: 20px 0;
-	color: var(--color-light);
-	background-color: #333333;
-	box-shadow: 0 2px 10px 0 rgba(0, 0, 0, .16);
-	margin-top: 60px;
-	width: 100%;
-	z-index: 0;
 }
 
 #helper.hide-opacity {
@@ -292,35 +290,9 @@ footer {
 	visibility: hidden;
 }
 
-footer a {
-	color: white;
-}
-
 #bmac {
 	position: fixed;
 	right: 5;
 	bottom: 5;
 	z-index: 1;
-}
-
-@keyframes tilt-shaking {
-	0% {
-		transform: rotate(0deg);
-	}
-
-	25% {
-		transform: rotate(5deg);
-	}
-
-	50% {
-		transform: rotate(0eg);
-	}
-
-	75% {
-		transform: rotate(-5deg);
-	}
-
-	100% {
-		transform: rotate(0deg);
-	}
 }
