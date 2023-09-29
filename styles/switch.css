@@ -1,8 +1,17 @@
-:root{
+:root {
 	--switch-height: 21px;
 }
 
-/* The switch - the box around the slider */
+#switchContainer {
+	width: 100%;
+	margin: auto;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+	text-align: center;
+}
+
 .switch {
 	position: relative;
 	display: inline-block;
@@ -10,17 +19,17 @@
 	height: var(--switch-height);
 }
 
-/* Hide default HTML checkbox */
-.switch input {display:none;}
+.switch input {
+	display: none;
+}
 
-/* The slider */
 .switchSlider {
 	position: absolute;
 	cursor: pointer;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
 	background-color: #ccc;
 	-webkit-transition: .2s;
 	transition: .2s;
@@ -41,44 +50,38 @@
 	border-radius: 50%;
 }
 
-input:checked + .switchSlider {
+input:checked+.switchSlider {
 	background-color: #2196F3;
 }
 
-input:focus + .switchSlider {
-	box-shadow: 0 0 1px #2196F3;
+input:focus+.switchSlider {
+	box-shadow: 0px 0px 1px #2196F3;
 }
 
-input:checked + .switchSlider:before {
+input:checked+.switchSlider:before {
 	-webkit-transform: translateX(14px);
 	-ms-transform: translateX(14px);
 	transform: translateX(14px);
 }
 
-#switchContainer{
-	text-align: center;
+.switchWrapper {
+	float: left;
+	margin: 5px 10px;
 }
 
-.switchWrapper{
-	float:left;
-	margin: 0 10px;
-}
-
-.switchText{
+.switchText {
 	line-height: var(--switch-height);
 	height: var(--switch-height);
 	float: right;
 	padding-left: 2px;
-	/* display:inline-block; */
 }
 
-
-#sliderContainer{
-	margin: 5px auto;
+#sliderContainer {
+	margin: 15px auto;
 	width: 100%;
 	max-width: 1000px;
 	text-align: center;
-	font-weight:bold;
+	font-weight: bold;
 	height: var(--switch-height);
 	line-height: var(--switch-height);
 }
@@ -87,7 +90,7 @@ input:checked + .switchSlider:before {
 	-webkit-appearance: none;
 	height: 15px;
 	width: 90%;
-	border-radius: 5px;	 
+	border-radius: 5px;
 	background: #d3d3d3;
 	outline: none;
 	opacity: 0.7;
@@ -100,7 +103,7 @@ input:checked + .switchSlider:before {
 	appearance: none;
 	width: var(--switch-height);
 	height: var(--switch-height);
-	border-radius: 50%; 
+	border-radius: 50%;
 	background: #2196F3;
 	cursor: pointer;
 }

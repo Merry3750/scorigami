@@ -5,16 +5,17 @@
 	--color-light: #eeeeee;
 	--color-green: #008000;
 	--color-green-dark: #014901;
+	--color-dark: #333333;
 }
 
 html {
 	background-color: var(--color-light);
-	color: #333333;
+	color: var(--color-dark);
 }
 
 body {
-	margin: 0;
-	padding: 0;
+	margin: 0px;
+	padding: 0px;
 	position: relative;
 }
 
@@ -23,62 +24,49 @@ h1 {
 	height: 40px;
 	font-family: 'Arvo', serif;
 	text-align: center;
-	margin: 0px 0px 30px 0px;
+	margin-bottom: 30px;
 	font-size: 2em;
-	padding: 30px 0 10px 0;
+	padding: 30px 0px 10px 0px;
 	width: 100%;
 }
 
 h3 {
-	margin: 0;
+	margin-bottom: 10px;
+	margin-top: 0px;
 }
 
-#content {
+#container {
 	min-height: 100%;
 	max-width: 1140px;
-	margin: 0 auto;
+	padding: 0px 10px;
+	margin: 0px auto;
 	display: flex;
+	flex-direction: row;
 	flex-wrap: wrap;
 	justify-content: center;
 }
 
 .sectionContent {
-	box-shadow: 0 2px 10px 0 rgba(0, 0, 0, .16);
+	box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, .16);
 	background-color: white;
 	border-radius: var(--border-radius);
+	min-width: 280px;
 }
 
-#switchContainer {
-	width: 100%;
-	margin: auto;
+#liveGamesHeader {
 	display: flex;
-	justify-content: center;
+	flex-wrap: wrap;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: flex-start;
 }
 
-.select {
-	text-align: center;
-	margin: auto;
+#liveGamesHeader h2 {
+	min-width: 300px;
 }
 
-#infoBox {
-	background-color: var(--color-light);
-	position: absolute;
-	font-size: 10px;
-	padding: 4px;
-	border-radius: var(--border-radius);
-	border: 1px solid #bbbbbb;
-	box-shadow: 0 2px 10px 0 rgba(0, 0, 0, .16);
-}
-
-#infoBoxScore {
-	font-size: 12px;
-	font-weight: bold;
-}
-
-#infoBoxClose {
-	font-size: 9px;
-	float: right;
-	cursor: pointer;
+#liveGamesButtons {
+	margin: 10px 0px;
 }
 
 #liveGamesContainer {
@@ -91,8 +79,7 @@ h3 {
 }
 
 #liveGamesContainer button {
-	float: right;
-	margin: 15px 5px;
+	margin: 5px;
 	padding: 10px;
 	color: var(--color-light);
 	background-color: var(--color-green);
@@ -113,18 +100,19 @@ h3 {
 	background-color: var(--color-green);
 }
 
-.liveGameContainer {
-	width: 25%;
-	margin: auto;
-	float: left;
-	border-bottom: 1px dashed #bbbbbb;
-}
-
-#liveGames {
+#liveGamesContent {
 	padding: 0px;
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-evenly;
+	flex-direction: row;
+}
+
+.liveGameContainer {
+	width: 25%;
+	min-width: 280px;
+	margin: auto;
+	float: left;
 }
 
 .liveGame {
@@ -145,10 +133,6 @@ h3 {
 	user-select: none;
 }
 
-.liveGameContent {
-	height: 73px;
-}
-
 .liveGame.selected {
 	color: var(--color-green-dark);
 	background-color: var(--color-light);
@@ -166,9 +150,13 @@ h3 {
 	width: var(--team-image-width);
 	height: var(--team-image-height);
 	vertical-align: middle;
-	margin: 5px 5px 0 0;
+	margin: 5px 5px 0px 0px;
 	float: left;
 	background-size: contain;
+}
+
+.liveGameContent {
+	height: 73px;
 }
 
 .teams {
@@ -209,24 +197,12 @@ h3 {
 	color: red;
 }
 
-.p33 .liveGameContainer {
-	width: 33%;
-}
-
-.p50 .liveGameContainer {
-	width: 50%;
-}
-
-.p100 .liveGameContainer {
-	width: 100%;
-}
-
 #faqContainer {
 	width: 100%;
 	margin: 20px auto;
 }
 
-#faqs {
+#faqContent {
 	padding: 20px 20px 20px 20px;
 }
 
@@ -241,10 +217,10 @@ p {
 footer {
 	text-align: center;
 	font-size: 12px;
-	padding: 20px 0;
+	padding: 20px 0px;
 	color: var(--color-light);
-	background-color: #333333;
-	box-shadow: 0 2px 10px 0 rgba(0, 0, 0, .16);
+	background-color: var(--color-dark);
+	box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, .16);
 	margin-top: 60px;
 	width: 100%;
 	z-index: 0;

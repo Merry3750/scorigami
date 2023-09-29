@@ -5,6 +5,7 @@
 	<meta name="description"
 		content="Scorigami is a concept thought up by Jon Bois. It is the art of building final scores that have never happened before in NFL history. Due to the unique nature of how points are scored in (American) Football, where it is impossible to score 1 point on its own, as well as the rarity of the 2 point safety and 8 point touchdown and 2 point conversion, there are a lot of scores that are possible, but have never happened." />
 	<meta name="google-site-verification" content="0TxEDey3rEbIYqnUZIjhsAQ_LUPipuSA6J3co4Vk-HY" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<script src="https://code.jquery.com/jquery-1.6.2.min.js"></script>
 	<script src="../js/Client/teamParser.js"></script>
 	<script src="../js/Client/source.js"></script>
@@ -24,8 +25,8 @@
 
 <body id="body">
 	<h1>NFL SCORIGAMI</h1>
-	<div id="content">
-		<div id="switchContainer">
+	<div id="container">
+		<div id="switchContainer" class="sectionContainer">
 			<div class="switchWrapper">
 				<label class="switch">
 					<input type="checkbox" id="colorblindSwitch">
@@ -64,12 +65,14 @@
 				</select>
 			</div>
 		</div>
-		<div id="sliderContainer" class="invisible">
+		<div id="sliderContainer" class="sectionContainer invisible">
 			<input type="range" min="1920" max="" value="" class="slider" id="yearSlider">
 			<span id="sliderValue"></span>
 		</div>
-		<div id="tableContainer">
-			<img id="loadingTable" src="../images/loading.gif" alt="Loading" />
+		<div id="tableContainer" class="sectionContainer">
+			<div id="loadingTableDiv">
+				<img id="loadingTable" src="../images/loading.gif" alt="Loading" />
+			</div>
 			<table id="scoreTable">
 			</table>
 			<div id="hueSpectrumLogarithmic" class="hueSpectrum invisible">
@@ -94,53 +97,71 @@
 				<div id="hueSpectrumLinearLabelMaxCount">{{hueSpectrumLinearLabelColorblindMaxCount}}</div>
 			</div>
 		</div>
-		<div id="liveGamesContainer" class="hidden">
-			<div id="liveGamesHeader">
-				<h2>This Week's Games</h2>
-				<button type="button" onclick="liveGameDeselectAll()">Deselect All</button>
-				<button type="button" onclick="liveGameSelectGroup('all')">Select All</button>
-				<button type="button" onclick="liveGameSelectGroup('ten')">Select 10%+ Chance</button>
-				<button type="button" onclick="liveGameSelectGroup('ongoing')">Select Ongoing</button>
-				<button type="button" onclick="liveGameSelectGroup('finished')">Select Finished</button>
+		<div id="liveGamesContainer" class="sectionContainer hidden">
+			<div id="liveGamesHeader" class="sectionHeader">
+				<div>
+					<h2>This Week's Games</h2>
+				</div>
+				<div id="liveGamesButtons">
+					<button type="button" onclick="liveGameDeselectAll()">Deselect All</button>
+					<button type="button" onclick="liveGameSelectGroup('all')">Select All</button>
+					<button type="button" onclick="liveGameSelectGroup('ten')">Select 10%+ Chance</button>
+					<button type="button" onclick="liveGameSelectGroup('ongoing')">Select Ongoing</button>
+					<button type="button" onclick="liveGameSelectGroup('finished')">Select Finished</button>
+				</div>
 			</div>
-			<div id="liveGames" class="sectionContent">
+			<div id="liveGamesContent" class="sectionContent">
 			</div>
 		</div>
-		<div id="faqContainer">
-			<h2>Frequently Asked Questions</h2>
-			<div id="faqs" class="sectionContent">
+		<div id="faqContainer" class="sectionContainer">
+			<div id="faqHeader" class="sectionHeader">
+				<h2>Frequently Asked Questions</h2>
+			</div>
+			<div id="faqContent" class="sectionContent">
 				<div class="qna">
 					<h3>What is Scorigami?</h3>
-					<p>Scorigami is a concept thought up by Jon Bois. It is the art of building
+					<p>
+						Scorigami is a concept thought up by Jon Bois. It is the art of building
 						final scores that have never happened before in NFL history. Due to the unique nature of how
 						points are scored in (American) Football, where it is impossible to score 1 point on its own, as
 						well as the rarity of the 2 point safety and 8 point touchdown and 2 point conversion, there are
 						a lot of scores that are possible, but have never happened. For more info, check out the video
-						made by Jon Bois about Scorigami below.</p>
+						made by Jon Bois about Scorigami below.
+					</p>
 					<div style="text-align: center">
-						<iframe id="video" width="560" height="315" src="" frameborder="0" allowfullscreen></iframe>
+						<iframe id="video" src="" frameborder="0"
+							style="width: 560px; height: 315px; max-width: 80%;"></iframe>
 					</div>
 				</div>
 				<div class="qna">
 					<h3>How do I read this chart?</h3>
-					<p>The winning team's score is along the top (horizontal axis) and the losing
+					<p>
+						The winning team's score is along the top (horizontal axis) and the losing
 						team's score is along the right (vertical axis). Scores marked in green have happened, scores in
 						white have not yet happened, scores in black are impossible. The bottom half is all black
 						because the losing team can not score more points than the winning team. You can find out more
 						information by clicking on a cell. You can also use the switches and dropdown on the top of the
-						page to see more visualizations of the data.</p>
+						page to see more visualizations of the data.
+					</p>
 				</div>
 				<div class="qna">
 					<h3>Why isn't the 1 row all black?</h3>
-					<p>I highly recommend you watch the video above to answer this question as
+					<p>
+						I highly recommend you watch the video above to answer this question as
 						having it charted out will help out a lot (also the video is amazing). The critical part to
 						answer this question is at the 18:23 mark. If you can't watch the video, the gist is that it is
-						possible for the defense to score 1 point on a PAT attempt by getting a safety.</p>
+						possible for the defense to score 1 point on a PAT attempt by getting a safety.
+					</p>
 				</div>
 				<div class="hidden">
 					<h3>Why is this so awful on mobile?</h3>
-					<p>Because the developer has absolutely no idea how to present this data in a
-						mobile friendly format, so he didn"t even try.</p>
+					<p>
+						Because the developer has absolutely no idea how to present this data in a
+						mobile friendly format, so he didn't even try.
+					</p>
+					<p>
+						But then another dev came along and decided to help out so now we are so "awful" on mobile.
+					</p>
 				</div>
 			</div>
 		</div>

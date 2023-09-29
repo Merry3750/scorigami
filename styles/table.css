@@ -2,6 +2,41 @@ body {
 	font-family: sans-serif;
 }
 
+#tableContainer {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: left;
+	text-align: center;
+	width: 1140px;
+	overflow-x: auto;
+}
+
+.select {
+	text-align: center;
+	margin: auto;
+}
+
+#infoBox {
+	background-color: var(--color-light);
+	position: absolute;
+	font-size: 10px;
+	padding: 4px;
+	border-radius: var(--border-radius);
+	border: 1px solid #bbbbbb;
+	box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, .16);
+}
+
+#infoBoxScore {
+	font-size: 12px;
+	font-weight: bold;
+}
+
+#infoBoxClose {
+	float: right;
+	font-size: 9px;
+	cursor: pointer;
+}
+
 .black {
 	background-color: black;
 	color: white;
@@ -41,9 +76,7 @@ body {
 
 .hover.adjhover,
 .hover.adjhover {
-	background-color: rgba(187, 187, 187, 0.30)
-		/*#AAAAAA*/
-	;
+	background-color: rgba(187, 187, 187, 0.30);
 }
 
 .hover.selected {
@@ -72,21 +105,15 @@ td {
 	width: 15px;
 	height: 12px;
 	line-height: 12px;
-	padding: 0;
-	margin: 0;
+	padding: 0px;
+	margin: 0px;
 
 	-webkit-touch-callout: none;
-	/* iOS Safari */
 	-webkit-user-select: none;
-	/* Safari */
 	-khtml-user-select: none;
-	/* Konqueror HTML */
 	-moz-user-select: none;
-	/* Firefox */
 	-ms-user-select: none;
-	/* Internet Explorer/Edge */
 	user-select: none;
-	/* Non-prefixed version, currently supported by Chrome and Opera */
 }
 
 th {
@@ -95,6 +122,10 @@ th {
 
 td {
 	font-size: 8px;
+}
+
+#loadingTableDiv {
+	min-width: 1140px;
 }
 
 td.axisLabel {
@@ -126,8 +157,8 @@ table {
 	padding: 5px;
 	height: 20px;
 	line-height: 20px;
-	width: 700px;
-	margin: 0px auto;
+	min-width: 700px;
+	margin: 5px auto;
 }
 
 .hueSpectrum div {
@@ -138,14 +169,8 @@ table {
 
 .hueColor {
 	margin: auto;
-	padding: 0;
+	padding: 0px;
 	width: 3px;
 	height: 20px;
 	display: inline-block;
-}
-
-#tableContainer {
-	display: flexbox;
-	justify-content: center;
-	text-align: center;
 }
