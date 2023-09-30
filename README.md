@@ -21,7 +21,7 @@ A step by step series of examples that tell you have to get a development env ru
 Clone the repository and install dependencies
 
 ```
-git clone https://github.com/ACMerriman/scorigami.git # or clone your own fork
+git clone https://github.com/Merry3750/scorigami.git # or clone your own fork
 cd scorigami
 npm install
 ```
@@ -49,12 +49,13 @@ Your app should now be running on [localhost:8081](http://localhost:8081/)
 
 ## Authors
 
-* **Andrew Merriman** - *Initial work* - [ACMerriman](https://github.com/ACMerriman)
+* **Andrew Merriman** - *Initial work* - [Merry3750](https://github.com/Merry3750)
 
-See also the list of [contributors](https://github.com/ACMerriman/scorigami/graphs/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/Merry3750/scorigami/graphs/contributors) who participated in this project.
 
 ## Acknowledgments
 
 * Historical data from [Pro Football Reference](https://www.pro-football-reference.com/)
 * Logos from [SportsLogos.Net](http://www.sportslogos.net/)
 * Prediction Data and algorithms by Dave Mattingly [@dpmattingly](https://twitter.com/dpmattingly)
+* CSS redesign by [Brian Sayre](https://github.com/briansayre)

@@ -846,7 +846,7 @@ function renderLiveGames() {
 			htmlString += "' onclick='liveGameClick(" + i + ");'>";
 			htmlString += "<div class='liveGameContent'>";
 			htmlString += "<div class='teams'>";
-			htmlString += "<div class='teamInfo'><div class='img' style='background-image:url(\"../images/teams/" + awayAbbr + ".gif\")'></div>";
+			htmlString += "<div class='teamInfo'><div class='img' style='background-image:url(\"../images/teams/" + awayAbbr + ".png\")'></div>";
 			htmlString += awayNick;
 			if (phase === "STATUS_IN_PROGRESS" || phase === "STATUS_HALFTIME" || phase === "STATUS_SUSPENDED" || phase === "STATUS_FINAL" || phase === "STATUS_FINAL_OVERTIME" || phase === "STATUS_END_PERIOD") {
 				// if(game.score.possessionTeamAbbr === game.gameSchedule.visitorTeamAbbr && phase !== "HALFTIME" && phase !== "FINAL" && phase !== "FINAL_OVERTIME")
@@ -856,7 +856,7 @@ function renderLiveGames() {
 				htmlString += "<span class='teamScore'>" + awayScore + "</span>";
 			}
 			htmlString += "</div>";
-			htmlString += "<div class='teamInfo'><div class='img' style='background-image:url(\"../images/teams/" + homeAbbr + ".gif\")'></div>";
+			htmlString += "<div class='teamInfo'><div class='img' style='background-image:url(\"../images/teams/" + homeAbbr + ".png\")'></div>";
 			htmlString += homeNick;
 			if (phase === "STATUS_IN_PROGRESS" || phase === "STATUS_HALFTIME" || phase === "STATUS_SUSPENDED" || phase === "STATUS_FINAL" || phase === "STATUS_FINAL_OVERTIME" || phase === "STATUS_END_PERIOD") {
 				// if(game.score.possessionTeamAbbr === game.gameSchedule.homeTeamAbbr && phase !== "HALFTIME" && phase !== "FINAL" && phase !== "FINAL_OVERTIME")

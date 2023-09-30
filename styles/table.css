@@ -43,7 +43,7 @@ body {
 }
 
 .green {
-	background-color: green;
+	background-color: var(--color-primary);
 	color: white;
 	text-align: center;
 	cursor: pointer;
@@ -59,7 +59,7 @@ body {
 }
 
 .green.red {
-	background-color: red;
+	background-color: var(--color-secondary);
 }
 
 .colorblind .green.red {

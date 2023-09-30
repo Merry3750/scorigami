@@ -1,15 +1,3 @@
-:root {
-	--team-image-height: 24px;
-	--team-image-width: 36px;
-	--border-radius: 3px;
-	--color-light: #eeeeee;
-	--color-primary: #1e3868;
-	--color-primary-dark: #1e2d47;
-	--color-dark: #333333;
-	--color-secondary: #b62126;
-	--switch-height: 21px;
-}
-
 #switchContainer {
 	width: 100%;
 	margin: auto;
