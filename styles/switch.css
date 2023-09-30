@@ -1,4 +1,12 @@
 :root {
+	--team-image-height: 24px;
+	--team-image-width: 36px;
+	--border-radius: 3px;
+	--color-light: #eeeeee;
+	--color-primary: #1e3868;
+	--color-primary-dark: #1e2d47;
+	--color-dark: #333333;
+	--color-secondary: #b62126;
 	--switch-height: 21px;
 }
 
@@ -8,8 +16,7 @@
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
-	justify-content: center;
-	text-align: center;
+	justify-content: space-evenly;
 }
 
 .switch {
@@ -51,11 +58,11 @@
 }
 
 input:checked+.switchSlider {
-	background-color: #2196F3;
+	background-color: var(--color-primary);
 }
 
 input:focus+.switchSlider {
-	box-shadow: 0px 0px 1px #2196F3;
+	box-shadow: 0px 0px 1px var(--color-primary);
 }
 
 input:checked+.switchSlider:before {
@@ -87,13 +94,14 @@ input:checked+.switchSlider:before {
 }
 
 .slider {
+	appearance: none;
 	-webkit-appearance: none;
 	height: 15px;
 	width: 90%;
 	border-radius: 5px;
 	background: #d3d3d3;
 	outline: none;
-	opacity: 0.7;
+	opacity: 0.99;
 	-webkit-transition: .2s;
 	transition: opacity .2s;
 }
@@ -104,7 +112,7 @@ input:checked+.switchSlider:before {
 	width: var(--switch-height);
 	height: var(--switch-height);
 	border-radius: 50%;
-	background: #2196F3;
+	background: var(--color-secondary);
 	cursor: pointer;
 }
 
@@ -112,6 +120,6 @@ input:checked+.switchSlider:before {
 	width: var(--switch-height);
 	height: var(--switch-height);
 	border-radius: 50%;
-	background: #2196F3;
+	background: var(--color-secondary);
 	cursor: pointer;
 }

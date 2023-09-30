@@ -39,13 +39,6 @@
 			</div>
 			<div class="switchWrapper">
 				<label class="switch">
-					<input type="checkbox" id="countSwitch">
-					<span class="switchSlider"></span>
-				</label>
-				<div id="countSwitchText" class="switchText">Show Count</div>
-			</div>
-			<div class="switchWrapper">
-				<label class="switch">
 					<input type="checkbox" id="gradientSwitch">
 					<span class="switchSlider">
 					</span>
@@ -58,6 +51,13 @@
 					<span class="switchSlider"></span>
 				</label>
 				<div class="switchText">Show Empty Rows</div>
+			</div>
+			<div class="switchWrapper">
+				<label class="switch">
+					<input type="checkbox" id="countSwitch">
+					<span class="switchSlider"></span>
+				</label>
+				<div id="countSwitchText" class="switchText">Show Count</div>
 			</div>
 			<div class="switchWrapper">
 				<select id="modeSelector">
@@ -106,11 +106,11 @@
 					<h2>This Week's Games</h2>
 				</div>
 				<div id="liveGamesButtons">
-					<button type="button" onclick="liveGameDeselectAll()">Deselect All</button>
-					<button type="button" onclick="liveGameSelectGroup('all')">Select All</button>
-					<button type="button" onclick="liveGameSelectGroup('ten')">Select 10%+ Chance</button>
 					<button type="button" onclick="liveGameSelectGroup('ongoing')">Select Ongoing</button>
+					<button type="button" onclick="liveGameSelectGroup('ten')">Select 10%+ Chance</button>
 					<button type="button" onclick="liveGameSelectGroup('finished')">Select Finished</button>
+					<button type="button" onclick="liveGameSelectGroup('all')">Select All</button>
+					<button type="button" onclick="liveGameDeselectAll()">Deselect All</button>
 				</div>
 			</div>
 			<div id="liveGamesContent" class="sectionContent">

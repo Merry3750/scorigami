@@ -1162,11 +1162,8 @@ function onResize() {
 		for (var i = 0; i < liveGameSeparators.length; i++) {
 			if ((i + 1) % numPossibleInRow === 0 || i === liveGameSeparators.length - 1) {
 				liveGameSeparators[i].style.borderRight = "none";
-				console.log("hide " + i);
 			} else {
 				liveGameSeparators[i].style.borderRight = "1px dashed #888888";
-				console.log("unhide " + i);
-
 			}
 		}
 
