@@ -1,144 +1,193 @@
 <html>
+
 <head>
 	<title>Scorigami</title>
-	<meta name="description" content="Scorigami is a concept thought up by Jon Bois. It is the art of building final scores that have never happened before in NFL history. Due to the unique nature of how points are scored in (American) Football, where it is impossible to score 1 point on its own, as well as the rarity of the 2 point safety and 8 point touchdown and 2 point conversion, there are a lot of scores that are possible, but have never happened." />
+	<meta name="description"
+		content="Scorigami is a concept thought up by Jon Bois. It is the art of building final scores that have never happened before in NFL history. Due to the unique nature of how points are scored in (American) Football, where it is impossible to score 1 point on its own, as well as the rarity of the 2 point safety and 8 point touchdown and 2 point conversion, there are a lot of scores that are possible, but have never happened." />
 	<meta name="google-site-verification" content="0TxEDey3rEbIYqnUZIjhsAQ_LUPipuSA6J3co4Vk-HY" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<script src="https://code.jquery.com/jquery-1.6.2.min.js"></script>
 	<script src="../js/Client/teamParser.js"></script>
 	<script src="../js/Client/source.js"></script>
 	<script src="../js/Client/scorigami_chances.js"></script>
-	<link rel="stylesheet" href="../styles/common.css"></link>
-	<link rel="stylesheet" href="../styles/table.css"></link>
-	<link rel="stylesheet" href="../styles/switch.css"></link>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Arvo:wght@700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="../styles/common.css">
+	</link>
+	<link rel="stylesheet" href="../styles/table.css">
+	</link>
+	<link rel="stylesheet" href="../styles/switch.css">
+	</link>
 	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 	<link rel="icon" href="/favicon.ico" type="image/x-icon">
 </head>
+
 <body id="body">
-	<div id="content">
-		<h1>NFL Scorigami</h1>
-		<div class="clearfix">
-			<div class='outer-wrapper'>
-				<div id='switchContainer' class='inner-wrapper'>
-					<div class="switchWrapper">
-						<label class="switch">
-							<input type="checkbox" id="colorblindSwitch">
-							<span class="switchSlider"></span>
-						</label>
-						<div class="switchText">Colorblind Mode</div>
-					</div>
-					<div class="switchWrapper">
-						<label class="switch">
-							<input type="checkbox" id="countSwitch">
-							<span class="switchSlider"></span>
-						</label>
-						<div id="countSwitchText" class="switchText">Show Count</div>
-					</div>
-					<div class="switchWrapper">
-						<label class="switch">
-							<input type="checkbox" id="gradientSwitch">
-							<span class="switchSlider">
-							</span>
-						</label>
-						<div class="switchText">Show Gradient</div>
-					</div>
-					<div class="switchWrapper">
-						<label class="switch">
-							<input type="checkbox" id="emptyRowsSwitch">
-							<span class="switchSlider"></span>
-						</label>
-						<div class="switchText">Show Empty Rows</div>
-					</div>				
-					<div class="switchWrapper">
-						<select id="modeSelector">
-							<option value="count" selected disabled>Select a Mode</option>
-							<option value="count">Count</option>
-							<option value="firstGame">First Game</option>
-							<option value="lastGame">Latest Game</option>
-						</select>
-					</div>
-				</div>
+	<div id="header">
+		<img src="../images/scoragamiwhite.PNG" id="scoragamiLogo" />
+		<h1>NFL SCORIGAMI</h1>
+	</div>
+	<div id="container">
+		<div id="switchContainer" class="sectionContainer">
+			<div class="switchWrapper">
+				<label class="switch">
+					<input type="checkbox" id="colorblindSwitch">
+					<span class="switchSlider"></span>
+				</label>
+				<div class="switchText">Colorblind Mode</div>
+			</div>
+			<div class="switchWrapper">
+				<label class="switch">
+					<input type="checkbox" id="gradientSwitch">
+					<span class="switchSlider">
+					</span>
+				</label>
+				<div class="switchText">Show Gradient</div>
+			</div>
+			<div class="switchWrapper">
+				<label class="switch">
+					<input type="checkbox" id="emptyRowsSwitch">
+					<span class="switchSlider"></span>
+				</label>
+				<div class="switchText">Show Empty Rows</div>
+			</div>
+			<div class="switchWrapper">
+				<label class="switch">
+					<input type="checkbox" id="countSwitch">
+					<span class="switchSlider"></span>
+				</label>
+				<div id="countSwitchText" class="switchText">Show Count</div>
+			</div>
+			<div class="switchWrapper">
+				<select id="modeSelector">
+					<option value="count" selected disabled>Select a Mode</option>
+					<option value="count">Count</option>
+					<option value="firstGame">First Game</option>
+					<option value="lastGame">Latest Game</option>
+				</select>
 			</div>
 		</div>
-		<div id='sliderContainer' class="invisible">
+		<div id="sliderContainer" class="sectionContainer invisible">
 			<input type="range" min="1920" max="" value="" class="slider" id="yearSlider">
 			<span id="sliderValue"></span>
 		</div>
-		<div id='tableContainer'>
-			<img id="loadingTable" src="../images/loading.gif" alt="Loading"/>
+		<div id="tableContainer" class="sectionContainer">
+			<div id="loadingTableDiv">
+				<img id="loadingTable" src="../images/loading.gif" alt="Loading" />
+			</div>
 			<table id="scoreTable">
 			</table>
-			<div class="clearfix">
-				<div class='outer-wrapper'>
-					<div id='hueSpectrumLogarithmic' class='inner-wrapper hueSpectrum invisible'>
-							<div id='hueSpectrumLogarithmicLabelMinCount'>1</div>
-							<div id="hueSpectrumLogarithmicColors">{{hueSpectrumLogarithmicColors}}</div>
-							<div id='hueSpectrumLogarithmicLabelMaxCount'>{{hueSpectrumLogarithmicLabelMaxCount}}</div>
+			<div id="hueSpectrumLogarithmic" class="hueSpectrum invisible">
+				<div id="hueSpectrumLogarithmicLabelMinCount">1</div>
+				<div id="hueSpectrumLogarithmicColors">{{hueSpectrumLogarithmicColors}}</div>
+				<div id="hueSpectrumLogarithmicLabelMaxCount">{{hueSpectrumLogarithmicLabelMaxCount}}</div>
+			</div>
+			<div id="hueSpectrumLinear" class="hueSpectrum hidden">
+				<div id="hueSpectrumLinearLabelMinCount">1920</div>
+				<div id="hueSpectrumLinearColors">{{hueSpectrumLinearColors}}</div>
+				<div id="hueSpectrumLinearLabelMaxCount">{{hueSpectrumLinearLabelMaxCount}}</div>
+			</div>
+			<div id="hueSpectrumLogarithmicColorblind" class="hueSpectrum hidden">
+				<div id="hueSpectrumLogarithmicLabelMinCount">1</div>
+				<div id="hueSpectrumLogarithmicColors">{{hueSpectrumLogarithmicColorblindColors}}</div>
+				<div id="hueSpectrumLogarithmicLabelMaxCount">{{hueSpectrumLogarithmicColorblindLabelMaxCount}}
+				</div>
+			</div>
+			<div id="hueSpectrumLinearColorblind" class="hueSpectrum hidden">
+				<div id="hueSpectrumLinearLabelMinCount">1920</div>
+				<div id="hueSpectrumLinearColors">{{hueSpectrumLinearColorblindColors}}</div>
+				<div id="hueSpectrumLinearLabelMaxCount">{{hueSpectrumLinearLabelColorblindMaxCount}}</div>
+			</div>
+		</div>
+		<div id="liveGamesContainer" class="sectionContainer hidden">
+			<div id="liveGamesHeader" class="sectionHeader">
+				<div>
+					<h2>This Week's Games</h2>
+				</div>
+				<div id="liveGamesButtons">
+					<button type="button" onclick="liveGameSelectGroup('ongoing')">Select Ongoing</button>
+					<button type="button" onclick="liveGameSelectGroup('ten')">Select 10%+ Chance</button>
+					<button type="button" onclick="liveGameSelectGroup('finished')">Select Finished</button>
+					<button type="button" onclick="liveGameSelectGroup('all')">Select All</button>
+					<button type="button" onclick="liveGameDeselectAll()">Deselect All</button>
+				</div>
+			</div>
+			<div id="liveGamesContent" class="sectionContent">
+			</div>
+		</div>
+		<div id="faqContainer" class="sectionContainer">
+			<div id="faqHeader" class="sectionHeader">
+				<h2>Frequently Asked Questions</h2>
+			</div>
+			<div id="faqContent" class="sectionContent">
+				<div class="qna">
+					<h3>What is Scorigami?</h3>
+					<p>
+						Scorigami is a concept thought up by Jon Bois. It is the art of building
+						final scores that have never happened before in NFL history. Due to the unique nature of how
+						points are scored in (American) Football, where it is impossible to score 1 point on its own, as
+						well as the rarity of the 2 point safety and 8 point touchdown and 2 point conversion, there are
+						a lot of scores that are possible, but have never happened. For more info, check out the video
+						made by Jon Bois about Scorigami below.
+					</p>
+					<div style="text-align: center">
+						<iframe id="video" src="" frameborder="0"
+							style="width: 560px; height: 315px; max-width: 80%;"></iframe>
 					</div>
-					<div id='hueSpectrumLinear' class='inner-wrapper hueSpectrum hidden'>
-							<div id='hueSpectrumLinearLabelMinCount'>1920</div>
-							<div id="hueSpectrumLinearColors">{{hueSpectrumLinearColors}}</div>
-							<div id='hueSpectrumLinearLabelMaxCount'>{{hueSpectrumLinearLabelMaxCount}}</div>
-					</div>
-					<div id='hueSpectrumLogarithmicColorblind' class='inner-wrapper hueSpectrum hidden'>
-							<div id='hueSpectrumLogarithmicLabelMinCount'>1</div>
-							<div id="hueSpectrumLogarithmicColors">{{hueSpectrumLogarithmicColorblindColors}}</div>
-							<div id='hueSpectrumLogarithmicLabelMaxCount'>{{hueSpectrumLogarithmicColorblindLabelMaxCount}}</div>
-					</div>
-					<div id='hueSpectrumLinearColorblind' class='inner-wrapper hueSpectrum hidden'>
-							<div id='hueSpectrumLinearLabelMinCount'>1920</div>
-							<div id="hueSpectrumLinearColors">{{hueSpectrumLinearColorblindColors}}</div>
-							<div id='hueSpectrumLinearLabelMaxCount'>{{hueSpectrumLinearLabelColorblindMaxCount}}</div>
-					</div>
+				</div>
+				<div class="qna">
+					<h3>How do I read this chart?</h3>
+					<p>
+						The winning team's score is along the top (horizontal axis) and the losing
+						team's score is along the right (vertical axis). Scores marked in green have happened, scores in
+						white have not yet happened, scores in black are impossible. The bottom half is all black
+						because the losing team can not score more points than the winning team. You can find out more
+						information by clicking on a cell. You can also use the switches and dropdown on the top of the
+						page to see more visualizations of the data.
+					</p>
+				</div>
+				<div class="qna">
+					<h3>Why isn't the 1 row all black?</h3>
+					<p>
+						I highly recommend you watch the video above to answer this question as
+						having it charted out will help out a lot (also the video is amazing). The critical part to
+						answer this question is at the 18:23 mark. If you can't watch the video, the gist is that it is
+						possible for the defense to score 1 point on a PAT attempt by getting a safety.
+					</p>
+				</div>
+				<div class="hidden">
+					<h3>Why is this so awful on mobile?</h3>
+					<p>
+						Because the developer has absolutely no idea how to present this data in a
+						mobile friendly format, so he didn't even try.
+					</p>
+					<p>
+						But then another dev came along and decided to help out so now we are so "awful" on mobile.
+					</p>
 				</div>
 			</div>
 		</div>
-		<div id="liveGamesWrapper" class="hidden">
-			<div id="liveGamesHeader">
-				<h2 id="liveGamesTitle">This Week's Games:</h2>
-				<button type='button' onclick='liveGameDeselectAll()'>Deselect All</button>
-				<button type='button' onclick='liveGameSelectGroup("all")'>Select All</button>
-				<button type='button' onclick='liveGameSelectGroup("ten")'>Select 10%+ Chance</button>
-				<button type='button' onclick='liveGameSelectGroup("ongoing")'>Select Ongoing</button>
-				<button type='button' onclick='liveGameSelectGroup("finished")'>Select Finished</button>
-			</div>
-			<div class="clearfix">
-				<div class='outer-wrapper'>
-					<div id='liveGames' class='inner-wrapper'>
-					</div>
-				</div>
-			</div>
-		</div>	
-		<div class="faq">
-			<h2>Frequently Asked Questions:</h2>
-			<div>
-				<h3>What is Scorigami?</h3>
-				<p style="margin-top:2px">Scorigami is a concept thought up by Jon Bois. It is the art of building final scores that have never happened before in NFL history. Due to the unique nature of how points are scored in (American) Football, where it is impossible to score 1 point on its own, as well as the rarity of the 2 point safety and 8 point touchdown and 2 point conversion, there are a lot of scores that are possible, but have never happened. For more info, check out the video made by Jon Bois about Scorigami below.</p>
-				<div style="text-align: center">
-					<iframe id='video' width="560" height="315" src="" frameborder="0" allowfullscreen></iframe>
-				</div>
-			</div>
-			<div>
-				<h3>How do I read this chart?</h3>
-				<p style="margin-top:2px">The winning team's score is along the top (horizontal axis) and the losing team's score is along the right (vertical axis). Scores marked in green have happened, scores in white have not yet happened, scores in black are impossible. The bottom half is all black because the losing team can not score more points than the winning team. You can find out more information by clicking on a cell. You can also use the switches and dropdown on the top of the page to see more visualizations of the data.</p>
-			</div>
-			<div>
-				<h3>Why isn't the 1 row all black?</h3>
-				<p style="margin-top:2px">I highly recommend you watch the video above to answer this question as having it charted out will help out a lot (also the video is amazing). The critical part to answer this question is at the 18:23 mark. If you can't watch the video, the gist is that it is possible for the defense to score 1 point on a PAT attempt by getting a safety.</p>
-			</div>
-			<div class="hidden">
-				<h3>Why is this so awful on mobile?</h3>
-				<p style="margin-top:2px">Because the developer has absolutely no idea how to present this data in a mobile friendly format, so he didn't even try.</p>
-			</div>
-		</div>
-		<div id="helper" class="invisible" onclick="hideHelper()">New Here?<br />See the FAQ below</div>
-		<div id="infoBox" class="hidden"></div>
+	</div>
+	<div id="helper" class="invisible" onclick="hideHelper()">New Here?<br />See the FAQ below</div>
+	<div id="infoBox" class="hidden"></div>
 	<div id="bmac">
-		<script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button" data-slug="acmerriman" data-color="#000000" data-emoji=""  data-font="Cookie" data-text="Buy me a coffee" data-outline-color="#fff" data-font-color="#fff" data-coffee-color="#fd0" ></script>
+		<script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js"
+			data-name="bmc-button" data-slug="acmerriman" data-color="#000000" data-emoji="" data-font="Cookie"
+			data-text="Buy me a coffee" data-outline-color="#fff" data-font-color="#fff"
+			data-coffee-color="#fd0"></script>
 	</div>
 	<footer>
-		Historical Data from <a href="https://www.pro-football-reference.com/">Pro Football Reference</a> | Logos from <a href="http://www.sportslogos.net/">SportsLogos.Net</a> | Prediction Data and algorithms by Dave Mattingly <a href="https://twitter.com/dpmattingly">@dpmattingly</a> <br /> 
-		<span id=lastUpdated></span>Spot a bug? Let me know <a href="https://github.com/Merry3750/scorigami/issues">here</a> | <a href="https://www.buymeacoffee.com/acmerriman">Buy me a coffee</a> | Business Inquiries: <a href = "mailto:mail@nflscorigami.com">mail@nflscorigami.com</a>  
+		Historical Data from <a href="https://www.pro-football-reference.com/">Pro Football Reference</a>
+		| Logos from <a href="http://www.sportslogos.net/">SportsLogos.Net</a>
+		| Prediction Data and algorithms by Dave Mattingly <a href="https://twitter.com/dpmattingly">@dpmattingly</a>
+		<br />
+		<br />
+		<span id=lastUpdated></span>Spot a bug? Let me know <a
+			href="https://github.com/Merry3750/scorigami/issues">here</a> | <a
+			href="https://www.buymeacoffee.com/acmerriman">Buy me a coffee</a> | Business Inquiries: <a
+			href="mailto:mail@nflscorigami.com">mail@nflscorigami.com</a>
 	</footer>
 </body>
-</html>
 
+</html>
