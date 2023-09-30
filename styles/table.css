@@ -54,7 +54,7 @@ body {
 }
 
 .green.later {
-	background-color: white !important;
+	background-color: rgba(0, 0, 0, 0) !important;
 	cursor: default;
 }
 

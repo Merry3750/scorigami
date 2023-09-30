@@ -932,6 +932,8 @@ function renderLiveGames() {
 				htmlString += "<a href='https://www.pro-football-reference.com/boxscores/" + date + "0" + getShorthandName(homeAbbr) + ".htm'>Game Preview</a>";
 			}
 			htmlString += "</div></div></div>";
+
+			htmlString += "<div id='liveGameSeparator_" + i + "' class='liveGameSeparator'></div>"
 		}
 
 		liveGames.innerHTML = htmlString;
@@ -1149,11 +1151,25 @@ function onResize() {
 
 		for (var i = 0; i < liveGameContainers.length; i++) {
 			if (i < liveGameContainers.length - numInLastRow) {
-				liveGameContainers[i].style.borderBottom = "1px dashed #bbbbbb";
+				liveGameContainers[i].style.borderBottom = "1px dashed #888888";
 			} else {
 				liveGameContainers[i].style.borderBottom = "none";
 			}
 		}
+
+		var liveGameSeparators = document.getElementsByClassName("liveGameSeparator");
+
+		for (var i = 0; i < liveGameSeparators.length; i++) {
+			if ((i + 1) % numPossibleInRow === 0 || i === liveGameSeparators.length - 1) {
+				liveGameSeparators[i].style.borderRight = "none";
+				console.log("hide " + i);
+			} else {
+				liveGameSeparators[i].style.borderRight = "1px dashed #888888";
+				console.log("unhide " + i);
+
+			}
+		}
+
 
 	}
 }
