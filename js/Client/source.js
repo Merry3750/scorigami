@@ -1085,6 +1085,7 @@ function moveSelectedCell(index) {
 
 	var newHomeScore = null;
 	var newAwayScore = null;
+	var phase = newGame.status.type.name;
 
 	for (let competitorIndex in newGame.competitions[0].competitors) {
 		var competitor = newGame.competitions[0].competitors[competitorIndex];
@@ -1100,7 +1101,7 @@ function moveSelectedCell(index) {
 	var newLowScore = (newAwayScore > newHomeScore ? newHomeScore : newAwayScore);
 	var newId = "hover_" + newLowScore + "-" + newHighScore;
 	var newCell = document.getElementById(newId);
-	if (newCell) {
+	if (newCell && phase !== "STATUS_SCHEDULED") {
 		newCell.classList.add("selected");
 	}
 }
