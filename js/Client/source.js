@@ -1144,9 +1144,7 @@ function onResize() {
 		var liveGameContainers = document.getElementsByClassName("liveGameContainer");
 
 		var numInLastRow = (liveGameContainers.length % numPossibleInRow);
-		if (numPossibleInRow === 4) {
-			numInLastRow = 4;
-		} else if (numInLastRow === 0) {
+		if (numInLastRow === 0) {
 			numInLastRow = numPossibleInRow;
 		}
 
