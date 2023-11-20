@@ -9,6 +9,7 @@ body {
 	text-align: center;
 	width: 1140px;
 	overflow-x: auto;
+	margin-top: 20px;
 }
 
 .select {

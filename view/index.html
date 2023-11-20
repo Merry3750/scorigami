@@ -64,12 +64,26 @@
 					<option value="count">Count</option>
 					<option value="firstGame">First Game</option>
 					<option value="lastGame">Latest Game</option>
+					<option value="search">Search</option>
 				</select>
 			</div>
 		</div>
 		<div id="sliderContainer" class="sectionContainer invisible">
 			<input type="range" min="1920" max="" value="" class="slider" id="yearSlider">
 			<span id="sliderValue"></span>
+		</div>
+		<div id="searchContainer" class="searchContainer invisible">
+			<div class="scoreSearchInputWrapper">
+				<div class="score1SearchWrapper">
+					<div class="score1SearchText">Score 1:</div>
+					<input type="number" id="score1SearchInput" oninput="onScoreSearchChange()">
+				</div>
+				<div class="score2SearchWrapper">
+					<div class="score2SearchText">Score 2:</div>
+					<input type="number" id="score2SearchInput" oninput="onScoreSearchChange()">
+				</div>
+				<button type="button" class="invisible" id="scoreSearchClearButton" onclick="onScoreSearchClear()">Clear</button>
+			</div>
 		</div>
 		<div id="tableContainer" class="sectionContainer">
 			<div id="loadingTableDiv">

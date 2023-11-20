@@ -8,6 +8,7 @@ var g_prevLiveGames;
 var g_mode;
 var g_updateTimeout;
 var g_bmacAnimating;
+var searchSelectedGameId;
 
 var MAX_HUE = 240.0;
 var COLORBLIND_START_R = 75.0;
@@ -20,6 +21,7 @@ var COLORBLIND_END_B = 50.0;
 var MODE_COUNT = "count";
 var MODE_FIRST_GAME = "firstGame";
 var MODE_LAST_GAME = "lastGame";
+var MODE_SEARCH = "search"
 
 var GROUP_ALL = "all";
 var GROUP_ONGOING = "ongoing";
@@ -331,14 +333,22 @@ function changeMode() {
 
 	switch (g_mode) {
 		case MODE_FIRST_GAME:
+			deselectSearchedGame();
+			hideSearch();
 			showSlider();
+			break;
+		case MODE_SEARCH:
+			hideSlider();
+			showSearch();
 			break;
 		case MODE_LAST_GAME:
 		/* falls through */
 		case MODE_COUNT:
 		/* falls through */
 		default:
+			deselectSearchedGame();
 			hideSlider();
+			hideSearch();
 			break;
 	}
 
@@ -430,6 +440,20 @@ function changeYearSlider() {
 		}
 	}
 
+}
+
+function showSearch() {
+	var searchContainer = document.getElementById("searchContainer");
+	if (searchContainer) {
+		searchContainer.classList.remove("invisible");
+	}
+}
+
+function hideSearch() {
+	var searchContainer = document.getElementById("searchContainer");
+	if (searchContainer) {
+		searchContainer.classList.add("invisible");
+	}
 }
 
 //shades the cells based on the number of times that score has been achieved
@@ -1328,4 +1352,56 @@ function mouseOffDelegate(i, j) {
 	return function () {
 		mouseOff(i, j);
 	};
+}
+
+function onScoreSearchChange() {
+	if (searchSelectedGameId) {
+		var cell = document.getElementById(searchSelectedGameId);
+		if (cell) {
+			cell.classList.remove("hover");
+			cell.classList.remove("selected");
+		}
+	}
+	var searchClearButton = document.getElementById("scoreSearchClearButton");
+	var homeScore = document.getElementById("score1SearchInput").value;
+	var awayScore = document.getElementById("score2SearchInput").value;
+	if (homeScore && awayScore) {
+		var highScore = (awayScore > homeScore ? awayScore : homeScore);
+		var lowScore = (awayScore > homeScore ? homeScore : awayScore);
+		searchSelectedGameId = "cell_" + lowScore + "-" + highScore;
+		var cell = document.getElementById(searchSelectedGameId);
+		if (cell) {
+			cell.classList.add("hover")
+			cell.classList.add("selected");
+		}
+		if (searchClearButton && searchClearButton.classList.contains("invisible")) {
+			searchClearButton.classList.remove("invisible");
+		}
+	}
+	else {
+		if (searchClearButton && !searchClearButton.classList.contains("invisible")) {
+			searchClearButton.classList.add("invisible");
+		}
+	}
+}
+
+function deselectSearchedGame() {
+	var searchClearButton = document.getElementById("scoreSearchClearButton");
+	if (searchSelectedGameId) {
+		var cell = document.getElementById(searchSelectedGameId);
+		if (cell) {
+			cell.classList.remove("hover");
+			cell.classList.remove("selected");
+		}
+	}
+	searchSelectedGameId = null;
+	document.getElementById("score1SearchInput").value = "";
+	document.getElementById("score2SearchInput").value = "";
+	if (searchClearButton && !searchClearButton.classList.contains("invisible")) {
+		searchClearButton.classList.add("invisible");
+	}
+}
+
+function onScoreSearchClear() {
+	deselectSearchedGame();
 }
