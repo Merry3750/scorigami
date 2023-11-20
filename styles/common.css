@@ -280,11 +280,11 @@ footer a {
 }
 
 .hidden {
-	display: none;
+	display: none !important;
 }
 
 .invisible {
-	visibility: hidden;
+	display: none !important;
 }
 
 #bmac {
@@ -292,4 +292,33 @@ footer a {
 	right: 5;
 	bottom: 5;
 	z-index: 1;
+}
+
+.scoreSearchInputWrapper {
+	display: flex;
+	flex-direction: column;
+	padding-bottom: 20px;
+	padding-top: 20px;
+}
+
+.searchContainer {
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+}
+
+#scoreSearchClearButton {
+	margin-left: 5px;
+	margin-top: 2px;
+}
+
+.score1SearchText, .score2SearchText {
+	position: relative;
+	display: inline-block;
+	padding-left: 2px;
+	width: 60px;
+}
+
+#score1SearchInput, #score2SearchInput {
+	width: 50px;
 }
