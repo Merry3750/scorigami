@@ -19,6 +19,7 @@ var COLORBLIND_END_B = 50.0;
 
 var MODE_COUNT = "count";
 var MODE_FIRST_GAME = "firstGame";
+var MODE_FIRST_GAME_SEASON = "firstGameSeason";
 var MODE_LAST_GAME = "lastGame";
 
 var GROUP_ALL = "all";
@@ -294,6 +295,12 @@ function changeMode() {
 			var div = document.getElementById("count_" + i + "-" + j);
 			if (div) {
 				switch (g_mode) {
+					case MODE_FIRST_GAME_SEASON:
+						var year = parseInt(g_data.matrix[i][j].first_date.substr(0, 4));
+						if(parseInt(g_data.matrix[i][j].first_date.substr(5, 2)) <= 3) year--;
+						div.innerHTML = year
+						div.style.fontSize = "6px";
+						break;
 					case MODE_FIRST_GAME:
 						div.innerHTML = g_data.matrix[i][j].first_date.substr(0, 4);
 						div.style.fontSize = "6px";
@@ -316,6 +323,8 @@ function changeMode() {
 	var countSwitchText = document.getElementById("countSwitchText");
 	if (countSwitchText) {
 		switch (g_mode) {
+			case MODE_FIRST_GAME_SEASON:
+			/* falls through */
 			case MODE_FIRST_GAME:
 			/* falls through */
 			case MODE_LAST_GAME:
@@ -330,6 +339,8 @@ function changeMode() {
 	}
 
 	switch (g_mode) {
+		case MODE_FIRST_GAME_SEASON:
+		/* falls through */
 		case MODE_FIRST_GAME:
 			showSlider();
 			break;
@@ -346,6 +357,8 @@ function changeMode() {
 	var spectrumLinear = document.getElementById("hueSpectrumLinear");
 	if (spectrumLogarithmic && spectrumLinear) {
 		switch (g_mode) {
+			case MODE_FIRST_GAME_SEASON:
+			/* falls through */
 			case MODE_FIRST_GAME:
 			/* falls through */
 			case MODE_LAST_GAME:
@@ -407,6 +420,11 @@ function changeYearSlider() {
 	var sliderValue = document.getElementById("sliderValue");
 	if (sliderValue) {
 		sliderValue.innerHTML = value;
+		if(g_mode == MODE_FIRST_GAME_SEASON) // && value >= 1969)
+		{
+			var nextvalue = value + 1;
+			sliderValue.innerHTML += " - " + nextvalue;
+		}
 	}
 
 	for (var i = 0; i <= g_data.maxpts; i++) {
@@ -414,6 +432,7 @@ function changeYearSlider() {
 			var cell = document.getElementById("cell_" + i + "-" + j);
 			if (cell && cell.classList.contains("green")) {
 				var year = parseInt(g_data.matrix[i][j].first_date.substr(0, 4));
+				if(g_mode == MODE_FIRST_GAME_SEASON && parseInt(g_data.matrix[i][j].first_date.substr(5, 2)) <= 3) year--;
 				if (year > value) {
 					cell.classList.add("later");
 					cell.classList.remove("red");
@@ -441,6 +460,8 @@ function toggleGradient(on) {
 	var colorblind = document.getElementById("colorblindSwitch").checked;
 
 	switch (g_mode) {
+		case MODE_FIRST_GAME_SEASON:
+		/* falls through */
 		case MODE_FIRST_GAME:
 		/* falls through */
 		case MODE_LAST_GAME:
@@ -470,6 +491,8 @@ function toggleGradient(on) {
 							var gDiff = COLORBLIND_START_G - COLORBLIND_END_G;
 							var bDiff = COLORBLIND_START_B - COLORBLIND_END_B;
 							switch (g_mode) {
+								case MODE_FIRST_GAME_SEASON:
+								/* falls through */
 								case MODE_FIRST_GAME:
 									var year = parseInt(matrix[i][j].first_date.substr(0, 4));
 									r = COLORBLIND_START_R - rDiff * (year - min) / (max - min);
@@ -497,6 +520,8 @@ function toggleGradient(on) {
 							// cell.style.backgroundColor = "rgba(0,128,0," + alpha + ")";
 							var hue;
 							switch (g_mode) {
+								case MODE_FIRST_GAME_SEASON:
+								/* falls through */
 								case MODE_FIRST_GAME:
 									var year = parseInt(matrix[i][j].first_date.substr(0, 4));
 									hue = MAX_HUE - MAX_HUE * (year - min) / (max - min);
@@ -534,7 +559,7 @@ function toggleGradient(on) {
 		}
 	}
 	var spectrumLinear = document.getElementById("hueSpectrumLinear");
-	if (spectrumLinear && (g_mode === MODE_FIRST_GAME || g_mode === MODE_LAST_GAME)) {
+	if (spectrumLinear && (g_mode === MODE_FIRST_GAME_SEASON || g_mode === MODE_FIRST_GAME || g_mode === MODE_LAST_GAME)) {
 		if (on && !colorblind) {
 			spectrumLinear.classList.remove("invisible");
 		}
