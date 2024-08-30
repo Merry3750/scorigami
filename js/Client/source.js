@@ -8,6 +8,7 @@ var g_prevLiveGames;
 var g_mode;
 var g_updateTimeout;
 var g_bmacAnimating;
+var g_ehlerCount;
 
 var MAX_HUE = 240.0;
 var COLORBLIND_START_R = 75.0;
@@ -19,7 +20,9 @@ var COLORBLIND_END_B = 50.0;
 
 var MODE_COUNT = "count";
 var MODE_FIRST_GAME = "firstGame";
+var MODE_FIRST_GAME_SEASON = "firstGameSeason";
 var MODE_LAST_GAME = "lastGame";
+var MODE_EHLER = "ehler";
 
 var GROUP_ALL = "all";
 var GROUP_ONGOING = "ongoing";
@@ -147,9 +150,10 @@ function render() {
 								case 4:
 								/* falls through */
 								case 5:
-								/* falls through */
-								case 7:
 									htmlString += "<td class='black'></td>";
+									break;
+								case 7:
+									htmlString += "<td  id='cell_ehler' class='black'></td>";
 									break;
 								default:
 									htmlString += "<td id='cell_" + i + "-" + j + "' class='blank'><div id='hover_" + i + "-" + j + "' class='hover'></div></td>";
@@ -275,10 +279,17 @@ function setupEvents() {
 		var date = new Date().getFullYear();
 		yearSlider.max = date;
 		yearSlider.value = date;
-		yearSlider.addEventListener("input", function (e) { (changeYearSlider()); });
+		yearSlider.addEventListener("input", function (e) { changeYearSlider(); });
 	}
 
-	document.addEventListener("scroll", function (e) { handleBMAC() });
+	var cellEhler = document.getElementById("cell_ehler");
+	if (cellEhler) {
+		console.log("zxcvzxcvzxcv");
+		g_ehlerCount = 0;
+		cellEhler.addEventListener("click", function (e) { ehlerClick(); });
+	}
+
+	document.addEventListener("scroll", function (e) { handleBMAC(); });
 
 	changeMode();
 }
@@ -294,10 +305,18 @@ function changeMode() {
 			var div = document.getElementById("count_" + i + "-" + j);
 			if (div) {
 				switch (g_mode) {
+					case MODE_FIRST_GAME_SEASON:
+						var year = parseInt(g_data.matrix[i][j].first_date.substr(0, 4));
+						if(parseInt(g_data.matrix[i][j].first_date.substr(5, 2)) <= 3) year--;
+						div.innerHTML = year
+						div.style.fontSize = "6px";
+						break;
 					case MODE_FIRST_GAME:
 						div.innerHTML = g_data.matrix[i][j].first_date.substr(0, 4);
 						div.style.fontSize = "6px";
 						break;
+					case MODE_EHLER:
+					/* falls through */
 					case MODE_LAST_GAME:
 						div.innerHTML = g_data.matrix[i][j].last_date.substr(0, 4);
 						div.style.fontSize = "6px";
@@ -316,9 +335,13 @@ function changeMode() {
 	var countSwitchText = document.getElementById("countSwitchText");
 	if (countSwitchText) {
 		switch (g_mode) {
+			case MODE_FIRST_GAME_SEASON:
+			/* falls through */
 			case MODE_FIRST_GAME:
 			/* falls through */
 			case MODE_LAST_GAME:
+			/* falls through */
+			case MODE_EHLER:
 				countSwitchText.innerHTML = "Show Year";
 				break;
 			case MODE_COUNT:
@@ -330,10 +353,14 @@ function changeMode() {
 	}
 
 	switch (g_mode) {
+		case MODE_FIRST_GAME_SEASON:
+		/* falls through */
 		case MODE_FIRST_GAME:
 			showSlider();
 			break;
 		case MODE_LAST_GAME:
+		/* falls through */
+		case MODE_EHLER:
 		/* falls through */
 		case MODE_COUNT:
 		/* falls through */
@@ -342,13 +369,32 @@ function changeMode() {
 			break;
 	}
 
+	if(g_mode === MODE_EHLER)
+	{
+		for (var i = 0; i <= g_data.maxpts; i++) {
+			for (var j = i; j <= g_data.maxpts; j++) {
+				var cell = document.getElementById("cell_" + i + "-" + j);
+				if (cell && cell.classList.contains("green")) {
+					var year = parseInt(g_data.matrix[i][j].last_date.substr(0, 4));
+					if (year < 2013) {
+						cell.classList.add("later");
+					}
+				}
+			}
+		}
+	}
+
 	var spectrumLogarithmic = document.getElementById("hueSpectrumLogarithmic");
 	var spectrumLinear = document.getElementById("hueSpectrumLinear");
 	if (spectrumLogarithmic && spectrumLinear) {
 		switch (g_mode) {
+			case MODE_FIRST_GAME_SEASON:
+			/* falls through */
 			case MODE_FIRST_GAME:
 			/* falls through */
 			case MODE_LAST_GAME:
+				/* falls through */
+			case MODE_EHLER:
 				spectrumLogarithmic.classList.remove("invisible");
 				spectrumLogarithmic.classList.add("hidden");
 				spectrumLinear.classList.remove("hidden");
@@ -407,6 +453,11 @@ function changeYearSlider() {
 	var sliderValue = document.getElementById("sliderValue");
 	if (sliderValue) {
 		sliderValue.innerHTML = value;
+		if(g_mode == MODE_FIRST_GAME_SEASON) // && value >= 1969)
+		{
+			var nextvalue = value + 1;
+			sliderValue.innerHTML += " - " + nextvalue;
+		}
 	}
 
 	for (var i = 0; i <= g_data.maxpts; i++) {
@@ -414,6 +465,7 @@ function changeYearSlider() {
 			var cell = document.getElementById("cell_" + i + "-" + j);
 			if (cell && cell.classList.contains("green")) {
 				var year = parseInt(g_data.matrix[i][j].first_date.substr(0, 4));
+				if(g_mode == MODE_FIRST_GAME_SEASON && parseInt(g_data.matrix[i][j].first_date.substr(5, 2)) <= 3) year--;
 				if (year > value) {
 					cell.classList.add("later");
 					cell.classList.remove("red");
@@ -441,11 +493,17 @@ function toggleGradient(on) {
 	var colorblind = document.getElementById("colorblindSwitch").checked;
 
 	switch (g_mode) {
+		case MODE_FIRST_GAME_SEASON:
+		/* falls through */
 		case MODE_FIRST_GAME:
 		/* falls through */
 		case MODE_LAST_GAME:
 			max = new Date().getFullYear();
 			min = 1920;
+			break;
+		case MODE_EHLER:
+			max = new Date().getFullYear();
+			min = 2013;
 			break;
 		case MODE_COUNT:
 		/* falls through */
@@ -470,6 +528,8 @@ function toggleGradient(on) {
 							var gDiff = COLORBLIND_START_G - COLORBLIND_END_G;
 							var bDiff = COLORBLIND_START_B - COLORBLIND_END_B;
 							switch (g_mode) {
+								case MODE_FIRST_GAME_SEASON:
+								/* falls through */
 								case MODE_FIRST_GAME:
 									var year = parseInt(matrix[i][j].first_date.substr(0, 4));
 									r = COLORBLIND_START_R - rDiff * (year - min) / (max - min);
@@ -477,6 +537,8 @@ function toggleGradient(on) {
 									b = COLORBLIND_START_B - bDiff * (year - min) / (max - min);
 									break;
 								case MODE_LAST_GAME:
+								/* falls through */
+								case MODE_EHLER:
 									var year = parseInt(matrix[i][j].last_date.substr(0, 4));
 									r = COLORBLIND_START_R - rDiff * (year - min) / (max - min);
 									g = COLORBLIND_START_G - gDiff * (year - min) / (max - min);
@@ -497,11 +559,15 @@ function toggleGradient(on) {
 							// cell.style.backgroundColor = "rgba(0,128,0," + alpha + ")";
 							var hue;
 							switch (g_mode) {
+								case MODE_FIRST_GAME_SEASON:
+								/* falls through */
 								case MODE_FIRST_GAME:
 									var year = parseInt(matrix[i][j].first_date.substr(0, 4));
 									hue = MAX_HUE - MAX_HUE * (year - min) / (max - min);
 									break;
 								case MODE_LAST_GAME:
+								/* falls through */
+								case MODE_EHLER:
 									var year = parseInt(matrix[i][j].last_date.substr(0, 4));
 									hue = MAX_HUE - MAX_HUE * (year - min) / (max - min);
 									break;
@@ -534,7 +600,7 @@ function toggleGradient(on) {
 		}
 	}
 	var spectrumLinear = document.getElementById("hueSpectrumLinear");
-	if (spectrumLinear && (g_mode === MODE_FIRST_GAME || g_mode === MODE_LAST_GAME)) {
+	if (spectrumLinear && (g_mode === MODE_FIRST_GAME_SEASON || g_mode === MODE_FIRST_GAME || g_mode === MODE_LAST_GAME|| g_mode === MODE_EHLER)) {
 		if (on && !colorblind) {
 			spectrumLinear.classList.remove("invisible");
 		}
@@ -1328,4 +1394,15 @@ function mouseOffDelegate(i, j) {
 	return function () {
 		mouseOff(i, j);
 	};
+}
+
+function ehlerClick() {
+	g_ehlerCount++;
+	if(g_ehlerCount === 10)
+	{
+		var modeSelector = document.getElementById("modeSelector");
+		modeSelector.innerHTML += '<option value="ehler">Latest Game (Ehler)</option>';
+		modeSelector.value = "ehler";
+		changeMode();
+	}
 }
