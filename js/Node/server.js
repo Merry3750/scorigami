@@ -430,3 +430,8 @@ app.get("/*", function(req, res)
 });
 
 app.listen(process.env.PORT || 8081);
+
+if(process.env.DEBUG)
+{
+	console.log("live at http://localhost:8081/");
+}
