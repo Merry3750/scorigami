@@ -6,9 +6,7 @@
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"start": "npm run build:client && node js/Node/server.js",
-		"start:watch": "tsc --watch && node js/Node/server.js",
 		"setup": "node js/Node/copyDB_PG.js & git update-index --assume-unchanged js/Node/dbVars.js",
-		"build": "tsc",
 		"build:client": "esbuild react-app/reactApp.tsx --bundle --sourcemap --outfile=react-app/build/reactApp.js"
 	},
 	"author": "Andrew Merriman",

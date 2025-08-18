@@ -36,7 +36,7 @@ if (debug) {
 }
 
 $.ajax({
-	url: "https://nflscorigami.com/data",
+	url: "/data",
 	success: function (data) {
 		g_data = data;
 		checkReady();
