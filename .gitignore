@@ -5,3 +5,4 @@ fuckwithstuff.js
 /hitCounter
 .gitignore
 package-lock.json
+react-app/build
