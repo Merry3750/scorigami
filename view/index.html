@@ -21,6 +21,13 @@
 	</link>
 	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 	<link rel="icon" href="/favicon.ico" type="image/x-icon">
+	<!-- React (no build) -->
+	<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+	<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+	<script>
+		window.React = window.React || React;
+		window.ReactDOM = window.ReactDOM || ReactDOM;
+	</script>
 </head>
 
 <body id="body">
@@ -116,6 +123,8 @@
 			<div id="liveGamesContent" class="sectionContent">
 			</div>
 		</div>
+		<div id="react-root"></div>
+
 		<div id="faqContainer" class="sectionContainer">
 			<div id="faqHeader" class="sectionHeader">
 				<h2>Frequently Asked Questions</h2>
@@ -132,8 +141,7 @@
 						made by Jon Bois about Scorigami below.
 					</p>
 					<div style="text-align: center">
-						<iframe id="video" src="" frameborder="0"
-							style="width: 560px; height: 315px; max-width: 80%;"></iframe>
+						<iframe id="video" src="" frameborder="0" style="width: 560px; height: 315px; max-width: 80%;"></iframe>
 					</div>
 				</div>
 				<div class="qna">
@@ -172,10 +180,9 @@
 	<div id="helper" class="invisible" onclick="hideHelper()">New Here?<br />See the FAQ below</div>
 	<div id="infoBox" class="hidden"></div>
 	<div id="bmac">
-		<script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js"
-			data-name="bmc-button" data-slug="acmerriman" data-color="#000000" data-emoji="" data-font="Cookie"
-			data-text="Buy me a coffee" data-outline-color="#fff" data-font-color="#fff"
-			data-coffee-color="#fd0"></script>
+		<script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button"
+			data-slug="acmerriman" data-color="#000000" data-emoji="" data-font="Cookie" data-text="Buy me a coffee"
+			data-outline-color="#fff" data-font-color="#fff" data-coffee-color="#fd0"></script>
 	</div>
 	<footer>
 		Historical Data from <a href="https://www.pro-football-reference.com/">Pro Football Reference</a>
@@ -185,10 +192,11 @@
 		<br />
 		<br />
 		<span id=lastUpdated></span>
-			Spot a bug? Let me know <a href="https://github.com/Merry3750/scorigami/issues">here</a> 
-			| <a href="https://www.buymeacoffee.com/acmerriman">Buy me a coffee</a> 
-			| Business Inquiries: <a href="mailto:mail@nflscorigami.com">mail@nflscorigami.com</a>
+		Spot a bug? Let me know <a href="https://github.com/Merry3750/scorigami/issues">here</a>
+		| <a href="https://www.buymeacoffee.com/acmerriman">Buy me a coffee</a>
+		| Business Inquiries: <a href="mailto:mail@nflscorigami.com">mail@nflscorigami.com</a>
 	</footer>
+	<script src="../js/Client/reactApp.js"></script>
 </body>
 
 </html>
