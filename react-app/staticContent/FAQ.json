@@ -1,0 +1,25 @@
+{
+  "data": [
+    {
+      "value": "what",
+      "title": "What is Scorigami?",
+      "description": "Scorigami is a concept thought up by Jon Bois. It is the art of building final scores that have never happened before in NFL history. Due to the unique nature of how points are scored in (American) Football, where it is impossible to score 1 point on its own, as well as the rarity of the 2 point safety and 8 point touchdown and 2 point conversion, there are a lot of scores that are possible, but have never happened. For more info, check out the video made by Jon Bois about Scorigami below.",
+      "videoUrl": "https://www.youtube.com/embed/9l5C8cGMueY?rel=0"
+    },
+    {
+      "value": "how",
+      "title": "How do I read this chart?",
+      "description": "The winning team's score is along the top (horizontal axis) and the losing team's score is along the right (vertical axis). Scores marked in green have happened, scores in white have not yet happened, scores in black are impossible. The bottom half is all black because the losing team can not score more points than the winning team. You can find out more information by clicking on a cell. You can also use the switches and dropdown on the top of the page to see more visualizations of the data."
+    },
+    {
+      "value": "whyBlack",
+      "title": "Why isn't the 1 row all black?",
+      "description": "I highly recommend you watch the video above to answer this question as having it charted out will help out a lot (also the video is amazing). The critical part to answer this question is at the 18: 23 mark. If you can't watch the video, the gist is that it is possible for the defense to score 1 point on a PAT attempt by getting a safety."
+    },
+    {
+      "value": "whySuck",
+      "title": "Why is this so awful on mobile?",
+      "description": "Because the original developer has absolutely no idea how to present this data in a mobile friendly format, so he didn't even try. But then another dev came along and decided to help out so now we aren't so 'awful' on mobile. Great news, is we have yet another dev taking a stab at things, so while this site will always be best experienced on desktop, mobile will hopefullly end up somewhat more funcitonal (coming Fall 2025)."
+    }
+  ]
+}

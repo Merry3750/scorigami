@@ -224,11 +224,6 @@ function render() {
 		hueSpectrumLinearLabelMaxCount.innerHTML = new Date().getFullYear();
 	}
 
-	var video = document.getElementById("video");
-	if (video) {
-		video.src = "https://www.youtube.com/embed/9l5C8cGMueY?rel=0";
-	}
-
 	var lastUpdated = document.getElementById("lastUpdated");
 	if (lastUpdated) {
 		lastUpdated.innerHTML = "Last Updated: " + g_data.lastUpdated + " | ";

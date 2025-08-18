@@ -21,10 +21,10 @@ declare namespace ReactDOM {
 }
 
 declare namespace JSX {
-  interface Element { }
+  interface Element {}
   interface IntrinsicElements {
     [elemName: string]: any;
   }
 }
 
-export { };
+export {};

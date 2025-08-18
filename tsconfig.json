@@ -22,8 +22,7 @@
     "rootDir": "react-app",
     "declaration": false,
     "sourceMap": true,
-    "jsx": "react",
-    "jsxFactory": "React.createElement"
+    "jsx": "react-jsx"
   },
   "include": [
     "react-app/**/*"
