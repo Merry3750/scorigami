@@ -224,6 +224,11 @@ function render() {
 		hueSpectrumLinearLabelMaxCount.innerHTML = new Date().getFullYear();
 	}
 
+	var video = document.getElementById("video");
+	if (video) {
+		video.src = "https://www.youtube.com/embed/9l5C8cGMueY?rel=0";
+	}
+
 	var lastUpdated = document.getElementById("lastUpdated");
 	if (lastUpdated) {
 		lastUpdated.innerHTML = "Last Updated: " + g_data.lastUpdated + " | ";
@@ -302,7 +307,7 @@ function changeMode() {
 				switch (g_mode) {
 					case MODE_FIRST_GAME_SEASON:
 						var year = parseInt(g_data.matrix[i][j].first_date.substr(0, 4));
-						if (parseInt(g_data.matrix[i][j].first_date.substr(5, 2)) <= 3) year--;
+						if(parseInt(g_data.matrix[i][j].first_date.substr(5, 2)) <= 3) year--;
 						div.innerHTML = year
 						div.style.fontSize = "6px";
 						break;
@@ -364,7 +369,8 @@ function changeMode() {
 			break;
 	}
 
-	if (g_mode === MODE_EHLER) {
+	if(g_mode === MODE_EHLER)
+	{
 		for (var i = 0; i <= g_data.maxpts; i++) {
 			for (var j = i; j <= g_data.maxpts; j++) {
 				var cell = document.getElementById("cell_" + i + "-" + j);
@@ -387,7 +393,7 @@ function changeMode() {
 			case MODE_FIRST_GAME:
 			/* falls through */
 			case MODE_LAST_GAME:
-			/* falls through */
+				/* falls through */
 			case MODE_EHLER:
 				spectrumLogarithmic.classList.remove("invisible");
 				spectrumLogarithmic.classList.add("hidden");
@@ -447,7 +453,7 @@ function changeYearSlider() {
 	var sliderValue = document.getElementById("sliderValue");
 	if (sliderValue) {
 		sliderValue.innerHTML = value;
-		if (g_mode == MODE_FIRST_GAME_SEASON) // && value >= 1969)
+		if(g_mode == MODE_FIRST_GAME_SEASON) // && value >= 1969)
 		{
 			var nextvalue = value + 1;
 			sliderValue.innerHTML += " - " + nextvalue;
@@ -459,7 +465,7 @@ function changeYearSlider() {
 			var cell = document.getElementById("cell_" + i + "-" + j);
 			if (cell && cell.classList.contains("green")) {
 				var year = parseInt(g_data.matrix[i][j].first_date.substr(0, 4));
-				if (g_mode == MODE_FIRST_GAME_SEASON && parseInt(g_data.matrix[i][j].first_date.substr(5, 2)) <= 3) year--;
+				if(g_mode == MODE_FIRST_GAME_SEASON && parseInt(g_data.matrix[i][j].first_date.substr(5, 2)) <= 3) year--;
 				if (year > value) {
 					cell.classList.add("later");
 					cell.classList.remove("red");
@@ -594,7 +600,7 @@ function toggleGradient(on) {
 		}
 	}
 	var spectrumLinear = document.getElementById("hueSpectrumLinear");
-	if (spectrumLinear && (g_mode === MODE_FIRST_GAME_SEASON || g_mode === MODE_FIRST_GAME || g_mode === MODE_LAST_GAME || g_mode === MODE_EHLER)) {
+	if (spectrumLinear && (g_mode === MODE_FIRST_GAME_SEASON || g_mode === MODE_FIRST_GAME || g_mode === MODE_LAST_GAME|| g_mode === MODE_EHLER)) {
 		if (on && !colorblind) {
 			spectrumLinear.classList.remove("invisible");
 		}
@@ -1392,7 +1398,8 @@ function mouseOffDelegate(i, j) {
 
 function ehlerClick() {
 	g_ehlerCount++;
-	if (g_ehlerCount === 10) {
+	if(g_ehlerCount === 10)
+	{
 		var modeSelector = document.getElementById("modeSelector");
 		modeSelector.innerHTML += '<option value="ehler">Latest Game (Ehler)</option>';
 		modeSelector.value = "ehler";
