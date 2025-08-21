@@ -5,20 +5,33 @@
 	"main": "js/server.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"start": "node js/Node/server.js",
-		"setup": "node js/Node/copyDB_PG.js & git update-index --assume-unchanged js/Node/dbVars.js"
+		"start": "npm run build && node js/Node/server.js",
+		"setup": "node js/Node/copyDB_PG.js & git update-index --assume-unchanged js/Node/dbVars.js",
+		"build": "esbuild react-app/reactApp.tsx --bundle --sourcemap --outfile=react-app/build/reactApp.js"
 	},
 	"author": "Andrew Merriman",
 	"license": "MIT",
 	"dependencies": {
 		"dotenv": "^4.0.0",
-		"express": "^4.19.2",
+		"express": "^4.21.2",
 		"heroku-ssl-redirect": "0.0.4",
+		"@mantine/core": "^8.2.5",
+		"@mantine/dates": "^8.2.5",
+		"@mantine/hooks": "^8.2.5",
+		"dayjs": "^1.11.13",
 		"pg": "^8.7.1",
-		"request": "^2.82.0"
+		"request": "^2.82.0",
+		"react": "^18.3.1",
+		"react-dom": "^18.3.1"
 	},
 	"devDependencies": {
+		"@types/express": "^4.17.0",
+		"@types/node": "^20.0.0",
+		"@types/react": "^18.0.0",
+		"@types/react-dom": "^18.0.0",
+		"esbuild": "^0.21.0",
 		"jshint": "^2.13.1",
- 		"shelljs": ">=0.8.5"
+		"shelljs": ">=0.8.5",
+		"typescript": "^5.0.0"
 	}
 }
