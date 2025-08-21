@@ -17,7 +17,7 @@ export default function FAQ(): React.ReactElement {
   ));
 
   return (
-    <Accordion defaultValue="what">
+    <Accordion defaultValue="what" style={{ width: '100%' }}>
       {items}
     </Accordion>
   );
