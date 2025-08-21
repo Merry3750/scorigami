@@ -4,7 +4,7 @@ import { data } from '../staticContent/FAQ.json';
 
 export default function FAQ(): React.ReactElement {
   const items = data.map((item) => (
-    <Accordion.Item key={item.value} value={item.value}>
+    <Accordion.Item key={item.value} value={item.value} >
       <Accordion.Control><h3>{item.title}</h3></Accordion.Control>
       <Accordion.Panel>
         <Flex
@@ -17,7 +17,7 @@ export default function FAQ(): React.ReactElement {
   ));
 
   return (
-    <Accordion defaultValue="what">
+    <Accordion defaultValue="what" style={{ width: '100%' }}>
       {items}
     </Accordion>
   );
