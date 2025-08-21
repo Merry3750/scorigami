@@ -47,6 +47,12 @@ npm start
 
 Your app should now be running on [localhost:8081](http://localhost:8081/)
 
+While developing on the new FE, files will not auto reload (something to add later). 
+To recompile the React code, run the following command in a separate terminal window or tab (you do not need to restart the entire local process), then just refresh the page:
+```
+npm run build
+```
+
 ## Authors
 
 * **Andrew Merriman** - *Initial work* - [Merry3750](https://github.com/Merry3750)
