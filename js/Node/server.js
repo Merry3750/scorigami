@@ -416,6 +416,11 @@ app.get("/copydb", function(req, res)
 {
 	res.json(tables);
 });
+	
+app.get("/wip", function(req, res)
+{
+	res.redirect("https://scorigami-staging-e6754f2a4ac1.herokuapp.com/");
+});
 
 app.get("/*", function(req, res)
 {
