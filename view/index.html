@@ -29,44 +29,54 @@
 		<h1>NFL SCORIGAMI</h1>
 	</div>
 	<div id="container">
-		<div id="switchContainer" class="sectionContainer">
-			<div class="switchWrapper">
-				<label class="switch">
-					<input type="checkbox" id="colorblindSwitch">
-					<span class="switchSlider"></span>
-				</label>
-				<div class="switchText">Colorblind Mode</div>
+		<div id="controlsContainer" class="sectionContainer">
+			<div class="controlGroup">
+				<h3 class="controlGroupTitle">Display Options</h3>
+				<div class="controlRow">
+					<div class="switchWrapper">
+						<label class="switch">
+							<input type="checkbox" id="colorblindSwitch">
+							<span class="switchSlider"></span>
+						</label>
+						<div class="switchText">Colorblind Mode</div>
+					</div>
+					<div class="switchWrapper">
+						<label class="switch">
+							<input type="checkbox" id="gradientSwitch">
+							<span class="switchSlider"></span>
+						</label>
+						<div class="switchText">Show Gradient</div>
+					</div>
+					<div class="switchWrapper">
+						<label class="switch">
+							<input type="checkbox" id="emptyRowsSwitch">
+							<span class="switchSlider"></span>
+						</label>
+						<div class="switchText">Show Empty Rows</div>
+					</div>
+				</div>
 			</div>
-			<div class="switchWrapper">
-				<label class="switch">
-					<input type="checkbox" id="gradientSwitch">
-					<span class="switchSlider">
-					</span>
-				</label>
-				<div class="switchText">Show Gradient</div>
-			</div>
-			<div class="switchWrapper">
-				<label class="switch">
-					<input type="checkbox" id="emptyRowsSwitch">
-					<span class="switchSlider"></span>
-				</label>
-				<div class="switchText">Show Empty Rows</div>
-			</div>
-			<div class="switchWrapper">
-				<label class="switch">
-					<input type="checkbox" id="countSwitch">
-					<span class="switchSlider"></span>
-				</label>
-				<div id="countSwitchText" class="switchText">Show Count</div>
-			</div>
-			<div class="switchWrapper">
-				<select id="modeSelector">
-					<option value="count" selected disabled>Select a Mode</option>
-					<option value="count">Count</option>
-					<option value="firstGame">First Game (Calendar Year)</option>
-					<option value="firstGameSeason">First Game (Season Year)</option>
-					<option value="lastGame">Latest Game</option>
-				</select>
+
+			<div class="controlGroup">
+				<h3 class="controlGroupTitle">Data Mode</h3>
+				<div class="controlRow">
+					<div class="selectorWrapper">
+						<label for="modeSelector" class="selectorLabel">Display:</label>
+						<select id="modeSelector">
+							<option value="count" selected>Count</option>
+							<option value="firstGame">First Game (Calendar Year)</option>
+							<option value="firstGameSeason">First Game (Season Year)</option>
+							<option value="lastGame">Latest Game</option>
+						</select>
+					</div>
+					<div class="switchWrapper">
+						<label class="switch">
+							<input type="checkbox" id="dataVisibilitySwitch">
+							<span class="switchSlider"></span>
+						</label>
+						<div id="dataVisibilityText" class="switchText">Show Data</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		<div id="sliderContainer" class="sectionContainer invisible">

@@ -1,10 +1,35 @@
-#switchContainer {
+#controlsContainer {
 	width: 100%;
 	margin: auto;
+	padding: 15px;
+	background-color: white;
+	border-radius: var(--border-radius);
+	box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, .16);
+}
+
+.controlGroup {
+	margin-bottom: 20px;
+}
+
+.controlGroup:last-child {
+	margin-bottom: 0;
+}
+
+.controlGroupTitle {
+	font-size: 14px;
+	font-weight: bold;
+	margin: 0 0 10px 0;
+	color: var(--color-dark);
+	border-bottom: 1px solid #ddd;
+	padding-bottom: 5px;
+}
+
+.controlRow {
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
-	justify-content: space-evenly;
+	align-items: center;
+	gap: 15px;
 }
 
 .switch {
@@ -60,15 +85,85 @@ input:checked+.switchSlider:before {
 }
 
 .switchWrapper {
-	float: left;
-	margin: 5px 10px;
+	display: flex;
+	align-items: center;
+	gap: 8px;
 }
 
 .switchText {
 	line-height: var(--switch-height);
 	height: var(--switch-height);
-	float: right;
-	padding-left: 2px;
+	white-space: nowrap;
+	font-size: 14px;
+}
+
+.selectorWrapper {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.selectorLabel {
+	font-size: 14px;
+	font-weight: 500;
+	white-space: nowrap;
+}
+
+#modeSelector {
+	padding: 6px 10px;
+	border: 1px solid #ccc;
+	border-radius: var(--border-radius);
+	font-size: 14px;
+	background-color: white;
+	min-width: 200px;
+}
+
+#modeSelector:focus {
+	outline: none;
+	border-color: var(--color-primary);
+	box-shadow: 0 0 0 2px rgba(0, 128, 0, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+	.controlRow {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 10px;
+	}
+	
+	#modeSelector {
+		min-width: 180px;
+		width: 100%;
+	}
+	
+	.selectorWrapper, .switchWrapper {
+		width: 100%;
+		justify-content: space-between;
+	}
+	
+	.controlGroupTitle {
+		font-size: 13px;
+	}
+}
+
+@media (max-width: 480px) {
+	#controlsContainer {
+		padding: 10px;
+	}
+	
+	.controlGroup {
+		margin-bottom: 15px;
+	}
+	
+	.controlGroupTitle {
+		font-size: 12px;
+		margin-bottom: 8px;
+	}
+	
+	.switchText, .selectorLabel {
+		font-size: 13px;
+	}
 }
 
 #sliderContainer {

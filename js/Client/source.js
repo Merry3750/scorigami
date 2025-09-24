@@ -254,9 +254,10 @@ function setupEvents() {
 		colorblindSwitch.addEventListener("change", function (e) { toggleColorblind(e.target.checked); });
 	}
 
-	var countSwitch = document.getElementById("countSwitch");
-	if (countSwitch) {
-		countSwitch.addEventListener("change", function (e) { toggleNumber(e.target.checked); });
+	var dataVisibilitySwitch = document.getElementById("dataVisibilitySwitch");
+	if (dataVisibilitySwitch) {
+		dataVisibilitySwitch.addEventListener("change", function (e) { toggleNumber(e.target.checked); });
+		toggleNumber(dataVisibilitySwitch.checked);
 	}
 
 	var gradientSwitch = document.getElementById("gradientSwitch");
@@ -327,8 +328,8 @@ function changeMode() {
 		}
 	}
 
-	var countSwitchText = document.getElementById("countSwitchText");
-	if (countSwitchText) {
+	var dataVisibilityText = document.getElementById("dataVisibilityText");
+	if (dataVisibilityText) {
 		switch (g_mode) {
 			case MODE_FIRST_GAME_SEASON:
 			/* falls through */
@@ -337,12 +338,12 @@ function changeMode() {
 			case MODE_LAST_GAME:
 			/* falls through */
 			case MODE_EHLER:
-				countSwitchText.innerHTML = "Show Year";
+				dataVisibilityText.innerHTML = "Show Years";
 				break;
 			case MODE_COUNT:
 			/* falls through */
 			default:
-				countSwitchText.innerHTML = "Show Count";
+				dataVisibilityText.innerHTML = "Show Counts";
 				break;
 		}
 	}
@@ -406,14 +407,14 @@ function changeMode() {
 	}
 
 	var colorblindSwitch = document.getElementById("colorblindSwitch");
-	var countSwitch = document.getElementById("countSwitch");
+	var dataVisibilitySwitch = document.getElementById("dataVisibilitySwitch");
 	var gradientSwitch = document.getElementById("gradientSwitch");
 	var emptyRowsSwitch = document.getElementById("emptyRowsSwitch");
 
-	toggleColorblind(colorblindSwitch.checked);
-	toggleNumber(countSwitch.checked);
-	toggleGradient(gradientSwitch.checked);
-	toggleEmptyRows(emptyRowsSwitch.checked);
+	if (colorblindSwitch) toggleColorblind(colorblindSwitch.checked);
+	if (dataVisibilitySwitch) toggleNumber(dataVisibilitySwitch.checked);
+	if (gradientSwitch) toggleGradient(gradientSwitch.checked);
+	if (emptyRowsSwitch) toggleEmptyRows(emptyRowsSwitch.checked);
 }
 
 function showSlider() {
