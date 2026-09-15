@@ -21,7 +21,15 @@ app.use(function forceLiveDomain(req, res, next) {
 
 app.use(sslRedirect())
 
-var url = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard";
+var options = {
+	url: 'https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard',
+	method: 'GET',
+	headers: {
+		'Accept-Language': 'en-US,en;q=0.9',
+		'Accept': "*/*",
+		'Accept-Encoding': 'json'
+	}
+}
 
 var scoresTable = "scores";
 var metadataTable = "metadata";
@@ -66,7 +74,7 @@ var newScorigami = [];
 function updateData()
 {
 	console.log("fetching data");
-	request(url, async function(err0, res0, data)
+	request(options, async function(err0, res0, data)
 	{
 		if(!err0)
 		{
@@ -93,7 +101,6 @@ function updateData()
 						//if the current week does not match the current tracked week, change the current week and delete the tracked games (we won't be needing them any more)
 						if(data.week && current_week !== data.week.number)
 						{
-							console.log(data);
 							client.query("UPDATE " + metadataTable + " SET data_int=" + data.week.number + " WHERE description='current_week';DELETE FROM " + metadataTable + " WHERE description='tracked_game';")
 								.then(res2 => 
 								{
